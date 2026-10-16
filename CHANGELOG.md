@@ -842,6 +842,13 @@ Historical entries through v0.5.11.3 were reconstructed from the original Orbit 
 
 ## 0.8 series
 
+- **v0.8.4.1**: ChatGPT sign-in reliability and Times New Roman fixes are now Stable.
+  - Orbit renews your ChatGPT session automatically, including older sessions, so requests no longer get stuck failing until you sign out and back in.
+  - After an unexplained ChatGPT failure, Orbit renews the session before your next request or retry.
+  - Temporary ChatGPT problems no longer sign you out, and an ended session shows a Sign in again button; your chats are kept.
+  - Times New Roman displays as a serif font again on Samsung phones where it had fallen back to the default font, in previews too.
+  - Orbit does not include the Times New Roman font itself; your phone's Times New Roman or Android's serif font is used.
+
 - **v0.8.4.1-beta.1**: A fix Beta for ChatGPT sign-in reliability and the Times New Roman font.
   - Orbit now renews your ChatGPT session automatically, including older sessions, so requests no longer get stuck failing until you sign out and back in.
   - After an unexplained ChatGPT failure, Orbit renews the session before your next request or retry.
