@@ -50,7 +50,7 @@ In short:
 
 - **It lives where you already are.** Call it over any app instead of switching to a chatbot and pasting things in.
 - **You decide what it sees.** The current screen is offered, not sent. You choose when to attach it, and apps marked sensitive never attach it automatically.
-- **It can do things, not just answer.** Timers, alarms, reminders, calendar events, media, flashlight, and more run through Android with confirmation where it matters.
+- **It can do things, not just answer.** Timers, alarms, reminders (in Orbit or Samsung Reminder), calendar events, media, flashlight, and more run through Android with confirmation where it matters.
 - **It is yours to shape.** Themes, Deck shortcuts, Routines, Custom Commands, and Extensions let you build the assistant you want.
 - **It is free and open source.** No account with Orbit, no ads, and the full source is here under MPL-2.0.
 

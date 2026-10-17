@@ -3691,18 +3691,41 @@ public class OrbitSession extends VoiceInteractionSession {
 
         boolean success = result != null && result.success;
         boolean reversibleOff = success && ReversibleActionHelper.isOffState(action);
+        // Handed to another app that reports nothing back: neither a check mark nor a failure.
+        boolean handedOff = result != null
+                && DeviceActionExecutor.STATUS_HANDED_OFF.equals(result.status);
+        boolean done = success && !reversibleOff && !handedOff;
         int red = Color.rgb(239, 105, 105);
-        int accent = (success && !reversibleOff) ? UiKit.SUCCESS : red;
+        int accent = done ? UiKit.SUCCESS : handedOff ? UiKit.accent(c) : red;
         card.setBackground(UiKit.outlined(UiKit.SURFACE_2,
-                success && !reversibleOff ? blend(UiKit.SUCCESS, UiKit.SURFACE_2, 0.52f) : Color.rgb(96, 67, 72),
+                done ? blend(UiKit.SUCCESS, UiKit.SURFACE_2, 0.52f)
+                        : handedOff ? blend(accent, UiKit.SURFACE_2, 0.52f) : Color.rgb(96, 67, 72),
                 17, c));
 
         LinearLayout titleRow = new LinearLayout(c);
         titleRow.setGravity(Gravity.CENTER_VERTICAL);
         TextView title = UiKit.text(c,
-                ((success && !reversibleOff) ? "✓ " : "○ ") + actionTitle(action),
+                (done ? "✓ " : handedOff ? "↗ " : "○ ") + actionTitle(action),
                 13, accent, true);
         titleRow.addView(title, new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1));
+
+        if (result != null && ReminderDestination.offersOrbitFallback(action, result.status)) {
+            Button useOrbit = actionCardControlButton("Use Orbit Reminders", UiKit.accent(c));
+            useOrbit.setOnClickListener(v -> {
+                AssistantReply.Action orbit = ReminderDestination.orbitFallback(action);
+                if (orbit == null) return;
+                v.setEnabled(false);
+                DeviceActionExecutor.Result orbitResult = DeviceActionExecutor.executeDetailed(c, orbit);
+                ActionResultStore.Entry updated = entry == null ? null
+                        : ActionResultStore.replace(c, conversationId, entry.id, orbit, orbitResult);
+                renderActionCard(card, orbit, orbitResult, updated == null ? entry : updated);
+                scrollBottom();
+            });
+            LinearLayout.LayoutParams useOrbitLp = new LinearLayout.LayoutParams(
+                    ViewGroup.LayoutParams.WRAP_CONTENT, UiKit.dp(c, 30));
+            useOrbitLp.setMargins(UiKit.dp(c, 10), 0, 0, 0);
+            titleRow.addView(useOrbit, useOrbitLp);
+        }
 
         if (success && ReversibleActionHelper.canTurnOff(action)) {
             Button off = actionCardControlButton("Turn off", red);
@@ -3801,7 +3824,8 @@ public class OrbitSession extends VoiceInteractionSession {
         switch (type == null ? "" : type.toUpperCase(Locale.US)) {
             case "SET_ALARM": return String.format(Locale.getDefault(), "Alarm · %d:%02d", p.optInt("hour", 8), p.optInt("minute", 0));
             case "SET_TIMER": return "Timer · " + friendlyDuration(p.optInt("seconds", 60));
-            case "SET_REMINDER": return "Reminder · " + clip(p.optString("message", "Reminder"), 34);
+            case "SET_REMINDER": return (ReminderDestination.isSamsungReminder(action)
+                    ? "Samsung Reminder · " : "Reminder · ") + clip(p.optString("message", "Reminder"), 34);
             case "NAVIGATE": return "Navigate · " + clip(p.optString("query", p.optString("destination", "Destination")), 34);
             case "OPEN_APP": return "Open · " + clip(p.optString("app", "App"), 34);
             case "DIAL_CONTACT": return "Call · " + clip(p.optString("name", "Contact"), 34);

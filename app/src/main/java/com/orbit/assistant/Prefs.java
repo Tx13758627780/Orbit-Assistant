@@ -83,6 +83,8 @@ public final class Prefs {
     public static final String ASSISTANT_BUBBLE_COLOR = "assistant_bubble_color";
     public static final String CHAT_TEXT_SIZE = "chat_text_size";
     public static final String GALLERY_APP_PACKAGE = "gallery_app_package";
+    /** Default reminder destination, {@link ReminderDestination#ORBIT} or {@link ReminderDestination#SAMSUNG}. */
+    public static final String REMINDER_APP = "reminder_app";
     public static final String LELO_MODE = "lelo_mode";
     public static final String BACKGROUND_NOTIFICATIONS = "background_notifications";
     public static final String WEATHER_LOCATION = "weather_location";
@@ -309,7 +311,7 @@ public final class Prefs {
             MODEL, REASONING, INTELLIGENCE_MODE, AI_DEFAULT_MODEL, AI_DEFAULT_STRENGTH,
             AI_MODEL_FAVORITES, AI_MODEL_RECENTS, AI_PROVIDER_DEFAULTS, ACCENT, USER_BUBBLE_COLOR,
             ASSISTANT_BUBBLE_COLOR, CHAT_TEXT_SIZE, WEATHER_LOCATION, WEATHER_UNITS, APP_FONT,
-            QUICK_SETTINGS_ROUTINE_ID, PAGE_TRANSITION, OVERLAY_STYLE,
+            QUICK_SETTINGS_ROUTINE_ID, PAGE_TRANSITION, OVERLAY_STYLE, REMINDER_APP,
             THEME_SURFACE, THEME_BACKGROUND, THEME_ID, THEME_NAME, THEME_MATERIAL,
             THEME_PRO_BACKGROUND_EFFECT_COLOR));
     private static final Set<String> BACKUP_BOOLEAN_KEYS = new HashSet<>(Arrays.asList(

@@ -4,7 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
-/** Fires a stored one-time Orbit reminder. */
+/** Fires a stored Orbit reminder, and books the next time of a repeating one. */
 public final class ReminderReceiver extends BroadcastReceiver {
     public static final String EXTRA_REMINDER_ID = "reminder_id";
 
@@ -13,7 +13,10 @@ public final class ReminderReceiver extends BroadcastReceiver {
         String id = intent.getStringExtra(EXTRA_REMINDER_ID);
         ReminderStore.Item item = ReminderStore.get(context, id);
         if (item == null) return;
-        ReminderStore.remove(context, item.id);
+        ReminderStore.Item next = item.next(System.currentTimeMillis());
+        if (next == null || !ReminderScheduler.schedule(context, next).scheduled) {
+            ReminderStore.remove(context, item.id);
+        }
         ReminderNotifier.show(context, item);
     }
 }

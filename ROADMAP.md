@@ -699,6 +699,21 @@ Betas.
 - **Live preview.** The Overlay section draws the selected style with the chosen controls and
   updates as they change
 
+### Reminder destinations - Orbit Reminders or Samsung Reminder
+
+The 0.8.5 line lets people choose where their reminders live.
+
+#### `0.8.5.0-beta.1` - choose your reminder app
+
+- **Default reminder app.** Settings, Reminders chooses Orbit Reminders or Samsung Reminder. Samsung
+  Reminder is offered only when the phone's Samsung Reminder accepts reminders from other apps
+- **Samsung Reminder through public Android entry points only.** It opens with the reminder filled in
+  and the user saves it there. Android reports nothing back, so Orbit says it opened and never that
+  the reminder was created
+- **Per-request choice.** Naming Samsung Reminder or an Orbit reminder overrides the default once
+- **Repeating Orbit reminders.** Daily and weekly
+- Existing users keep Orbit Reminders; nothing is migrated, copied or deleted
+
 ### Orbit Local 2.0 - more of Orbit, privately on the phone
 
 Orbit Local began as private offline chat. The 0.8.2 line makes it a first-class part of Orbit:

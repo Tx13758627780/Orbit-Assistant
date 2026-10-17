@@ -86,10 +86,15 @@ public final class OrbitLocalVisibilityTest {
                 componentManifest().contains("QUERY_ALL_PACKAGES"));
     }
 
-    /** Exactly one package is named. A second one needs a reason and a test of its own. */
-    @Test public void exactlyOnePackageIsNamed() {
-        assertEquals("Orbit declares visibility of its own component and nothing else",
-                java.util.Collections.singletonList(OrbitLocalComponent.PACKAGE),
+    /**
+     * Only named packages, each with a reason and a test of its own: Orbit's own component, and
+     * Samsung Reminder so Orbit can see which public reminder entry points it declares before
+     * offering it as a reminder destination (see {@code ReminderDestinationTest}).
+     */
+    @Test public void onlyTheJustifiedPackagesAreNamed() {
+        assertEquals("Orbit declares visibility of its own component and Samsung Reminder only",
+                java.util.Arrays.asList(OrbitLocalComponent.PACKAGE,
+                        ReminderDestination.SAMSUNG_PACKAGE),
                 declaredQueryPackages(mainManifest()));
     }
 

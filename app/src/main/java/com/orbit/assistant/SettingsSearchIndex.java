@@ -106,6 +106,7 @@ public final class SettingsSearchIndex {
     public static final String KEY_PERMISSIONS = "permissions";
     public static final String KEY_MEMORY = "memory";
     public static final String KEY_REMINDERS = "reminders";
+    public static final String KEY_REMINDER_APP = "reminder_app";
     public static final String KEY_PLACES = "saved_places";
     public static final String KEY_APP_PROFILES = "app_profiles";
     public static final String KEY_NOTIFICATIONS = "notifications";
@@ -340,6 +341,10 @@ public final class SettingsSearchIndex {
                 "Reminders Orbit has scheduled.",
                 S_DATA, "data", KEY_REMINDERS,
                 "reminder", "alarm", "notify", "schedule"));
+        out.add(new Entry("Default reminder app",
+                "Orbit Reminders or Samsung Reminder for new reminders.",
+                S_DATA, "data", KEY_REMINDER_APP,
+                "reminder", "samsung", "remind", "default", "app"));
         out.add(new Entry("Saved places",
                 "Home, work and other places Orbit knows.",
                 S_DATA, "data", KEY_PLACES,

@@ -126,7 +126,9 @@ public final class RemindersActivity extends Activity {
             LinearLayout card = card();
             TextView message = UiKit.text(this, item.message, 16, UiKit.TEXT, true);
             card.addView(message);
-            TextView when = UiKit.text(this, format.format(new Date(item.triggerAt)), 12, UiKit.MUTED, false);
+            String repeats = item.repeat.isEmpty() ? "" : " · Repeats " + item.repeat;
+            TextView when = UiKit.text(this, format.format(new Date(item.triggerAt)) + repeats,
+                    12, UiKit.MUTED, false);
             when.setPadding(0, UiKit.dp(this, 5), 0, 0);
             card.addView(when);
             Button cancel = secondaryButton("Cancel reminder");

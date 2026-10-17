@@ -6,7 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 
-/** AlarmManager-backed scheduler for one-time Orbit reminders. */
+/** AlarmManager-backed scheduler for Orbit reminders. */
 public final class ReminderScheduler {
     public static final class ScheduleResult {
         public final boolean scheduled;
@@ -76,7 +76,11 @@ public final class ReminderScheduler {
         long now = System.currentTimeMillis();
         for (ReminderStore.Item item : ReminderStore.list(c)) {
             if (item.triggerAt <= now) {
-                ReminderStore.remove(c, item.id);
+                // A repeating reminder whose time passed while the phone was off moves to its next
+                // time; a one-time one is gone, as before.
+                ReminderStore.Item next = item.next(now);
+                if (next != null) schedule(c, next);
+                else ReminderStore.remove(c, item.id);
                 continue;
             }
             schedule(c, item);

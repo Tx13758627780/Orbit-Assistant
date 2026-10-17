@@ -2139,18 +2139,38 @@ public class ChatActivity extends Activity {
         AssistantReply.Action action = entry.action;
         boolean success = entry.success;
         boolean reversibleOff = success && ReversibleActionHelper.isOffState(action);
+        // Handed to another app that reports nothing back: neither a check mark nor a failure.
+        boolean handedOff = DeviceActionExecutor.STATUS_HANDED_OFF.equals(entry.status);
+        boolean done = success && !reversibleOff && !handedOff;
         int red = Color.rgb(239, 105, 105);
-        int accent = (success && !reversibleOff) ? UiKit.SUCCESS : red;
+        int accent = done ? UiKit.SUCCESS : handedOff ? UiKit.accent(this) : red;
         card.setBackground(UiKit.outlined(UiKit.SURFACE_2,
-                success && !reversibleOff ? UiKit.blend(UiKit.SUCCESS, UiKit.SURFACE_2, 0.52f) : Color.rgb(96, 67, 72),
+                done ? UiKit.blend(UiKit.SUCCESS, UiKit.SURFACE_2, 0.52f)
+                        : handedOff ? UiKit.blend(accent, UiKit.SURFACE_2, 0.52f) : Color.rgb(96, 67, 72),
                 17, this));
 
         LinearLayout titleRow = new LinearLayout(this);
         titleRow.setGravity(Gravity.CENTER_VERTICAL);
         TextView title = UiKit.text(this,
-                ((success && !reversibleOff) ? "✓ " : "○ ") + actionCardTitle(action),
+                (done ? "✓ " : handedOff ? "↗ " : "○ ") + actionCardTitle(action),
                 13, accent, true);
         titleRow.addView(title, new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1));
+
+        if (ReminderDestination.offersOrbitFallback(action, entry.status)) {
+            Button useOrbit = actionCardControlButton("Use Orbit Reminders", UiKit.accent(this));
+            useOrbit.setOnClickListener(v -> {
+                AssistantReply.Action orbit = ReminderDestination.orbitFallback(action);
+                if (orbit == null) return;
+                v.setEnabled(false);
+                ActionResultStore.replace(this, conversationId, entry.id, orbit,
+                        DeviceActionExecutor.executeDetailed(this, orbit));
+                render();
+            });
+            LinearLayout.LayoutParams useOrbitLp = new LinearLayout.LayoutParams(
+                    ViewGroup.LayoutParams.WRAP_CONTENT, UiKit.dp(this, 30));
+            useOrbitLp.setMargins(UiKit.dp(this, 10), 0, 0, 0);
+            titleRow.addView(useOrbit, useOrbitLp);
+        }
 
         if (success && ReversibleActionHelper.canTurnOff(action)) {
             Button off = actionCardControlButton("Turn off", red);
@@ -2288,7 +2308,8 @@ public class ChatActivity extends Activity {
             // the user nothing about the one thing they had just asked Orbit to get right.
             case "SET_TIMER": return "Timer · "
                     + DurationParser.compactLabel(p.optInt("seconds", 60));
-            case "SET_REMINDER": return "Reminder · " + p.optString("message", "Reminder");
+            case "SET_REMINDER": return (ReminderDestination.isSamsungReminder(action)
+                    ? "Samsung Reminder · " : "Reminder · ") + p.optString("message", "Reminder");
             case "SET_ALARM": return "Alarm";
             case "NAVIGATE": return "Navigate · " + p.optString("query", p.optString("destination", "Destination"));
             case "CREATE_EVENT": return "Calendar composer · " + p.optString("title", "Event");

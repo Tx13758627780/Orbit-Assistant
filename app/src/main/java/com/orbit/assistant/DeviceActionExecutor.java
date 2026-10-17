@@ -32,6 +32,12 @@ public final class DeviceActionExecutor {
     public static final String STATUS_PERMISSION = "permission_required";
     public static final String STATUS_UNAVAILABLE = "unavailable";
     public static final String STATUS_CANCELLED = "cancelled";
+    /**
+     * Another app was opened to finish the job and the user completes it there. Android reports
+     * nothing back, so this is neither a success nor a failure Orbit can claim: it is shown as
+     * waiting, and a chain carries on past it.
+     */
+    public static final String STATUS_HANDED_OFF = "handed_off";
 
     public static final class Result {
         public final String status;
@@ -48,6 +54,10 @@ public final class DeviceActionExecutor {
 
         public static Result success(String message) {
             return new Result(STATUS_SUCCESS, message, true, true);
+        }
+
+        public static Result handedOff(String message) {
+            return new Result(STATUS_HANDED_OFF, message, true, true);
         }
 
         public static Result cancelled(String message) {
@@ -344,12 +354,26 @@ public final class DeviceActionExecutor {
         }
     }
 
+    /**
+     * Every reminder from every surface (chat, overlay, voice, Routines, widgets) arrives here, so
+     * the destination is decided once: an explicit {@code destination} on the action, otherwise
+     * the user's default. Exactly one destination is used per request; nothing is ever created in
+     * both, and a Samsung request that cannot be delivered creates nothing at all.
+     */
     private static Result setReminder(Context c, JSONObject p) {
-        if (!ReminderNotifier.notificationsAllowed(c)) {
+        String destination = ReminderDestination.forAction(c, p);
+        boolean samsung = ReminderDestination.SAMSUNG.equals(destination);
+        if (!samsung && !ReminderNotifier.notificationsAllowed(c)) {
             return Result.permission("Allow Orbit notifications so the reminder can alert you.");
         }
         String message = p.optString("message", p.optString("label", "Reminder")).trim();
         if (message.isEmpty()) message = "Reminder";
+        String repeat = p.optString("repeat", "").trim().toLowerCase(Locale.US);
+        if (repeat.equals("none") || repeat.equals("once")) repeat = "";
+        if (!samsung && !repeat.isEmpty() && !ReminderStore.isSupportedRepeat(repeat)) {
+            // Said out loud rather than quietly creating a one-time reminder in its place.
+            return Result.failed("Orbit reminders can repeat daily or weekly, not " + repeat + ".");
+        }
 
         long triggerAt = p.optLong("triggerAtMillis", 0L);
         if (triggerAt <= 0L) {
@@ -378,17 +402,44 @@ public final class DeviceActionExecutor {
         if (triggerAt <= System.currentTimeMillis() + 500L) {
             return Result.failed("Reminder time must be in the future");
         }
+        String when = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT)
+                .format(new Date(triggerAt));
+        // Recorded on the action, so its card and any retry know where this request went.
+        try { p.put("destination", destination); } catch (Exception ignored) {}
+        if (samsung) return openSamsungReminder(c, message, triggerAt, when, repeat);
 
-        ReminderStore.Item item = ReminderStore.create(message, triggerAt);
+        ReminderStore.Item item = ReminderStore.create(message, triggerAt, repeat);
         ReminderScheduler.ScheduleResult scheduled = ReminderScheduler.schedule(c, item);
         if (!scheduled.scheduled) return Result.failed(scheduled.message);
         try { p.put("reminderId", item.id).put("triggerAtMillis", triggerAt).put("message", message); }
         catch (Exception ignored) {}
 
-        String when = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT)
-                .format(new Date(triggerAt));
+        String repeats = repeat.isEmpty() ? "" : ", repeating " + repeat;
         String suffix = scheduled.exact ? "" : " (approximate timing)";
-        return Result.success("Reminder set for " + when + suffix);
+        return Result.success("Reminder set for " + when + repeats + suffix);
+    }
+
+    /**
+     * Hands the reminder to Samsung Reminder through a public entry point it declares. Samsung's
+     * own screen asks the user to save, and Android tells Orbit nothing about what happened
+     * there, so the result is a hand-off and never a claim that the reminder exists.
+     */
+    private static Result openSamsungReminder(Context c, String message, long triggerAt,
+                                              String when, String repeat) {
+        String repeatNote = repeat.isEmpty() ? "" : " Set it to repeat " + repeat + " there too.";
+        switch (ReminderDestination.samsungSupport(c)) {
+            case ReminderDestination.FULL:
+                start(c, ReminderDestination.fullIntent(message, triggerAt));
+                return Result.handedOff("Samsung Reminder opened for " + when
+                        + ". Tap Save there to keep it." + repeatNote);
+            case ReminderDestination.SHARE:
+                start(c, ReminderDestination.shareIntent(message));
+                return Result.handedOff("Samsung Reminder opened with the text. Set the time to "
+                        + when + " and tap Save there." + repeatNote);
+            default:
+                return Result.unavailable("Samsung Reminder is not available on this phone, so "
+                        + "nothing was created. You can use Orbit Reminders instead.");
+        }
     }
 
     /**

@@ -842,6 +842,14 @@ Historical entries through v0.5.11.3 were reconstructed from the original Orbit 
 
 ## 0.8 series
 
+- **v0.8.5.0-beta.1**: Choose your reminder app: reminders can now go to Samsung Reminder or stay in Orbit.
+  - Settings > Reminders has a new Default reminder app choice: Orbit Reminders or Samsung Reminder.
+  - Samsung Reminder opens with your reminder filled in and you tap Save there; Orbit never claims it was saved for you.
+  - Say "create a Samsung Reminder" or "set an Orbit reminder" to pick a destination for one reminder.
+  - Orbit Reminders can now repeat daily or weekly, like "every Friday at 8 PM".
+  - If Samsung Reminder is unavailable, nothing is created and Orbit offers to use Orbit Reminders instead.
+  - Existing users keep Orbit Reminders, and existing reminders are untouched.
+
 - **v0.8.4.1**: ChatGPT sign-in reliability and Times New Roman fixes are now Stable.
   - Orbit renews your ChatGPT session automatically, including older sessions, so requests no longer get stuck failing until you sign out and back in.
   - After an unexplained ChatGPT failure, Orbit renews the session before your next request or retry.

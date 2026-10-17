@@ -25,7 +25,10 @@ public final class OrbitApplication extends Application {
         // decided before anything reads the overlay style, and only process start is guaranteed to
         // come first. After its first run it is a single preference read.
         try {
-            Prefs.keepClassicForStableUpgrade(this, OnboardingState.packageWasUpdated(this));
+            boolean updated = OnboardingState.packageWasUpdated(this);
+            Prefs.keepClassicForStableUpgrade(this, updated);
+            // Same shape and same reason: an updating user keeps Orbit Reminders, decided once.
+            ReminderDestination.settleForInstall(this, updated);
         } catch (Exception ignored) {
             // Preferences unavailable this early: the flag stays unset and the next start decides.
         }

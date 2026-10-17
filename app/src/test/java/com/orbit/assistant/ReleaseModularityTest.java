@@ -185,14 +185,14 @@ public final class ReleaseModularityTest {
     }
 
     /**
-     * 0.8.4.1 is promoted to Stable from the tested Beta 1, so this build carries Stable metadata
+     * 0.8.5.0 Beta 1 opens the reminder-destinations line, so this build carries Beta metadata
      * and the changelog entry the release workflow builds its notes from must exist.
      */
-    @Test public void thisReleaseIsTheFixStable() {
-        assertTrue(BuildConfig.VERSION_NAME + " must be a Stable version",
-                OrbitVersion.isStable(BuildConfig.VERSION_NAME));
-        assertFalse(OrbitVersion.isBeta(BuildConfig.VERSION_NAME));
-        assertFalse(OrbitVersion.installedIsBeta());
+    @Test public void thisReleaseIsABeta() {
+        assertTrue(BuildConfig.VERSION_NAME + " must be a Beta version",
+                OrbitVersion.isBeta(BuildConfig.VERSION_NAME));
+        assertFalse(OrbitVersion.isStable(BuildConfig.VERSION_NAME));
+        assertTrue(OrbitVersion.installedIsBeta());
         assertTrue(read("CHANGELOG.md").contains("- **v" + BuildConfig.VERSION_NAME + "**:"));
     }
 

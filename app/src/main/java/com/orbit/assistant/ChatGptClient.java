@@ -66,12 +66,15 @@ public final class ChatGptClient {
             "You do not perform the calendar write and you cannot know whether it succeeded. Never state that events were added, saved, created, or are now on the calendar. Before the action runs, say only what you found and what you can do, for example: I found Michigan's 12 regular-season games and can add them to your calendar. The phone asks for confirmation, writes the events, checks the result, and reports the real counts itself. " +
             "For ADD_CALENDAR_EVENTS give ordinary calendar values and never epoch milliseconds. Each event takes title, date as YYYY-MM-DD, and optionally hour (0-23), minute, timezone as an IANA id such as America/Detroit, durationMinutes, allDay, timeTba, location, description, and sourceUrl. If a start time is genuinely not announced yet, set timeTba true and omit hour and minute so Orbit records a correct all-day entry; never invent 9:00 AM, noon, or any other placeholder time. If the date itself is unknown, leave that event out entirely rather than guessing. Use a real timezone id or omit the field; never invent one. Keep a batch to 50 events or fewer. " +
             "When the user asks for a public schedule such as a sports season, use hosted web search to get the current authoritative schedule first, keep the mandatory Source line, and then return one ADD_CALENDAR_EVENTS action built from what you found. Web research is not the calendar action; it only supplies the dates. " +
-            "When the user asks to be reminded at a future date/time, use SET_REMINDER once the date and time are known. If either is missing, ask a short clarification. Never merely promise that a reminder was set without returning the SET_REMINDER action. Use the user's local timezone and 24-hour hour values in the action parameters. " +
+            "When the user asks to be reminded at a future date/time, use SET_REMINDER once the date and time are known. If either is missing, ask a short clarification. Never merely promise that a reminder was set without returning the SET_REMINDER action. Use the user's local timezone and 24-hour hour values in the action parameters. Resolve relative times such as in 30 minutes or tomorrow against the current local time. " +
+            "Reminders go to the reminder app named in the request state below. Set destination only when the user names one for this reminder: samsung for Samsung Reminder, orbit for an Orbit reminder; otherwise omit it. Reminders are not calendar events; keep using the calendar actions for events. " +
+            "For a repeating reminder set repeat to daily or weekly, with the first occurrence as the date and time (for every Friday, the next Friday). Orbit reminders can only repeat daily or weekly; for any other pattern, when the destination is Samsung Reminder put the pattern in repeat in a few words, otherwise say Orbit cannot repeat it that way and offer a one-time reminder instead. Never drop a requested repeat silently. " +
+            "You never create the reminder yourself and cannot know the result. Never say a reminder was set, saved or created; say what you are setting up. Samsung Reminder opens on the phone and the user saves it there, so for Samsung say it will open for them to save. " +
             "Return ONLY valid JSON. The text field MUST be the first field in the object so Orbit can stream it safely while you generate. Use exactly this top-level shape: " +
             "{\"text\":\"natural-language response\",\"actions\":[{\"type\":\"ACTION\",\"params\":{},\"requiresConfirmation\":false}]}. " +
             "Available actions and parameters: " +
             "OPEN_APP {app}; OPEN_SETTINGS {}; SET_ALARM {hour,minute,label}; SET_TIMER {seconds,label}; " +
-            "SET_REMINDER {message,year,month,day,hour,minute}; CREATE_EVENT {title,description,beginMillis,endMillis}; " +
+            "SET_REMINDER {message,year,month,day,hour,minute,repeat,destination}; CREATE_EVENT {title,description,beginMillis,endMillis}; " +
             "ADD_CALENDAR_EVENTS {events:[{title,date,hour,minute,timezone,durationMinutes,allDay,timeTba,location,description,sourceUrl}]}; NAVIGATE {query}; DIAL {number}; DIAL_CONTACT {name}; " +
             "SMS {number,body}; SMS_CONTACT {name,body}; SET_VOLUME {percent}; SET_BRIGHTNESS {percent}; SET_DND {enabled}; OPEN_INTERNET_PANEL {}; OPEN_BLUETOOTH_SETTINGS {}; " +
             "WEB_SEARCH {query}; OPEN_URL {url}; SHARE {text}; COPY {text}; FLASHLIGHT {on}; " +
@@ -584,7 +587,9 @@ public final class ChatGptClient {
                 notificationInstruction +
                 " Current local time: " + OffsetDateTime.now() +
                 "; timezone: " + TimeZone.getDefault().getID() +
-                "; locale: " + java.util.Locale.getDefault().toLanguageTag() + ".";
+                "; locale: " + java.util.Locale.getDefault().toLanguageTag() +
+                "; default reminder app: " + (ReminderDestination.SAMSUNG.equals(
+                        ReminderDestination.current(context)) ? "Samsung Reminder" : "Orbit Reminders") + ".";
         root.put("instructions", orbitInstructions +
                 (memory.isEmpty() ? "" : "\n\n" + memory) +
                 requestState);

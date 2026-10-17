@@ -65,12 +65,17 @@
           installed and Android has just reported "Install success". That is exactly how
           v0.7.7.5-beta.2 came to show "Not installed" for a component sitting on the device.
 
-          Deliberately one <package> entry and never QUERY_ALL_PACKAGES. Orbit needs to see its own
-          optional component and nothing else. Visibility is not trust: OrbitLocalComponent still
+          Never QUERY_ALL_PACKAGES. Orbit needs to see its own optional component, plus the one
+          named reminder app below, and nothing else. Visibility is not trust: OrbitLocalComponent still
           requires the exact package, Orbit's permanent signing certificate, the matching version,
           and a compatible protocol before a single request crosses the boundary.
         -->
         <package android:name="com.orbit.assistant.local" />
+        <!--
+          Samsung Reminder, so Orbit can see which public entry points it declares
+          (ACTION_CREATE_REMINDER, plain-text share) before offering it as a reminder destination.
+        -->
+        <package android:name="com.samsung.android.app.reminder" />
         <intent>
             <action android:name="android.speech.RecognitionService" />
         </intent>

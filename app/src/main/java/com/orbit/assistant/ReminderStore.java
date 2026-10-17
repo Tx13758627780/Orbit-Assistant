@@ -7,36 +7,56 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 
-/** Durable local store for one-time Orbit reminders. */
+/** Durable local store for Orbit reminders: one-time, or repeating daily or weekly. */
 public final class ReminderStore {
     private static final String PREFS = "orbit_reminders_v1";
     private static final String KEY = "items";
     private static final int MAX_ITEMS = 100;
+
+    public static final String REPEAT_DAILY = "daily";
+    public static final String REPEAT_WEEKLY = "weekly";
 
     public static final class Item {
         public final String id;
         public final String message;
         public final long triggerAt;
         public final long createdAt;
+        /** Empty for a one-time reminder, otherwise {@link #REPEAT_DAILY} or {@link #REPEAT_WEEKLY}. */
+        public final String repeat;
 
         public Item(String id, String message, long triggerAt, long createdAt) {
+            this(id, message, triggerAt, createdAt, "");
+        }
+
+        public Item(String id, String message, long triggerAt, long createdAt, String repeat) {
             this.id = id == null ? "" : id;
             this.message = message == null ? "" : message.trim();
             this.triggerAt = triggerAt;
             this.createdAt = createdAt;
+            this.repeat = isSupportedRepeat(repeat) ? repeat : "";
+        }
+
+        /** The same reminder at its next time after {@code now}, or null for a one-time reminder. */
+        public Item next(long now) {
+            if (repeat.isEmpty()) return null;
+            return new Item(id, message, nextOccurrence(triggerAt, repeat, now), createdAt, repeat);
         }
 
         JSONObject toJson() throws Exception {
-            return new JSONObject()
+            JSONObject o = new JSONObject()
                     .put("id", id)
                     .put("message", message)
                     .put("triggerAt", triggerAt)
                     .put("createdAt", createdAt);
+            // Absent on one-time reminders, so their stored and backed-up form is unchanged.
+            if (!repeat.isEmpty()) o.put("repeat", repeat);
+            return o;
         }
 
         static Item fromJson(JSONObject o) {
@@ -46,14 +66,38 @@ public final class ReminderStore {
             long triggerAt = o.optLong("triggerAt", 0L);
             long createdAt = o.optLong("createdAt", 0L);
             if (id.isEmpty() || message.isEmpty() || triggerAt <= 0L) return null;
-            return new Item(id, message, triggerAt, createdAt);
+            return new Item(id, message, triggerAt, createdAt, o.optString("repeat", ""));
         }
     }
 
     private ReminderStore() {}
 
     public static Item create(String message, long triggerAt) {
-        return new Item(UUID.randomUUID().toString(), message, triggerAt, System.currentTimeMillis());
+        return create(message, triggerAt, "");
+    }
+
+    public static Item create(String message, long triggerAt, String repeat) {
+        return new Item(UUID.randomUUID().toString(), message, triggerAt, System.currentTimeMillis(),
+                repeat);
+    }
+
+    public static boolean isSupportedRepeat(String repeat) {
+        return REPEAT_DAILY.equals(repeat) || REPEAT_WEEKLY.equals(repeat);
+    }
+
+    /**
+     * The first time after {@code now} on the same wall-clock time as {@code from}. Stepped on a
+     * local Calendar, so a weekly 8 PM reminder stays at 8 PM across a daylight-saving change, and
+     * a phone that was off for a while skips the missed times instead of firing them in a burst.
+     * ponytail: steps from the last time, so a reminder set inside the hour a spring-forward skips
+     * (02:30) stays an hour later afterwards; store the chosen hour and minute if that matters.
+     */
+    static long nextOccurrence(long from, String repeat, long now) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(from);
+        int step = REPEAT_WEEKLY.equals(repeat) ? 7 : 1;
+        do { cal.add(Calendar.DAY_OF_YEAR, step); } while (cal.getTimeInMillis() <= now);
+        return cal.getTimeInMillis();
     }
 
     public static synchronized List<Item> list(Context c) {

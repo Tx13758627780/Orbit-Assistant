@@ -677,12 +677,14 @@ public class RoutinesActivity extends Activity {
         boolean success = result != null && result.success;
         boolean reversibleOff = success && ReversibleActionHelper.isOffState(action);
         int red = Color.rgb(239, 105, 105);
-        int tone = (success && !reversibleOff) ? UiKit.SUCCESS : red;
+        boolean handedOff = result != null
+                && DeviceActionExecutor.STATUS_HANDED_OFF.equals(result.status);
+        int tone = handedOff ? UiKit.accent(this) : (success && !reversibleOff) ? UiKit.SUCCESS : red;
         row.setBackground(UiKit.outlined(UiKit.SURFACE_2, UiKit.withAlpha(tone, 110), 15, this));
 
         LinearLayout titleRow = new LinearLayout(this);
         titleRow.setGravity(Gravity.CENTER_VERTICAL);
-        String prefix = (success && !reversibleOff) ? "✓ " : (success ? "○ " : "! ");
+        String prefix = handedOff ? "↗ " : (success && !reversibleOff) ? "✓ " : (success ? "○ " : "! ");
         TextView title = UiKit.text(this, prefix + RoutineActionCatalog.title(action), 13, tone, true);
         titleRow.addView(title, new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1));
 

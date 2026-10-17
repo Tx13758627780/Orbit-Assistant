@@ -170,6 +170,21 @@ public final class OrbitActionEngine {
         DeviceActionExecutor.Result safeResult = result == null
                 ? DeviceActionExecutor.Result.failed("Action did not finish") : result;
         if (listener != null) listener.onStep(action, safeResult, index, actions.size());
+        if (DeviceActionExecutor.STATUS_HANDED_OFF.equals(safeResult.status)
+                && index + 1 < actions.size()) {
+            // Another app is now in front waiting for the user, and a later step that opens its
+            // own screen would bury it (two Samsung reminders would leave only the second to
+            // save). The rest is shown as not run rather than run out of sight or dropped silently.
+            if (listener != null) {
+                for (int i = index + 1; i < actions.size(); i++) {
+                    listener.onStep(actions.get(i), DeviceActionExecutor.Result.cancelled(
+                            "Not run · finish in the app Orbit opened, then ask again"),
+                            i, actions.size());
+                }
+                listener.onFinished(false, index + 1, actions.size());
+            }
+            return;
+        }
         if (safeResult.shouldContinue) {
             advance(context, actions, flow, index, confirmationHandler, listener);
         } else if (listener != null) {

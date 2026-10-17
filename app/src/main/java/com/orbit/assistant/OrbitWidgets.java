@@ -181,7 +181,7 @@ public final class OrbitWidgets {
                     .putExtra(ChatActivity.EXTRA_FOCUS_COMPOSER, true)
                     .putExtra(ChatActivity.EXTRA_INITIAL_DRAFT, "Remind me ");
             return new Slot("Reminder", R.drawable.ic_widget_reminder,
-                    "Create an Orbit reminder", activityPendingIntent(context, intent, widgetId, slot, type));
+                    "Create a reminder", activityPendingIntent(context, intent, widgetId, slot, type));
         }
         Intent intent = new Intent(context, ChatActivity.class)
                 .putExtra(ChatActivity.EXTRA_FOCUS_COMPOSER, true);

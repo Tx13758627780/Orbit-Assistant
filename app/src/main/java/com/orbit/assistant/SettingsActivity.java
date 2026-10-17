@@ -766,6 +766,14 @@ public class SettingsActivity extends Activity implements UiKit.AppearanceListen
         TextView remindersSection = sectionTitle("REMINDERS", "data");
         LinearLayout remindersCard = card();
         tagSectionCard(remindersCard, "data");
+        TextView reminderAppLabel = label("Default reminder app");
+        reminderAppLabel.setPadding(UiKit.dp(this, 2), 0, 0, UiKit.dp(this, 6));
+        TextView reminderAppNote = UiKit.text(this, "", 12, UiKit.MUTED, false);
+        reminderAppNote.setLineSpacing(0, 1.12f);
+        reminderAppNote.setPadding(0, 0, 0, UiKit.dp(this, 12));
+        remindersCard.addView(controlGroup(SettingsSearchIndex.KEY_REMINDER_APP,
+                reminderAppLabel, reminderAppSelector(reminderAppNote), null));
+        remindersCard.addView(reminderAppNote);
         TextView remindersHelp = UiKit.text(this,
                 "Orbit reminders are scheduled locally on this device and appear as notifications at the time you choose.",
                 13, UiKit.MUTED, false);
@@ -2277,6 +2285,37 @@ public class SettingsActivity extends Activity implements UiKit.AppearanceListen
             Prefs.setOverlayStyle(this, key);
             refreshOverlayPreview();
         });
+        selector.setLayoutParams(selectorLp());
+        return selector;
+    }
+
+    /**
+     * Samsung Reminder is offered only when this phone's Samsung Reminder declares an entry point
+     * Orbit can use, or when it is already the stored choice, so a restored or now-unavailable
+     * choice is shown honestly rather than silently swapped for Orbit Reminders.
+     */
+    private View reminderAppSelector(TextView note) {
+        boolean offerSamsung = ReminderDestination.samsungSupport(this) != ReminderDestination.NONE
+                || ReminderDestination.SAMSUNG.equals(ReminderDestination.current(this));
+        String[] keys = offerSamsung
+                ? new String[]{ReminderDestination.ORBIT, ReminderDestination.SAMSUNG}
+                : new String[]{ReminderDestination.ORBIT};
+        String[] labels = offerSamsung
+                ? new String[]{"Orbit Reminders", "Samsung Reminder"}
+                : new String[]{"Orbit Reminders"};
+        Runnable explain = () -> note.setText(ReminderDestination.SAMSUNG.equals(
+                ReminderDestination.current(this))
+                ? ReminderDestination.samsungExplanation(this)
+                + " You can still say “set an Orbit reminder” for any one reminder."
+                : "New reminders are saved and alerted by Orbit."
+                + (offerSamsung ? " Say “create a Samsung Reminder” to use Samsung Reminder once."
+                : " " + ReminderDestination.samsungExplanation(this)));
+        explain.run();
+        LinearLayout selector = menuSelector(labels,
+                indexOf(keys, ReminderDestination.current(this)), (position, label) -> {
+                    ReminderDestination.set(this, keys[Math.max(0, Math.min(keys.length - 1, position))]);
+                    explain.run();
+                });
         selector.setLayoutParams(selectorLp());
         return selector;
     }
