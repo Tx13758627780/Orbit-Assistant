@@ -666,7 +666,7 @@ public class SettingsActivity extends Activity implements UiKit.AppearanceListen
         tagSectionCard(setupCard, "setup");
         assistantStatus = UiKit.text(this, OrbitText.get(R.string.ui_checking_assistant_status_4430bc, "Checking assistant status…"), 15, UiKit.TEXT, true);
         setupCard.addView(assistantStatus);
-        TextView desc = UiKit.text(this, OrbitText.get(R.string.ui_make_orbit_the_default_digital_assistant_a_e6e29a, "Make Orbit the default Digital assistant app, then map Side button → Long press → Digital assistant in Samsung Settings."), 13, UiKit.MUTED, false);
+        TextView desc = UiKit.text(this, OrbitText.get(R.string.ui_after_choosing_orbit_as_the_default_assist_b3cab3, "After choosing Orbit as the default assistant, use whichever assistant button or gesture Android exposes on your device."), 13, UiKit.MUTED, false);
         desc.setPadding(0, UiKit.dp(this, 7), 0, UiKit.dp(this, 14));
         setupCard.addView(desc);
         assistantAction = primaryButton(OrbitText.get(R.string.ui_make_orbit_default_assistant_7a5864, "Make Orbit default assistant"));
