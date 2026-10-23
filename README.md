@@ -1,3 +1,5 @@
+> **社区简体中文初版**：[中文说明](README.zh-CN.md) · [验证记录](docs/LOCALIZATION_VALIDATION.md)。本分支基于 v0.8.4.1；下方发行徽章指向上游官方版本。
+
 <div align="center">
 
 # Orbit Assistant

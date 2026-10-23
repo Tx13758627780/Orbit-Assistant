@@ -45,7 +45,7 @@ public final class AiProvidersActivity extends Activity {
     /** Hears the OpenRouter sign-in while this screen is visible. */
     private final OpenRouterAuth.Listener openRouterListener = new OpenRouterAuth.Listener() {
         @Override public void onConnected() {
-            Toast.makeText(AiProvidersActivity.this, "OpenRouter connected", Toast.LENGTH_SHORT).show();
+            Toast.makeText(AiProvidersActivity.this, OrbitText.get(R.string.ui_openrouter_connected_2d8899, "OpenRouter connected"), Toast.LENGTH_SHORT).show();
             refreshOpenRouterCatalog(false);
             refreshCards();
         }
@@ -121,7 +121,7 @@ public final class AiProvidersActivity extends Activity {
         back.setImageResource(R.drawable.ic_back);
         back.setImageTintList(ColorStateList.valueOf(UiKit.accent(this)));
         back.setBackground(UiKit.ripple(UiKit.SURFACE_2, UiKit.accent(this), 18, this));
-        back.setContentDescription("Back");
+        back.setContentDescription(OrbitText.get(R.string.ui_back_76900f, "Back"));
         back.setPadding(UiKit.dp(this, 10), UiKit.dp(this, 10),
                 UiKit.dp(this, 10), UiKit.dp(this, 10));
         back.setOnClickListener(v -> navigation.performBack());
@@ -131,14 +131,14 @@ public final class AiProvidersActivity extends Activity {
         LinearLayout titles = new LinearLayout(this);
         titles.setOrientation(LinearLayout.VERTICAL);
         titles.setPadding(UiKit.dp(this, 13), 0, 0, 0);
-        titles.addView(UiKit.text(this, "AI Providers", 24, UiKit.TEXT, true));
-        titles.addView(UiKit.text(this, "Choose what Orbit thinks with", 13, UiKit.MUTED, false));
+        titles.addView(UiKit.text(this, OrbitText.get(R.string.ui_ai_providers_5aef60, "AI Providers"), 24, UiKit.TEXT, true));
+        titles.addView(UiKit.text(this, OrbitText.get(R.string.ui_choose_what_orbit_thinks_with_0f34df, "Choose what Orbit thinks with"), 13, UiKit.MUTED, false));
         header.addView(titles, new LinearLayout.LayoutParams(
                 0, ViewGroup.LayoutParams.WRAP_CONTENT, 1));
         page.addView(header);
 
         TextView intro = UiKit.text(this,
-                "Choose how Orbit thinks. Features and capabilities vary by provider.",
+                OrbitText.get(R.string.ui_choose_how_orbit_thinks_features_and_capab_808740, "Choose how Orbit thinks. Features and capabilities vary by provider."),
                 13, UiKit.MUTED, false);
         intro.setLineSpacing(0, 1.14f);
         LinearLayout.LayoutParams introLp = new LinearLayout.LayoutParams(
@@ -191,10 +191,10 @@ public final class AiProvidersActivity extends Activity {
         titleRow.addView(UiKit.text(this, provider.displayName(), 17, UiKit.TEXT, true),
                 new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1));
         if (active) {
-            titleRow.addView(pill("Active", UiKit.onAccent(this),
+            titleRow.addView(pill(OrbitText.get(R.string.ui_active_923406, "Active"), UiKit.onAccent(this),
                     UiKit.rounded(UiKit.accent(this), 99, this)));
         } else if (status == AiProvider.Status.COMING_SOON) {
-            titleRow.addView(pill("Experimental", UiKit.MUTED,
+            titleRow.addView(pill(OrbitText.get(R.string.ui_experimental_3dc9f5, "Experimental"), UiKit.MUTED,
                     UiKit.outlined(UiKit.SURFACE_2, Color.rgb(53, 58, 72), 99, this)));
         }
         card.addView(titleRow);
@@ -247,16 +247,16 @@ public final class AiProvidersActivity extends Activity {
         List<String> out = new ArrayList<>();
         switch (status) {
             case READY:
-                if (!active) out.add(ACTION_USE);
-                out.add(ACTION_MANAGE);
+                if (!active) out.add(OrbitText.get(R.string.ui_use_this_provider_67bf11, ACTION_USE));
+                out.add(OrbitText.get(R.string.ui_manage_5a2344, ACTION_MANAGE));
                 break;
             case NEEDS_SETUP:
             case NOT_INSTALLED:
             case COMING_SOON:
-                out.add(ACTION_SET_UP);
+                out.add(OrbitText.get(R.string.ui_set_up_4da10f, ACTION_SET_UP));
                 break;
             default: // UNSUPPORTED: nothing to enable, but the explanation stays reachable.
-                out.add(ACTION_DETAILS);
+                out.add(OrbitText.get(R.string.ui_details_45989d, ACTION_DETAILS));
         }
         return out;
     }
@@ -268,8 +268,8 @@ public final class AiProvidersActivity extends Activity {
     static List<String> actionLabels(String providerId, AiProvider.Status status, boolean active) {
         if (Prefs.PROVIDER_OPENROUTER.equals(providerId) && status == AiProvider.Status.NEEDS_SETUP) {
             List<String> out = new ArrayList<>();
-            out.add(ACTION_OPENROUTER_SIGN_IN);
-            out.add(ACTION_USE_API_KEY);
+            out.add(OrbitText.get(R.string.ui_sign_in_with_openrouter_ec2200, ACTION_OPENROUTER_SIGN_IN));
+            out.add(OrbitText.get(R.string.ui_use_api_key_instead_91c16a, ACTION_USE_API_KEY));
             return out;
         }
         return actionLabels(status, active);
@@ -280,8 +280,8 @@ public final class AiProvidersActivity extends Activity {
         List<String> labels = actionLabels(provider.id(), status, active);
         boolean first = true;
         for (String label : labels) {
-            boolean primary = ACTION_USE.equals(label) || ACTION_OPENROUTER_SIGN_IN.equals(label)
-                    || (ACTION_SET_UP.equals(label) && status != AiProvider.Status.COMING_SOON);
+            boolean primary = OrbitText.get(R.string.ui_use_this_provider_67bf11, ACTION_USE).equals(label) || OrbitText.get(R.string.ui_sign_in_with_openrouter_ec2200, ACTION_OPENROUTER_SIGN_IN).equals(label)
+                    || (OrbitText.get(R.string.ui_set_up_4da10f, ACTION_SET_UP).equals(label) && status != AiProvider.Status.COMING_SOON);
             View action;
             LinearLayout.LayoutParams lp;
             if (primary) {
@@ -312,19 +312,19 @@ public final class AiProvidersActivity extends Activity {
     }
 
     private void runAction(AiProvider provider, String label) {
-        if (ACTION_USE.equals(label)) {
+        if (OrbitText.get(R.string.ui_use_this_provider_67bf11, ACTION_USE).equals(label)) {
             if (AiProviders.select(this, provider.id())) {
-                Toast.makeText(this, provider.displayName() + " is now Orbit's active provider",
+                Toast.makeText(this, provider.displayName() + OrbitText.get(R.string.ui_is_now_orbit_s_active_provider_2612e2, " is now Orbit's active provider"),
                         Toast.LENGTH_SHORT).show();
                 refreshCards();
             }
             return;
         }
-        if (ACTION_OPENROUTER_SIGN_IN.equals(label)) {
+        if (OrbitText.get(R.string.ui_sign_in_with_openrouter_ec2200, ACTION_OPENROUTER_SIGN_IN).equals(label)) {
             startOpenRouterSignIn();
             return;
         }
-        if (ACTION_USE_API_KEY.equals(label)) {
+        if (OrbitText.get(R.string.ui_use_api_key_instead_91c16a, ACTION_USE_API_KEY).equals(label)) {
             showOpenRouterKeyEntry();
             return;
         }
@@ -359,13 +359,13 @@ public final class AiProvidersActivity extends Activity {
     /** Compact positive capabilities, in scanning order. */
     static List<String> capabilityChips(AiCapabilities caps) {
         List<String> chips = new ArrayList<>();
-        if (caps.streaming) chips.add("Live replies");
-        if (caps.deviceActions) chips.add("Device actions");
-        if (caps.images) chips.add("Screens & images");
-        if (caps.hostedWebSearch) chips.add("Web search");
-        if (caps.richWebMedia) chips.add("Sourced images");
-        if (caps.offline) chips.add("Works offline");
-        if (!caps.needsCredentials) chips.add("No account");
+        if (caps.streaming) chips.add(OrbitText.get(R.string.ui_live_replies_b313ab, "Live replies"));
+        if (caps.deviceActions) chips.add(OrbitText.get(R.string.ui_device_actions_4b0730, "Device actions"));
+        if (caps.images) chips.add(OrbitText.get(R.string.ui_screens_images_09ba03, "Screens & images"));
+        if (caps.hostedWebSearch) chips.add(OrbitText.get(R.string.ui_web_search_7711fa, "Web search"));
+        if (caps.richWebMedia) chips.add(OrbitText.get(R.string.ui_sourced_images_a5de69, "Sourced images"));
+        if (caps.offline) chips.add(OrbitText.get(R.string.ui_works_offline_099187, "Works offline"));
+        if (!caps.needsCredentials) chips.add(OrbitText.get(R.string.ui_no_account_79eb5c, "No account"));
         return chips;
     }
 
@@ -373,8 +373,8 @@ public final class AiProvidersActivity extends Activity {
     static String capabilityLimitation(AiCapabilities caps) {
         if (caps.deviceActions) return "";
         return caps.images
-                ? "Can't run device actions yet"
-                : "Can't run device actions or read screens and images yet";
+                ? OrbitText.get(R.string.ui_can_t_run_device_actions_yet_7fdac2, "Can't run device actions yet")
+                : OrbitText.get(R.string.ui_can_t_run_device_actions_or_read_screens_a_665d94, "Can't run device actions or read screens and images yet");
     }
 
     private void manage(AiProvider provider) {
@@ -418,16 +418,16 @@ public final class AiProvidersActivity extends Activity {
                     .addCategory(Intent.CATEGORY_BROWSABLE));
         } catch (Exception e) {
             OpenRouterAuth.cancel();
-            showOpenRouterSignInFailure("Orbit could not open a web browser on this phone.");
+            showOpenRouterSignInFailure(OrbitText.get(R.string.ui_orbit_could_not_open_a_web_browser_on_this_3ed952, "Orbit could not open a web browser on this phone."));
         }
     }
 
     private void showOpenRouterSignInFailure(String message) {
         AlertDialog dialog = new AlertDialog.Builder(this)
-                .setTitle("OpenRouter was not connected")
+                .setTitle(OrbitText.get(R.string.ui_openrouter_was_not_connected_56d044, "OpenRouter was not connected"))
                 .setMessage(message)
-                .setPositiveButton(ACTION_USE_API_KEY, (d, w) -> showOpenRouterKeyEntry())
-                .setNegativeButton("Close", null)
+                .setPositiveButton(OrbitText.get(R.string.ui_use_api_key_instead_91c16a, ACTION_USE_API_KEY), (d, w) -> showOpenRouterKeyEntry())
+                .setNegativeButton(OrbitText.get(R.string.ui_close_7d9eb7, "Close"), null)
                 .create();
         UiKit.styleOrbitDialog(dialog, this, false);
         dialog.show();
@@ -438,7 +438,7 @@ public final class AiProvidersActivity extends Activity {
         ProviderCatalogRepository.refreshAsync(this, Prefs.PROVIDER_OPENROUTER, (changed, error) ->
                 runOnUiThread(() -> {
                     if (announce || error.contains("rejected")) {
-                        Toast.makeText(this, error.isEmpty() ? "OpenRouter models are up to date"
+                        Toast.makeText(this, error.isEmpty() ? OrbitText.get(R.string.ui_openrouter_models_are_up_to_date_ffec21, "OpenRouter models are up to date")
                                 : error, error.isEmpty() ? Toast.LENGTH_SHORT : Toast.LENGTH_LONG).show();
                     }
                     refreshCards();
@@ -455,31 +455,31 @@ public final class AiProvidersActivity extends Activity {
         int pad = UiKit.dp(this, 22);
         wrap.setPadding(pad, UiKit.dp(this, 8), pad, 0);
         String status = AiProviders.byId(Prefs.PROVIDER_OPENROUTER).statusDetail(this);
-        TextView note = UiKit.text(this, status + ". Usage is billed to your OpenRouter account. "
-                + "Auto uses OpenRouter only if you switch it on in Settings > Intelligence > Auto.",
+        TextView note = UiKit.text(this, status + OrbitText.get(R.string.ui_usage_is_billed_to_your_openrouter_account_880b2f, ". Usage is billed to your OpenRouter account. ")
+                + OrbitText.get(R.string.ui_auto_uses_openrouter_only_if_you_switch_it_d40dbc, "Auto uses OpenRouter only if you switch it on in Settings > Intelligence > Auto."),
                 13, UiKit.MUTED, false);
         note.setLineSpacing(0, 1.14f);
         wrap.addView(note);
         AlertDialog[] holder = new AlertDialog[1];
-        addSheetButton(wrap, "Check connection", false, () -> {
-            Toast.makeText(this, "Checking OpenRouter connection…", Toast.LENGTH_SHORT).show();
+        addSheetButton(wrap, OrbitText.get(R.string.ui_check_connection_be5dff, "Check connection"), false, () -> {
+            Toast.makeText(this, OrbitText.get(R.string.ui_checking_openrouter_connection_76a9f3, "Checking OpenRouter connection…"), Toast.LENGTH_SHORT).show();
             ProviderCatalogRepository.checkOpenRouterAsync(this, (changed, error) ->
                     runOnUiThread(() -> {
-                        Toast.makeText(this, error.isEmpty() ? "OpenRouter is connected" : error,
+                        Toast.makeText(this, error.isEmpty() ? OrbitText.get(R.string.ui_openrouter_is_connected_85f922, "OpenRouter is connected") : error,
                                 error.isEmpty() ? Toast.LENGTH_SHORT : Toast.LENGTH_LONG).show();
                         if (error.isEmpty()) refreshOpenRouterCatalog(false);
                     }));
         }, holder);
-        addSheetButton(wrap, "Refresh models", false, () -> refreshOpenRouterCatalog(true), holder);
-        addSheetButton(wrap, "Reconnect with OpenRouter", false, this::startOpenRouterSignIn, holder);
+        addSheetButton(wrap, OrbitText.get(R.string.ui_refresh_models_049030, "Refresh models"), false, () -> refreshOpenRouterCatalog(true), holder);
+        addSheetButton(wrap, OrbitText.get(R.string.ui_reconnect_with_openrouter_6e9bfb, "Reconnect with OpenRouter"), false, this::startOpenRouterSignIn, holder);
         addSheetButton(wrap, SecureStore.OPENROUTER_SOURCE_MANUAL.equals(
-                SecureStore.openRouterKeySource(this)) ? "Replace API key" : ACTION_USE_API_KEY,
+                SecureStore.openRouterKeySource(this)) ? OrbitText.get(R.string.ui_replace_api_key_f97925, "Replace API key") : OrbitText.get(R.string.ui_use_api_key_instead_91c16a, ACTION_USE_API_KEY),
                 false, this::showOpenRouterKeyEntry, holder);
-        addSheetButton(wrap, "Disconnect", true, this::confirmOpenRouterDisconnect, holder);
+        addSheetButton(wrap, OrbitText.get(R.string.ui_disconnect_acfc5b, "Disconnect"), true, this::confirmOpenRouterDisconnect, holder);
         AlertDialog dialog = new AlertDialog.Builder(this)
                 .setTitle("OpenRouter")
                 .setView(wrap)
-                .setNegativeButton("Close", null)
+                .setNegativeButton(OrbitText.get(R.string.ui_close_7d9eb7, "Close"), null)
                 .create();
         holder[0] = dialog;
         UiKit.styleOrbitDialog(dialog, this, false);
@@ -503,15 +503,15 @@ public final class AiProvidersActivity extends Activity {
     /** Disconnect removes the key and Auto's permission; chats and their history stay. */
     private void confirmOpenRouterDisconnect() {
         AlertDialog dialog = new AlertDialog.Builder(this)
-                .setTitle("Disconnect OpenRouter?")
-                .setMessage("Orbit removes its OpenRouter key from this phone and stops using "
-                        + "OpenRouter, including in Auto. Your chats and their history stay. To "
-                        + "revoke the key itself, delete it in your OpenRouter account settings.")
-                .setNegativeButton("Cancel", null)
-                .setPositiveButton("Disconnect", (d, w) -> {
+                .setTitle(OrbitText.get(R.string.ui_disconnect_openrouter_068f16, "Disconnect OpenRouter?"))
+                .setMessage(OrbitText.get(R.string.ui_orbit_removes_its_openrouter_key_from_this_487e65, "Orbit removes its OpenRouter key from this phone and stops using ")
+                        + OrbitText.get(R.string.ui_openrouter_including_in_auto_your_chats_an_09847f, "OpenRouter, including in Auto. Your chats and their history stay. To ")
+                        + OrbitText.get(R.string.ui_revoke_the_key_itself_delete_it_in_your_op_22426a, "revoke the key itself, delete it in your OpenRouter account settings."))
+                .setNegativeButton(OrbitText.get(R.string.ui_cancel_19766e, "Cancel"), null)
+                .setPositiveButton(OrbitText.get(R.string.ui_disconnect_acfc5b, "Disconnect"), (d, w) -> {
                     OpenRouterAuth.cancel();
                     SecureStore.clearOpenRouterKey(this);
-                    Toast.makeText(this, "OpenRouter disconnected", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, OrbitText.get(R.string.ui_openrouter_disconnected_619cb1, "OpenRouter disconnected"), Toast.LENGTH_SHORT).show();
                     refreshCards();
                 })
                 .create();
@@ -530,13 +530,13 @@ public final class AiProvidersActivity extends Activity {
         int pad = UiKit.dp(this, 22);
         wrap.setPadding(pad, UiKit.dp(this, 8), pad, 0);
         TextView note = UiKit.text(this,
-                "Paste an API key created in your OpenRouter account. Orbit encrypts it with Android Keystore, never backs it up, and never shows it again. Signing in with OpenRouter does this for you.",
+                OrbitText.get(R.string.ui_paste_an_api_key_created_in_your_openroute_fc7230, "Paste an API key created in your OpenRouter account. Orbit encrypts it with Android Keystore, never backs it up, and never shows it again. Signing in with OpenRouter does this for you."),
                 13, UiKit.MUTED, false);
         note.setLineSpacing(0, 1.14f);
         wrap.addView(note);
 
         EditText input = new EditText(this);
-        input.setHint(SecureStore.hasOpenRouterKey(this) ? "Key saved · enter a new key to replace it" : "sk-or-…");
+        input.setHint(SecureStore.hasOpenRouterKey(this) ? OrbitText.get(R.string.ui_key_saved_enter_a_new_key_to_replace_it_1b9dd2, "Key saved · enter a new key to replace it") : "sk-or-…");
         input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
         input.setTextColor(UiKit.TEXT);
         input.setHintTextColor(UiKit.MUTED);
@@ -547,27 +547,27 @@ public final class AiProvidersActivity extends Activity {
         wrap.addView(input, inputLp);
 
         AlertDialog dialog = new AlertDialog.Builder(this)
-                .setTitle("OpenRouter API key")
+                .setTitle(OrbitText.get(R.string.ui_openrouter_api_key_89616b, "OpenRouter API key"))
                 .setView(wrap)
-                .setNegativeButton("Cancel", null)
-                .setPositiveButton("Save and check", (d, w) -> {
+                .setNegativeButton(OrbitText.get(R.string.ui_cancel_19766e, "Cancel"), null)
+                .setPositiveButton(OrbitText.get(R.string.ui_save_and_check_0a9315, "Save and check"), (d, w) -> {
                     String value = input.getText().toString().trim();
                     if (value.isEmpty()) return;
                     if (!SecureStore.saveOpenRouterKey(this, value,
                             SecureStore.OPENROUTER_SOURCE_MANUAL)) {
-                        Toast.makeText(this, "Could not store the key securely, so it was not saved",
+                        Toast.makeText(this, OrbitText.get(R.string.ui_could_not_store_the_key_securely_so_it_was_3eb68b, "Could not store the key securely, so it was not saved"),
                                 Toast.LENGTH_LONG).show();
                         return;
                     }
-                    Toast.makeText(this, "Checking OpenRouter connection…", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, OrbitText.get(R.string.ui_checking_openrouter_connection_76a9f3, "Checking OpenRouter connection…"), Toast.LENGTH_SHORT).show();
                     ProviderCatalogRepository.checkOpenRouterAsync(this, (changed, error) ->
                             runOnUiThread(() -> {
                                 if (ProviderCatalogRepository.OPENROUTER_REJECTED.equals(error)) {
                                     SecureStore.clearOpenRouterKey(this);
-                                    Toast.makeText(this, "OpenRouter rejected that key, so it was not saved.",
+                                    Toast.makeText(this, OrbitText.get(R.string.ui_openrouter_rejected_that_key_so_it_was_not_88ef8f, "OpenRouter rejected that key, so it was not saved."),
                                             Toast.LENGTH_LONG).show();
                                 } else {
-                                    Toast.makeText(this, error.isEmpty() ? "OpenRouter connected" : error,
+                                    Toast.makeText(this, error.isEmpty() ? OrbitText.get(R.string.ui_openrouter_connected_2d8899, "OpenRouter connected") : error,
                                             error.isEmpty() ? Toast.LENGTH_SHORT : Toast.LENGTH_LONG).show();
                                     refreshOpenRouterCatalog(false);
                                 }
@@ -588,13 +588,13 @@ public final class AiProvidersActivity extends Activity {
         int pad = UiKit.dp(this, 22);
         wrap.setPadding(pad, UiKit.dp(this, 8), pad, 0);
         TextView note = UiKit.text(this,
-                "Enter a developer API key from " + name + ". Orbit encrypts it with Android Keystore, never backs it up, and never shows the saved key again.",
+                OrbitText.get(R.string.ui_enter_a_developer_api_key_from_74bc51, "Enter a developer API key from ") + name + OrbitText.get(R.string.ui_orbit_encrypts_it_with_android_keystore_ne_f4a47b, ". Orbit encrypts it with Android Keystore, never backs it up, and never shows the saved key again."),
                 13, UiKit.MUTED, false);
         note.setLineSpacing(0, 1.14f);
         wrap.addView(note);
 
         EditText input = new EditText(this);
-        input.setHint(saved ? "Key saved · enter a new key to replace it" : "API key");
+        input.setHint(saved ? OrbitText.get(R.string.ui_key_saved_enter_a_new_key_to_replace_it_1b9dd2, "Key saved · enter a new key to replace it") : OrbitText.get(R.string.ui_api_key_16f0ee, "API key"));
         input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
         input.setTextColor(UiKit.TEXT);
         input.setHintTextColor(UiKit.MUTED);
@@ -605,20 +605,20 @@ public final class AiProvidersActivity extends Activity {
         wrap.addView(input, inputLp);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this)
-                .setTitle(name + " connection")
+                .setTitle(name + OrbitText.get(R.string.ui_connection_a0ac96, " connection"))
                 .setView(wrap)
-                .setNegativeButton("Cancel", null)
-                .setPositiveButton("Save and check", (d, w) -> {
+                .setNegativeButton(OrbitText.get(R.string.ui_cancel_19766e, "Cancel"), null)
+                .setPositiveButton(OrbitText.get(R.string.ui_save_and_check_0a9315, "Save and check"), (d, w) -> {
                     String value = input.getText().toString().trim();
                     if (value.isEmpty()) return;
                     boolean stored = anthropic ? SecureStore.saveAnthropicKey(this, value)
                             : SecureStore.saveXaiKey(this, value);
                     if (!stored) {
-                        Toast.makeText(this, "Could not store the key securely, so it was not saved",
+                        Toast.makeText(this, OrbitText.get(R.string.ui_could_not_store_the_key_securely_so_it_was_3eb68b, "Could not store the key securely, so it was not saved"),
                                 Toast.LENGTH_LONG).show();
                         return;
                     }
-                    Toast.makeText(this, "Checking " + name + " connection…", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, OrbitText.get(R.string.ui_checking_cd1263, "Checking ") + name + OrbitText.get(R.string.ui_connection_9d8942, " connection…"), Toast.LENGTH_SHORT).show();
                     ProviderCatalogRepository.refreshAsync(this, provider, (changed, error) ->
                             runOnUiThread(() -> {
                                 // A credential the provider explicitly rejected is not kept as a
@@ -630,14 +630,14 @@ public final class AiProvidersActivity extends Activity {
                                     else SecureStore.clearXaiKey(this);
                                 }
                                 Toast.makeText(this, error.isEmpty()
-                                                ? name + " connected" : error,
+                                                ? name + OrbitText.get(R.string.ui_connected_6ab2ba, " connected") : error,
                                         error.isEmpty() ? Toast.LENGTH_SHORT : Toast.LENGTH_LONG).show();
                                 refreshCards();
                             }));
                 });
-        if (saved) builder.setNeutralButton("Remove key", (d, w) -> {
+        if (saved) builder.setNeutralButton(OrbitText.get(R.string.ui_remove_key_81c45f, "Remove key"), (d, w) -> {
             if (anthropic) SecureStore.clearAnthropicKey(this); else SecureStore.clearXaiKey(this);
-            Toast.makeText(this, name + " key removed", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, name + OrbitText.get(R.string.ui_key_removed_f762b3, " key removed"), Toast.LENGTH_SHORT).show();
             refreshCards();
         });
         AlertDialog dialog = builder.create();

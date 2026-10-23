@@ -104,7 +104,7 @@ public class RoutineBuilderActivity extends Activity {
 
         LinearLayout header = new LinearLayout(this);
         header.setGravity(Gravity.CENTER_VERTICAL);
-        ImageButton back = iconButton(R.drawable.ic_back, "Back");
+        ImageButton back = iconButton(R.drawable.ic_back, OrbitText.get(R.string.ui_back_76900f, "Back"));
         back.setOnClickListener(v -> navigation.performBack());
         LinearLayout.LayoutParams backLp = new LinearLayout.LayoutParams(
                 UiKit.dp(this, 48), UiKit.dp(this, 48));
@@ -112,15 +112,15 @@ public class RoutineBuilderActivity extends Activity {
         header.addView(back, backLp);
         LinearLayout titles = new LinearLayout(this);
         titles.setOrientation(LinearLayout.VERTICAL);
-        titles.addView(UiKit.text(this, "Create with Orbit", 25, UiKit.TEXT, true));
-        titles.addView(UiKit.text(this, "Describe a routine", 12, UiKit.MUTED, false));
+        titles.addView(UiKit.text(this, OrbitText.get(R.string.ui_create_with_orbit_b3052f, "Create with Orbit"), 25, UiKit.TEXT, true));
+        titles.addView(UiKit.text(this, OrbitText.get(R.string.ui_describe_a_routine_a7a2e7, "Describe a routine"), 12, UiKit.MUTED, false));
         header.addView(titles, new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1));
         page.addView(header);
 
         TextView intro = UiKit.text(this,
-                "Describe what you want the routine to do and Orbit will turn it into steps using "
-                        + "the actions it already supports. Nothing runs and nothing is saved until "
-                        + "you review it and press Save routine.",
+                OrbitText.get(R.string.ui_describe_what_you_want_the_routine_to_do_a_39e23a, "Describe what you want the routine to do and Orbit will turn it into steps using ")
+                        + OrbitText.get(R.string.ui_the_actions_it_already_supports_nothing_ru_961c02, "the actions it already supports. Nothing runs and nothing is saved until ")
+                        + OrbitText.get(R.string.ui_you_review_it_and_press_save_routine_b28e49, "you review it and press Save routine."),
                 14, UiKit.MUTED, false);
         intro.setLineSpacing(0, 1.13f);
         LinearLayout.LayoutParams introLp = new LinearLayout.LayoutParams(
@@ -129,7 +129,7 @@ public class RoutineBuilderActivity extends Activity {
         page.addView(intro, introLp);
 
         description = new EditText(this);
-        description.setHint("Turn on Do Not Disturb, set brightness to 20%, and lower media volume");
+        description.setHint(OrbitText.get(R.string.ui_turn_on_do_not_disturb_set_brightness_to_2_d8bf01, "Turn on Do Not Disturb, set brightness to 20%, and lower media volume"));
         description.setHintTextColor(UiKit.MUTED);
         description.setTextColor(UiKit.TEXT);
         description.setTextSize(15);
@@ -142,22 +142,22 @@ public class RoutineBuilderActivity extends Activity {
                 UiKit.dp(this, 14), UiKit.dp(this, 12));
         description.setBackground(UiKit.outlined(UiKit.SURFACE,
                 UiKit.withAlpha(UiKit.accent(this), 46), 18, this));
-        description.setContentDescription("Routine description");
+        description.setContentDescription(OrbitText.get(R.string.ui_routine_description_f84985, "Routine description"));
         page.addView(description, new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
-        buildButton = primaryButton("Build draft");
+        buildButton = primaryButton(OrbitText.get(R.string.ui_build_draft_b5e249, "Build draft"));
         buildButton.setOnClickListener(v -> startBuild());
         LinearLayout.LayoutParams buildLp = new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, UiKit.dp(this, 50));
         buildLp.setMargins(0, UiKit.dp(this, 14), 0, 0);
         page.addView(buildButton, buildLp);
 
-        page.addView(sectionTitle("EXAMPLES"));
+        page.addView(sectionTitle(OrbitText.get(R.string.ui_examples_04a81e, "EXAMPLES")));
         for (String example : new String[]{
-                "Bedtime: turn on Do Not Disturb, set brightness to 15%, and lower media volume",
-                "Focus mode: Do Not Disturb on and brightness at 35%",
-                "Gaming: flashlight off, media volume 80%, brightness 90%"}) {
+                OrbitText.get(R.string.ui_bedtime_turn_on_do_not_disturb_set_brightn_9f8ff5, "Bedtime: turn on Do Not Disturb, set brightness to 15%, and lower media volume"),
+                OrbitText.get(R.string.ui_focus_mode_do_not_disturb_on_and_brightnes_7eb842, "Focus mode: Do Not Disturb on and brightness at 35%"),
+                OrbitText.get(R.string.ui_gaming_flashlight_off_media_volume_80_brig_3297d5, "Gaming: flashlight off, media volume 80%, brightness 90%")}) {
             page.addView(exampleRow(example));
         }
 
@@ -188,7 +188,7 @@ public class RoutineBuilderActivity extends Activity {
         if (building) return;
         String text = description.getText().toString().trim();
         if (text.isEmpty()) {
-            showMessage("Describe the routine you want Orbit to build.");
+            showMessage(OrbitText.get(R.string.ui_describe_the_routine_you_want_orbit_to_bui_2985cc, "Describe the routine you want Orbit to build."));
             return;
         }
         building = true;
@@ -224,7 +224,7 @@ public class RoutineBuilderActivity extends Activity {
         if (buildButton != null) {
             buildButton.setEnabled(true);
             buildButton.setAlpha(1f);
-            buildButton.setText("Build draft");
+            buildButton.setText(OrbitText.get(R.string.ui_build_draft_b5e249, "Build draft"));
         }
         stopThinking();
     }
@@ -239,7 +239,7 @@ public class RoutineBuilderActivity extends Activity {
         // Decorative: the adjacent label is what carries the state for screen readers.
         thinking.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_NO);
         row.addView(thinking, new LinearLayout.LayoutParams(UiKit.dp(this, 30), UiKit.dp(this, 30)));
-        TextView label = UiKit.text(this, "Building your routine…", 15, UiKit.TEXT, false);
+        TextView label = UiKit.text(this, OrbitText.get(R.string.ui_building_your_routine_817e37, "Building your routine…"), 15, UiKit.TEXT, false);
         label.setPadding(UiKit.dp(this, 12), 0, 0, 0);
         row.addView(label);
         thinkingRow.addView(row);
@@ -259,7 +259,7 @@ public class RoutineBuilderActivity extends Activity {
     private void showMessage(String message) {
         resultArea.removeAllViews();
         LinearLayout card = card();
-        card.addView(UiKit.text(this, "Couldn't build that routine", 16, UiKit.TEXT, true));
+        card.addView(UiKit.text(this, OrbitText.get(R.string.ui_couldn_t_build_that_routine_e328fb, "Couldn't build that routine"), 16, UiKit.TEXT, true));
         TextView note = UiKit.text(this, message, 13, UiKit.MUTED, false);
         note.setLineSpacing(0, 1.1f);
         note.setPadding(0, UiKit.dp(this, 6), 0, 0);
@@ -276,7 +276,7 @@ public class RoutineBuilderActivity extends Activity {
         card.addView(UiKit.text(this, draft.name, 17, UiKit.TEXT, true));
 
         if (draft.hasTrigger()) {
-            TextView automaticLabel = UiKit.text(this, "AUTOMATIC", 11, UiKit.MUTED, true);
+            TextView automaticLabel = UiKit.text(this, OrbitText.get(R.string.ui_automatic_7f15ac, "AUTOMATIC"), 11, UiKit.MUTED, true);
             automaticLabel.setLetterSpacing(0.14f);
             automaticLabel.setPadding(0, UiKit.dp(this, 10), 0, UiKit.dp(this, 3));
             card.addView(automaticLabel);
@@ -288,18 +288,18 @@ public class RoutineBuilderActivity extends Activity {
                 card.addView(state);
             }
             TextView inactive = UiKit.text(this,
-                    "Nothing is scheduled until you review and save the routine.",
+                    OrbitText.get(R.string.ui_nothing_is_scheduled_until_you_review_and_645944, "Nothing is scheduled until you review and save the routine."),
                     12, UiKit.MUTED, false);
             inactive.setPadding(0, UiKit.dp(this, 4), 0, 0);
             card.addView(inactive);
-            TextView stepsLabel = UiKit.text(this, "STEPS", 11, UiKit.MUTED, true);
+            TextView stepsLabel = UiKit.text(this, OrbitText.get(R.string.ui_steps_979cfa, "STEPS"), 11, UiKit.MUTED, true);
             stepsLabel.setLetterSpacing(0.14f);
             stepsLabel.setPadding(0, UiKit.dp(this, 12), 0, UiKit.dp(this, 3));
             card.addView(stepsLabel);
         }
 
         TextView steps = UiKit.text(this,
-                draft.actions.size() == 1 ? "1 step" : draft.actions.size() + " steps",
+                draft.actions.size() == 1 ? OrbitText.get(R.string.ui_1_step_3ce601, "1 step") : draft.actions.size() + OrbitText.get(R.string.ui_steps_947f2e, " steps"),
                 12, UiKit.MUTED, false);
         steps.setPadding(0, UiKit.dp(this, 3), 0, UiKit.dp(this, 10));
         card.addView(steps);
@@ -307,7 +307,7 @@ public class RoutineBuilderActivity extends Activity {
         List<String> summaries = draft.stepSummaries();
         for (int i = 0; i < summaries.size(); i++) {
             TextView step = UiKit.text(this, "✓  " + summaries.get(i), 13, UiKit.TEXT, false);
-            step.setContentDescription("Step " + (i + 1) + ": " + summaries.get(i));
+            step.setContentDescription(OrbitText.get(R.string.ui_step_474a98, "Step ") + (i + 1) + ": " + summaries.get(i));
             step.setPadding(0, UiKit.dp(this, 4), 0, UiKit.dp(this, 4));
             card.addView(step);
         }
@@ -315,7 +315,7 @@ public class RoutineBuilderActivity extends Activity {
 
         if (!draft.warnings.isEmpty()) {
             LinearLayout warn = card();
-            warn.addView(UiKit.text(this, "Needs attention", 15, UiKit.DANGER, true));
+            warn.addView(UiKit.text(this, OrbitText.get(R.string.ui_needs_attention_c1ebc7, "Needs attention"), 15, UiKit.DANGER, true));
             for (String warning : draft.warnings) {
                 TextView line = UiKit.text(this, "•  " + warning, 13, UiKit.MUTED, false);
                 line.setPadding(0, UiKit.dp(this, 5), 0, 0);
@@ -326,7 +326,7 @@ public class RoutineBuilderActivity extends Activity {
 
         if (!automationNotice.isEmpty()) {
             LinearLayout notice = card();
-            notice.addView(UiKit.text(this, "Scheduling", 15, UiKit.TEXT, true));
+            notice.addView(UiKit.text(this, OrbitText.get(R.string.ui_scheduling_ed5c58, "Scheduling"), 15, UiKit.TEXT, true));
             TextView line = UiKit.text(this, automationNotice, 13, UiKit.MUTED, false);
             line.setLineSpacing(0, 1.1f);
             line.setPadding(0, UiKit.dp(this, 5), 0, 0);
@@ -334,7 +334,7 @@ public class RoutineBuilderActivity extends Activity {
             resultArea.addView(notice, cardLp());
         }
 
-        Button review = primaryButton("Review routine");
+        Button review = primaryButton(OrbitText.get(R.string.ui_review_routine_e3d4f8, "Review routine"));
         review.setOnClickListener(v -> {
             // Opens the ordinary editor with an unsaved draft. Nothing is stored until Save.
             startActivity(new Intent(this, RoutineEditorActivity.class)
@@ -345,7 +345,7 @@ public class RoutineBuilderActivity extends Activity {
         reviewLp.setMargins(0, UiKit.dp(this, 4), 0, UiKit.dp(this, 8));
         resultArea.addView(review, reviewLp);
 
-        Button change = secondaryButton("Change description");
+        Button change = secondaryButton(OrbitText.get(R.string.ui_change_description_3be1d2, "Change description"));
         change.setOnClickListener(v -> {
             draft = null;
             automationNotice = "";

@@ -75,11 +75,11 @@ public final class ProtectedDialConfirmationView {
         // answer is the one reached without effort.
         Button cancel = ghostButton(c, EmergencyDialGuard.cancelLabel(), compact);
         cancel.setContentDescription(EmergencyDialGuard.cancelLabel()
-                + ", close this without opening the dialer");
+                + OrbitText.get(R.string.ui_close_this_without_opening_the_dialer_10cdf3, ", close this without opening the dialer"));
         actions.addView(cancel);
 
         Button confirm = accentPillButton(c, EmergencyDialGuard.confirmLabel(), compact);
-        confirm.setContentDescription(EmergencyDialGuard.confirmLabel() + " for " + number);
+        confirm.setContentDescription(EmergencyDialGuard.confirmLabel() + OrbitText.get(R.string.ui_for_ccb2f8, " for ") + number);
         LinearLayout.LayoutParams confirmLp = new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         confirmLp.setMarginStart(UiKit.dp(c, 6));

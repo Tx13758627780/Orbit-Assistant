@@ -34,7 +34,7 @@ public final class ComposerActionState {
     }
 
     public static String descriptionFor(boolean stop) {
-        return stop ? STOP_DESCRIPTION : SEND_DESCRIPTION;
+        return stop ? OrbitText.get(R.string.ui_stop_response_d5ca57, STOP_DESCRIPTION) : OrbitText.get(R.string.ui_send_message_93a26b, SEND_DESCRIPTION);
     }
 
     /** Puts the decision on the control without touching anything that would move the composer. */

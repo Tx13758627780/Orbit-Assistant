@@ -103,10 +103,10 @@ public final class GlassStylePreview extends FrameLayout {
         control.setPadding(UiKit.dp(c, 12), UiKit.dp(c, 11), UiKit.dp(c, 12), UiKit.dp(c, 11));
         control.setElevation(UiKit.dp(c, OrbitGlass.RESTING_ELEVATION_DP));
 
-        label = UiKit.text(c, "Search", 12, UiKit.TEXT, false);
+        label = UiKit.text(c, OrbitText.get(R.string.ui_search_49c266, "Search"), 12, UiKit.TEXT, false);
         control.addView(label, new LinearLayout.LayoutParams(0,
                 ViewGroup.LayoutParams.WRAP_CONTENT, 1f));
-        hint = UiKit.text(c, "Chats", 11, UiKit.MUTED, false);
+        hint = UiKit.text(c, OrbitText.get(R.string.ui_chats_ef5b40, "Chats"), 11, UiKit.MUTED, false);
         control.addView(hint);
         cluster.addView(control, new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
@@ -125,7 +125,7 @@ public final class GlassStylePreview extends FrameLayout {
         compact.setGravity(Gravity.CENTER);
         compact.setPadding(UiKit.dp(c, 12), UiKit.dp(c, 8), UiKit.dp(c, 12), UiKit.dp(c, 9));
         compact.setElevation(UiKit.dp(c, OrbitGlass.RESTING_ELEVATION_DP));
-        compactLabel = UiKit.text(c, "All", 11.5f, UiKit.TEXT, false);
+        compactLabel = UiKit.text(c, OrbitText.get(R.string.ui_all_a52ace, "All"), 11.5f, UiKit.TEXT, false);
         compact.addView(compactLabel);
         compactRow.addView(compact, new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));

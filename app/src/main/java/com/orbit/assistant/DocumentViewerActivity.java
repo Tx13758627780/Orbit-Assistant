@@ -201,7 +201,7 @@ public final class DocumentViewerActivity extends Activity {
 
         LinearLayout header = new LinearLayout(this);
         header.setGravity(Gravity.CENTER_VERTICAL);
-        ImageButton back = iconButton(R.drawable.ic_back, "Close document viewer");
+        ImageButton back = iconButton(R.drawable.ic_back, OrbitText.get(R.string.ui_close_document_viewer_a0352d, "Close document viewer"));
         back.setOnClickListener(v -> finish());
         header.addView(back, new LinearLayout.LayoutParams(UiKit.dp(this, 48), UiKit.dp(this, 48)));
 
@@ -218,7 +218,7 @@ public final class DocumentViewerActivity extends Activity {
         // Without this the header lays itself out title-first and pushes them off the edge.
         title.setMinWidth(0);
 
-        searchButton = iconButton(R.drawable.ic_search, "Search document");
+        searchButton = iconButton(R.drawable.ic_search, OrbitText.get(R.string.ui_search_document_bd4233, "Search document"));
         searchButton.setOnClickListener(v -> toggleSearch());
         LinearLayout.LayoutParams searchButtonLp = new LinearLayout.LayoutParams(
                 UiKit.dp(this, 48), UiKit.dp(this, 48));
@@ -231,7 +231,7 @@ public final class DocumentViewerActivity extends Activity {
         //
         // Absent entirely while the Vault is switched off. Nothing else on this screen changes:
         // reading, searching and Ask Orbit are untouched by a preference about saving.
-        saveToVaultButton = iconButton(R.drawable.ic_vault, "Save this page to your Vault");
+        saveToVaultButton = iconButton(R.drawable.ic_vault, OrbitText.get(R.string.ui_save_this_page_to_your_vault_9016b6, "Save this page to your Vault"));
         saveToVaultButton.setEnabled(false);
         saveToVaultButton.setAlpha(0.5f);
         saveToVaultButton.setOnClickListener(v -> savePageToVault());
@@ -241,7 +241,7 @@ public final class DocumentViewerActivity extends Activity {
 
         // The visible label stays two words. The whole action — "Ask Orbit about this page" — is
         // what a screen reader is told, which is where the extra words are worth their room.
-        askButton = actionButton("Ask Orbit", "Ask Orbit about this page");
+        askButton = actionButton(OrbitText.get(R.string.ui_ask_orbit_18ea29, "Ask Orbit"), OrbitText.get(R.string.ui_ask_orbit_about_this_page_7449bb, "Ask Orbit about this page"));
         askButton.setEnabled(false);
         askButton.setAlpha(0.5f);
         askButton.setOnClickListener(v -> askAboutPage());
@@ -258,7 +258,7 @@ public final class DocumentViewerActivity extends Activity {
         searchLp.setMargins(0, UiKit.dp(this, 6), 0, UiKit.dp(this, 8));
         root.addView(searchPanel, searchLp);
 
-        opening = UiKit.text(this, "Opening document…", 13, UiKit.MUTED, false);
+        opening = UiKit.text(this, OrbitText.get(R.string.ui_opening_document_49ef50, "Opening document…"), 13, UiKit.MUTED, false);
         opening.setGravity(Gravity.CENTER);
         root.addView(opening, new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, 0, 1f));
@@ -272,17 +272,17 @@ public final class DocumentViewerActivity extends Activity {
 
         LinearLayout controls = new LinearLayout(this);
         controls.setGravity(Gravity.CENTER);
-        previous = iconButton(R.drawable.ic_back, "Previous page");
+        previous = iconButton(R.drawable.ic_back, OrbitText.get(R.string.ui_previous_page_1208ec, "Previous page"));
         previous.setOnClickListener(v -> step(-1));
         controls.addView(previous,
                 new LinearLayout.LayoutParams(UiKit.dp(this, 48), UiKit.dp(this, 48)));
-        pageButton = actionButton("Page", "Choose page");
+        pageButton = actionButton(OrbitText.get(R.string.ui_page_0a30a8, "Page"), OrbitText.get(R.string.ui_choose_page_e47dfa, "Choose page"));
         pageButton.setOnClickListener(v -> showPagePicker());
         LinearLayout.LayoutParams pageLp = new LinearLayout.LayoutParams(
                 0, UiKit.dp(this, 44), 1f);
         pageLp.setMargins(UiKit.dp(this, 10), 0, UiKit.dp(this, 10), 0);
         controls.addView(pageButton, pageLp);
-        next = iconButton(R.drawable.ic_back, "Next page");
+        next = iconButton(R.drawable.ic_back, OrbitText.get(R.string.ui_next_page_c08ac7, "Next page"));
         next.setRotation(180f);
         next.setOnClickListener(v -> step(1));
         controls.addView(next,
@@ -301,7 +301,7 @@ public final class DocumentViewerActivity extends Activity {
                 UiKit.withAlpha(UiKit.accent(this), 100), 16, this));
         searchInput = new EditText(this);
         searchInput.setSingleLine(true);
-        searchInput.setHint("Search document");
+        searchInput.setHint(OrbitText.get(R.string.ui_search_document_bd4233, "Search document"));
         searchInput.setTextColor(UiKit.TEXT);
         searchInput.setHintTextColor(UiKit.MUTED);
         searchInput.setTextSize(14);
@@ -314,7 +314,7 @@ public final class DocumentViewerActivity extends Activity {
         // while a search box a few characters narrower costs nothing.
         inputLp.setMarginEnd(UiKit.dp(this, 4));
         panel.addView(searchInput, inputLp);
-        searchResult = UiKit.text(this, "Indexing…", 11.5f, UiKit.MUTED, true);
+        searchResult = UiKit.text(this, OrbitText.get(R.string.ui_indexing_740c08, "Indexing…"), 11.5f, UiKit.MUTED, true);
         searchResult.setGravity(Gravity.CENTER);
         searchResult.setMaxLines(2);
         // Sized to its own content, with a floor so the panel does not shuffle sideways on every
@@ -322,16 +322,16 @@ public final class DocumentViewerActivity extends Activity {
         searchResult.setMinWidth(UiKit.dp(this, 78));
         panel.addView(searchResult, new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT, UiKit.dp(this, 44)));
-        searchPrevious = iconButton(R.drawable.ic_back, "Previous search result");
+        searchPrevious = iconButton(R.drawable.ic_back, OrbitText.get(R.string.ui_previous_search_result_63b932, "Previous search result"));
         searchPrevious.setOnClickListener(v -> moveSearch(-1));
         panel.addView(searchPrevious,
                 new LinearLayout.LayoutParams(UiKit.dp(this, 48), UiKit.dp(this, 48)));
-        searchNext = iconButton(R.drawable.ic_back, "Next search result");
+        searchNext = iconButton(R.drawable.ic_back, OrbitText.get(R.string.ui_next_search_result_8fb2c3, "Next search result"));
         searchNext.setRotation(180f);
         searchNext.setOnClickListener(v -> moveSearch(1));
         panel.addView(searchNext,
                 new LinearLayout.LayoutParams(UiKit.dp(this, 48), UiKit.dp(this, 48)));
-        ImageButton close = iconButton(R.drawable.ic_close, "Close document search");
+        ImageButton close = iconButton(R.drawable.ic_close, OrbitText.get(R.string.ui_close_document_search_acc8e7, "Close document search"));
         close.setOnClickListener(v -> toggleSearch());
         panel.addView(close,
                 new LinearLayout.LayoutParams(UiKit.dp(this, 48), UiKit.dp(this, 48)));
@@ -349,8 +349,8 @@ public final class DocumentViewerActivity extends Activity {
     private void documentOpened(int count) {
         if (destroyed) return;
         if (count <= 0 || count > MAX_PAGES) {
-            showOpenError(count <= 0 ? "This PDF has no readable pages."
-                    : "This PDF has too many pages to open safely.");
+            showOpenError(count <= 0 ? OrbitText.get(R.string.ui_this_pdf_has_no_readable_pages_68f813, "This PDF has no readable pages.")
+                    : OrbitText.get(R.string.ui_this_pdf_has_too_many_pages_to_open_safely_dc0f9c, "This PDF has too many pages to open safely."));
             return;
         }
         model = new DocumentViewerModel(count, restoredPage);
@@ -372,7 +372,7 @@ public final class DocumentViewerActivity extends Activity {
     private void addPage(int pageNumber) {
         FrameLayout container = new FrameLayout(this);
         container.setFocusable(true);
-        container.setContentDescription("Page " + (pageNumber + 1) + " of " + model.pageCount());
+        container.setContentDescription(OrbitText.get(R.string.ui_page_607693, "Page ") + (pageNumber + 1) + OrbitText.get(R.string.ui_of_a4282e, " of ") + model.pageCount());
         Page page = new Page(container);
         pages.add(page);
         pager.addPage(container, new AttachmentPagerView.Page() {
@@ -402,7 +402,7 @@ public final class DocumentViewerActivity extends Activity {
         });
         page.container.addView(image, new FrameLayout.LayoutParams(
                 maxWidth, ViewGroup.LayoutParams.MATCH_PARENT, Gravity.CENTER));
-        TextView state = UiKit.text(this, "Rendering page…", 13, UiKit.MUTED, false);
+        TextView state = UiKit.text(this, OrbitText.get(R.string.ui_rendering_page_839d47, "Rendering page…"), 13, UiKit.MUTED, false);
         state.setGravity(Gravity.CENTER);
         page.container.addView(state, new FrameLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
@@ -426,7 +426,7 @@ public final class DocumentViewerActivity extends Activity {
             furnish(page);
             if (page.bitmap != null) continue;
             page.requested = true;
-            page.showState("Rendering page…");
+            page.showState(OrbitText.get(R.string.ui_rendering_page_839d47, "Rendering page…"));
             renderer.render(generation, i, Math.max(1200, pager.getWidth() * 2));
         }
     }
@@ -444,7 +444,7 @@ public final class DocumentViewerActivity extends Activity {
         page.bitmap = bitmap;
         page.image.setBitmap(bitmap);
         page.state.setVisibility(View.GONE);
-        page.container.setContentDescription("Page " + (pageNumber + 1) + " of "
+        page.container.setContentDescription(OrbitText.get(R.string.ui_page_607693, "Page ") + (pageNumber + 1) + OrbitText.get(R.string.ui_of_a4282e, " of ")
                 + model.pageCount());
         // A page re-rendered while a search result is on it gets its highlights back; the bitmap
         // changed, the geometry did not.
@@ -459,7 +459,7 @@ public final class DocumentViewerActivity extends Activity {
     }
 
     private void showOpenError(String message) {
-        opening.setText(message == null ? "Orbit could not open this PDF." : message);
+        opening.setText(message == null ? OrbitText.get(R.string.ui_orbit_could_not_open_this_pdf_b48788, "Orbit could not open this PDF.") : message);
         opening.setTextColor(UiKit.MUTED);
         pager.setVisibility(View.GONE);
         previous.setEnabled(false);
@@ -483,7 +483,7 @@ public final class DocumentViewerActivity extends Activity {
     private void updateChrome() {
         if (model == null) return;
         pageButton.setText(model.counterText());
-        pageButton.setContentDescription(model.counterText() + ", choose page");
+        pageButton.setContentDescription(model.counterText() + OrbitText.get(R.string.ui_choose_page_a78804, ", choose page"));
         previous.setEnabled(model.hasPrevious());
         previous.setAlpha(model.hasPrevious() ? 1f : 0.35f);
         next.setEnabled(model.hasNext());
@@ -503,7 +503,7 @@ public final class DocumentViewerActivity extends Activity {
         SeekBar seek = new SeekBar(this);
         seek.setMax(Math.max(0, model.pageCount() - 1));
         seek.setProgress(model.page());
-        seek.setContentDescription("Choose document page");
+        seek.setContentDescription(OrbitText.get(R.string.ui_choose_document_page_1563b5, "Choose document page"));
         seek.setProgressTintList(ColorStateList.valueOf(UiKit.accent(this)));
         seek.setThumbTintList(ColorStateList.valueOf(UiKit.accent(this)));
         body.addView(seek, new LinearLayout.LayoutParams(
@@ -512,16 +512,16 @@ public final class DocumentViewerActivity extends Activity {
         seek.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override public void onProgressChanged(SeekBar bar, int progress, boolean fromUser) {
                 target[0] = progress;
-                chosen.setText("Page " + (progress + 1) + " of " + model.pageCount());
+                chosen.setText(OrbitText.get(R.string.ui_page_607693, "Page ") + (progress + 1) + OrbitText.get(R.string.ui_of_a4282e, " of ") + model.pageCount());
             }
             @Override public void onStartTrackingTouch(SeekBar bar) {}
             @Override public void onStopTrackingTouch(SeekBar bar) {}
         });
         AlertDialog dialog = new AlertDialog.Builder(this)
-                .setTitle("Choose page")
+                .setTitle(OrbitText.get(R.string.ui_choose_page_e47dfa, "Choose page"))
                 .setView(body)
-                .setNegativeButton("Cancel", null)
-                .setPositiveButton("Go", (d, which) -> goToPage(target[0], true))
+                .setNegativeButton(OrbitText.get(R.string.ui_cancel_19766e, "Cancel"), null)
+                .setPositiveButton(OrbitText.get(R.string.ui_go_6cc851, "Go"), (d, which) -> goToPage(target[0], true))
                 .create();
         UiKit.styleOrbitDialog(dialog, this, false);
         dialog.show();
@@ -556,7 +556,7 @@ public final class DocumentViewerActivity extends Activity {
                     textIndex = index;
                     searchInput.setEnabled(true);
                     searchResult.setText(index.hasSearchableText()
-                            ? "Type to search" : "No searchable text found");
+                            ? OrbitText.get(R.string.ui_type_to_search_8f5af6, "Type to search") : OrbitText.get(R.string.ui_no_searchable_text_found_7b54d5, "No searchable text found"));
                     performSearch(searchInput.getText().toString());
                     updateAskEnabled();
                 });
@@ -564,7 +564,7 @@ public final class DocumentViewerActivity extends Activity {
                 runOnUiThread(() -> {
                     if (destroyed) return;
                     searchInput.setEnabled(false);
-                    searchResult.setText("Search unavailable");
+                    searchResult.setText(OrbitText.get(R.string.ui_search_unavailable_23ae80, "Search unavailable"));
                     setSearchNavigationEnabled(false);
                     updateAskEnabled();
                 });
@@ -574,7 +574,7 @@ public final class DocumentViewerActivity extends Activity {
 
     private void performSearch(String query) {
         if (textIndex == null) {
-            searchResult.setText("Indexing…");
+            searchResult.setText(OrbitText.get(R.string.ui_indexing_740c08, "Indexing…"));
             setSearchNavigationEnabled(false);
             return;
         }
@@ -600,15 +600,15 @@ public final class DocumentViewerActivity extends Activity {
         if (matches.isEmpty()) {
             boolean blank = searchInput.getText().toString().trim().isEmpty();
             searchResult.setText(blank ? (textIndex != null && !textIndex.hasSearchableText()
-                    ? "No searchable text found" : "Type to search") : "No results");
+                    ? OrbitText.get(R.string.ui_no_searchable_text_found_7b54d5, "No searchable text found") : OrbitText.get(R.string.ui_type_to_search_8f5af6, "Type to search")) : OrbitText.get(R.string.ui_no_results_a43619, "No results"));
             setSearchNavigationEnabled(false);
             clearHighlights();
             return;
         }
         DocumentTextIndex.Match match = matches.get(selectedMatch);
-        String announcement = "Result " + (selectedMatch + 1) + " of " + matches.size()
-                + ", page " + (match.page + 1);
-        searchResult.setText((selectedMatch + 1) + " of " + matches.size()
+        String announcement = OrbitText.get(R.string.ui_result_69b87f, "Result ") + (selectedMatch + 1) + OrbitText.get(R.string.ui_of_a4282e, " of ") + matches.size()
+                + OrbitText.get(R.string.ui_page_789ab3, ", page ") + (match.page + 1);
+        searchResult.setText((selectedMatch + 1) + OrbitText.get(R.string.ui_of_a4282e, " of ") + matches.size()
                 + " · p" + (match.page + 1));
         searchResult.setContentDescription(announcement);
         setSearchNavigationEnabled(true);
@@ -772,8 +772,8 @@ public final class DocumentViewerActivity extends Activity {
                 && !textIndex.pageText(model.page()).trim().isEmpty();
         // The visible label stays "Ask Orbit"; the whole action is only ever spoken here.
         askButton.setContentDescription(enabled && !hasText
-                ? "Ask Orbit about this page, no extractable text on this page"
-                : "Ask Orbit about this page");
+                ? OrbitText.get(R.string.ui_ask_orbit_about_this_page_no_extractable_t_a37fde, "Ask Orbit about this page, no extractable text on this page")
+                : OrbitText.get(R.string.ui_ask_orbit_about_this_page_7449bb, "Ask Orbit about this page"));
     }
 
     /**
@@ -794,7 +794,7 @@ public final class DocumentViewerActivity extends Activity {
         DocumentPageContext page = new DocumentPageContext(session.document.label, pageIndex,
                 model.pageCount(), text, session.document, rendered);
         if (!page.isUsable()) {
-            Toast.makeText(this, "Orbit could not read or render this page",
+            Toast.makeText(this, OrbitText.get(R.string.ui_orbit_could_not_read_or_render_this_page_df78ea, "Orbit could not read or render this page"),
                     Toast.LENGTH_SHORT).show();
             return;
         }
@@ -828,7 +828,7 @@ public final class DocumentViewerActivity extends Activity {
     private void savePageToVault() {
         if (model == null || model.pageCount() <= 0) return;
         if (!Prefs.vaultEnabled(this)) {
-            Toast.makeText(this, "Orbit Vault is turned off", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, OrbitText.get(R.string.ui_orbit_vault_is_turned_off_cd728c, "Orbit Vault is turned off"), Toast.LENGTH_SHORT).show();
             return;
         }
         int pageIndex = model.page();
@@ -840,11 +840,11 @@ public final class DocumentViewerActivity extends Activity {
                 pageIndex, model.pageCount(), text, rendered, "");
         if (rendered != null && !rendered.isRecycled()) rendered.recycle();
         if (saved == null) {
-            Toast.makeText(this, OrbitVaultStore.saveFailureMessage(this, "Orbit could not save this page"), Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, OrbitVaultStore.saveFailureMessage(this, OrbitText.get(R.string.ui_orbit_could_not_save_this_page_d7392d, "Orbit could not save this page")), Toast.LENGTH_SHORT).show();
             return;
         }
         UiKit.haptic(saveToVaultButton, HapticFeedbackConstants.CLOCK_TICK);
-        Toast.makeText(this, "Page " + (pageIndex + 1) + " saved to Vault",
+        Toast.makeText(this, OrbitText.get(R.string.ui_page_607693, "Page ") + (pageIndex + 1) + OrbitText.get(R.string.ui_saved_to_vault_8544f2, " saved to Vault"),
                 Toast.LENGTH_SHORT).show();
     }
 

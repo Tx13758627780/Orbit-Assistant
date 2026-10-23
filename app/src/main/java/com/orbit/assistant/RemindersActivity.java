@@ -63,7 +63,7 @@ public final class RemindersActivity extends Activity {
 
         LinearLayout header = new LinearLayout(this);
         header.setGravity(Gravity.CENTER_VERTICAL);
-        ImageButton back = iconButton(R.drawable.ic_back, "Back");
+        ImageButton back = iconButton(R.drawable.ic_back, OrbitText.get(R.string.ui_back_76900f, "Back"));
         back.setOnClickListener(v -> navigation.performBack());
         LinearLayout.LayoutParams backLp = new LinearLayout.LayoutParams(UiKit.dp(this, 48), UiKit.dp(this, 48));
         backLp.rightMargin = UiKit.dp(this, 12);
@@ -71,13 +71,13 @@ public final class RemindersActivity extends Activity {
 
         LinearLayout titles = new LinearLayout(this);
         titles.setOrientation(LinearLayout.VERTICAL);
-        titles.addView(UiKit.text(this, "Reminders", 26, UiKit.TEXT, true));
-        titles.addView(UiKit.text(this, "Scheduled tasks", 12, UiKit.MUTED, false));
+        titles.addView(UiKit.text(this, OrbitText.get(R.string.ui_reminders_7971dd, "Reminders"), 26, UiKit.TEXT, true));
+        titles.addView(UiKit.text(this, OrbitText.get(R.string.ui_scheduled_tasks_21c4a0, "Scheduled tasks"), 12, UiKit.MUTED, false));
         header.addView(titles, new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1));
         page.addView(header);
 
         TextView intro = UiKit.text(this,
-                "Reminders you create through Orbit live here until they fire or you cancel them.",
+                OrbitText.get(R.string.ui_reminders_you_create_through_orbit_live_he_0b0fcb, "Reminders you create through Orbit live here until they fire or you cancel them."),
                 14, UiKit.MUTED, false);
         intro.setLineSpacing(0, 1.13f);
         LinearLayout.LayoutParams introLp = new LinearLayout.LayoutParams(
@@ -87,14 +87,14 @@ public final class RemindersActivity extends Activity {
 
         TextView timing = UiKit.text(this,
                 RoutineTriggerScheduler.canScheduleExact(this)
-                        ? "Precise timing is available."
-                        : "Approximate timing is active. Enable Alarms & reminders for minute-level delivery.",
+                        ? OrbitText.get(R.string.ui_precise_timing_is_available_fcbf92, "Precise timing is available.")
+                        : OrbitText.get(R.string.ui_approximate_timing_is_active_enable_alarms_372fdd, "Approximate timing is active. Enable Alarms & reminders for minute-level delivery."),
                 12, UiKit.MUTED, false);
         LinearLayout timingCard = card();
         timingCard.addView(timing);
         page.addView(timingCard, cardLp());
 
-        TextView section = UiKit.text(this, "PENDING REMINDERS", 11, UiKit.MUTED, true);
+        TextView section = UiKit.text(this, OrbitText.get(R.string.ui_pending_reminders_aeb51c, "PENDING REMINDERS"), 11, UiKit.MUTED, true);
         section.setLetterSpacing(0.13f);
         section.setPadding(UiKit.dp(this, 4), UiKit.dp(this, 20), 0, UiKit.dp(this, 8));
         page.addView(section);
@@ -111,9 +111,9 @@ public final class RemindersActivity extends Activity {
         List<ReminderStore.Item> items = ReminderStore.list(this);
         if (items.isEmpty()) {
             LinearLayout empty = card();
-            empty.addView(UiKit.text(this, "No pending reminders", 16, UiKit.TEXT, true));
+            empty.addView(UiKit.text(this, OrbitText.get(R.string.ui_no_pending_reminders_5aa1fc, "No pending reminders"), 16, UiKit.TEXT, true));
             TextView note = UiKit.text(this,
-                    "Ask Orbit something like “Remind me to wash clothes tomorrow at 10 AM.”",
+                    OrbitText.get(R.string.ui_ask_orbit_something_like_remind_me_to_wash_cbb747, "Ask Orbit something like “Remind me to wash clothes tomorrow at 10 AM.”"),
                     13, UiKit.MUTED, false);
             note.setPadding(0, UiKit.dp(this, 6), 0, 0);
             empty.addView(note);
@@ -129,14 +129,14 @@ public final class RemindersActivity extends Activity {
             TextView when = UiKit.text(this, format.format(new Date(item.triggerAt)), 12, UiKit.MUTED, false);
             when.setPadding(0, UiKit.dp(this, 5), 0, 0);
             card.addView(when);
-            Button cancel = secondaryButton("Cancel reminder");
+            Button cancel = secondaryButton(OrbitText.get(R.string.ui_cancel_reminder_948e11, "Cancel reminder"));
             LinearLayout.LayoutParams cancelLp = new LinearLayout.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT, UiKit.dp(this, 44));
             cancelLp.setMargins(0, UiKit.dp(this, 12), 0, 0);
             card.addView(cancel, cancelLp);
             cancel.setOnClickListener(v -> {
                 ReminderScheduler.cancel(this, item.id);
-                Toast.makeText(this, "Reminder cancelled", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, OrbitText.get(R.string.ui_reminder_cancelled_005e1c, "Reminder cancelled"), Toast.LENGTH_SHORT).show();
                 refresh();
             });
             reminderList.addView(card, cardLp());

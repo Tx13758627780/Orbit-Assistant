@@ -49,7 +49,7 @@ public final class AiSelection {
 
     /** "GPT-6.1 Sol", or the raw id only when Orbit has no name for it. */
     public String modelName() {
-        if (isAuto()) return AUTO_LABEL;
+        if (isAuto()) return autoLabel();
         String name = OrbitModelCatalog.displayName(model);
         return name.isEmpty() ? model : name;
     }
@@ -73,6 +73,14 @@ public final class AiSelection {
     public static final String AUTO_DESCRIPTION =
             "Orbit chooses the model and reasoning level for each request.";
 
+    public static String autoLabel() {
+        return OrbitText.get(R.string.ui_auto_028624, AUTO_LABEL);
+    }
+
+    public static String autoDescription() {
+        return OrbitText.get(R.string.ui_meta_auto_description, AUTO_DESCRIPTION);
+    }
+
     /**
      * " · OpenRouter" for a model reached through OpenRouter, otherwise "". The same model reached
      * directly and through OpenRouter are different routes, and every label keeps them apart.
@@ -87,13 +95,13 @@ public final class AiSelection {
     /** "GPT-6.1 Sol · High", or just the model when there is no strength. */
     public String label() {
         String name = modelName() + routeSuffix();
-        return strength == null ? name : name + " · " + strength.label;
+        return strength == null ? name : name + " · " + strength.displayLabel();
     }
 
     /** "Sol · High", for the overlay's compact chip. */
     public String shortLabel() {
         String name = shortModelName() + routeSuffix();
-        return strength == null ? name : name + " · " + strength.label;
+        return strength == null ? name : name + " · " + strength.displayLabel();
     }
 
     /** One storable line. Read back with {@link #decode}. */

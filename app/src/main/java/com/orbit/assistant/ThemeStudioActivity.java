@@ -349,8 +349,8 @@ public final class ThemeStudioActivity extends Activity {
     private void explainPremiumPreset(OrbitTheme preset) {
         AlertDialog dialog = new AlertDialog.Builder(this)
                 .setTitle(preset.name)
-                .setMessage("An Orbit Pro preset. " + proUnavailableNote())
-                .setPositiveButton("OK", null)
+                .setMessage(OrbitText.get(R.string.ui_an_orbit_pro_preset_59bb86, "An Orbit Pro preset. ") + proUnavailableNote())
+                .setPositiveButton(OrbitText.get(R.string.ui_ok_565339, "OK"), null)
                 .create();
         UiKit.styleOrbitDialog(dialog, this, false);
         dialog.show();
@@ -364,8 +364,8 @@ public final class ThemeStudioActivity extends Activity {
      * never mention a developer preview that it would refuse to honour anyway.
      */
     private String proUnavailableNote() {
-        return OrbitProEntitlement.lockedGuidance("Orbit Pro Preview is off. "
-                + "Enable Pro Preview in Orbit Diagnostics to test advanced styling.");
+        return OrbitProEntitlement.lockedGuidance(OrbitText.get(R.string.ui_orbit_pro_preview_is_off_fa2881, "Orbit Pro Preview is off. ")
+                + OrbitText.get(R.string.ui_enable_pro_preview_in_orbit_diagnostics_to_b9e444, "Enable Pro Preview in Orbit Diagnostics to test advanced styling."));
     }
 
     // ---- synchronizing the screen to the draft ------------------------------------------------
@@ -476,7 +476,7 @@ public final class ThemeStudioActivity extends Activity {
         effectColourSwatch.setBackground(UiKit.outlined(effect,
                 UiKit.withAlpha(OrbitContrast.inkOn(effect), 70), 11, this));
         effectColourSummary.setText(OrbitTheme.ACCENT.equals(style.backgroundEffectColor)
-                ? OrbitColorName.of(effect) + " · theme accent"
+                ? OrbitColorName.of(effect) + OrbitText.get(R.string.ui_theme_accent_790861, " · theme accent")
                 : OrbitColorName.of(effect) + " · " + OrbitPalette.labelFor(style.backgroundEffectColor));
     }
 
@@ -536,12 +536,12 @@ public final class ThemeStudioActivity extends Activity {
             revertButton.setAlpha(dirty ? 1f : 0.45f);
         }
         if (applyButton != null) {
-            applyButton.setText(dirty ? "Apply theme" : "Applied");
+            applyButton.setText(dirty ? OrbitText.get(R.string.ui_apply_theme_2b9737, "Apply theme") : OrbitText.get(R.string.ui_applied_0c79a9, "Applied"));
             applyButton.setEnabled(dirty);
             applyButton.setAlpha(dirty ? 1f : 0.55f);
             applyButton.setContentDescription(dirty
-                    ? "Apply " + draft.name + " to Orbit"
-                    : draft.name + " is already applied");
+                    ? OrbitText.get(R.string.ui_apply_d0b4b0, "Apply ") + draft.name + OrbitText.get(R.string.ui_to_orbit_d10125, " to Orbit")
+                    : draft.name + OrbitText.get(R.string.ui_is_already_applied_8db85c, " is already applied"));
         }
     }
 
@@ -563,7 +563,7 @@ public final class ThemeStudioActivity extends Activity {
         // else reads the new canvas when it is next built.
         UiKit.notifyAppearanceChanged(this);
         rebuildInNewTheme();
-        Toast.makeText(this, applied.name + " applied", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, applied.name + OrbitText.get(R.string.ui_applied_3cde05, " applied"), Toast.LENGTH_SHORT).show();
     }
 
     /** Rebuilds this screen in the theme it just applied, keeping the reading position. */
@@ -601,21 +601,21 @@ public final class ThemeStudioActivity extends Activity {
         if (!isDirty()) return;
         draft = applied;
         syncAllToDraft();
-        Toast.makeText(this, "Changes discarded", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, OrbitText.get(R.string.ui_changes_discarded_6fb7a4, "Changes discarded"), Toast.LENGTH_SHORT).show();
     }
 
     private void resetToOrbitDefault() {
         selectPreset(OrbitTheme.orbitDefault());
-        Toast.makeText(this, "Orbit Default loaded. Apply to use it.", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, OrbitText.get(R.string.ui_orbit_default_loaded_apply_to_use_it_4fa07d, "Orbit Default loaded. Apply to use it."), Toast.LENGTH_SHORT).show();
     }
 
     private void leave() {
         if (!isDirty()) { finish(); return; }
         AlertDialog dialog = new AlertDialog.Builder(this)
-                .setTitle("Discard theme changes?")
-                .setMessage("Orbit will keep using " + applied.name + ".")
-                .setNegativeButton("Keep editing", null)
-                .setPositiveButton("Discard", (d, which) -> finish())
+                .setTitle(OrbitText.get(R.string.ui_discard_theme_changes_d5e1eb, "Discard theme changes?"))
+                .setMessage(OrbitText.get(R.string.ui_orbit_will_keep_using_1ec17a, "Orbit will keep using ") + applied.name + ".")
+                .setNegativeButton(OrbitText.get(R.string.ui_keep_editing_e76fd2, "Keep editing"), null)
+                .setPositiveButton(OrbitText.get(R.string.ui_discard_eb1a70, "Discard"), (d, which) -> finish())
                 .create();
         UiKit.styleOrbitDialog(dialog, this, true);
         dialog.show();
@@ -737,7 +737,7 @@ public final class ThemeStudioActivity extends Activity {
         LinearLayout header = new LinearLayout(this);
         header.setGravity(Gravity.CENTER_VERTICAL);
 
-        ImageButton back = iconButton(R.drawable.ic_back, "Back");
+        ImageButton back = iconButton(R.drawable.ic_back, OrbitText.get(R.string.ui_back_76900f, "Back"));
         back.setOnClickListener(v -> {
             UiKit.haptic(v, HapticFeedbackConstants.VIRTUAL_KEY);
             if (navigation != null) navigation.performBack(); else leave();
@@ -749,15 +749,15 @@ public final class ThemeStudioActivity extends Activity {
 
         LinearLayout titles = new LinearLayout(this);
         titles.setOrientation(LinearLayout.VERTICAL);
-        titles.addView(UiKit.text(this, "Theme Studio", 26, UiKit.TEXT, true));
-        titles.addView(UiKit.text(this, "Make Orbit yours.", 13, UiKit.MUTED, false));
+        titles.addView(UiKit.text(this, OrbitText.get(R.string.ui_theme_studio_d64bfb, "Theme Studio"), 26, UiKit.TEXT, true));
+        titles.addView(UiKit.text(this, OrbitText.get(R.string.ui_make_orbit_yours_968563, "Make Orbit yours."), 13, UiKit.MUTED, false));
         header.addView(titles, new LinearLayout.LayoutParams(0,
                 ViewGroup.LayoutParams.WRAP_CONTENT, 1f));
 
         // File work lives here rather than in a card of its own. Import and Export are two things
         // a person does rarely and deliberately, and a card for them would sit above the presets
         // taking the same weight as the colours, which is not the weight they have.
-        ImageButton options = iconButton(R.drawable.ic_more, "Theme options");
+        ImageButton options = iconButton(R.drawable.ic_more, OrbitText.get(R.string.ui_theme_options_dc06eb, "Theme options"));
         options.setOnClickListener(v -> {
             UiKit.haptic(v, HapticFeedbackConstants.VIRTUAL_KEY);
             showThemeOptions(v);
@@ -768,7 +768,7 @@ public final class ThemeStudioActivity extends Activity {
     }
 
     private void showThemeOptions(View anchor) {
-        String[] labels = {"Import theme", "Export theme"};
+        String[] labels = {OrbitText.get(R.string.ui_import_theme_f9cc63, "Import theme"), OrbitText.get(R.string.ui_export_theme_575ade, "Export theme")};
         UiKit.showOrbitMenu(this, anchor, labels, -1, (index, label) -> {
             if (index == 0) chooseThemeFile(); else chooseExportDestination();
         });
@@ -800,15 +800,15 @@ public final class ThemeStudioActivity extends Activity {
         actions.setOrientation(LinearLayout.HORIZONTAL);
         actions.setGravity(Gravity.CENTER_VERTICAL);
 
-        revertButton = secondaryButton("Revert");
-        revertButton.setContentDescription("Discard unapplied theme changes");
+        revertButton = secondaryButton(OrbitText.get(R.string.ui_revert_0026c5, "Revert"));
+        revertButton.setContentDescription(OrbitText.get(R.string.ui_discard_unapplied_theme_changes_d11490, "Discard unapplied theme changes"));
         revertButton.setOnClickListener(v -> {
             UiKit.haptic(v, HapticFeedbackConstants.VIRTUAL_KEY);
             revertDraft();
         });
         actions.addView(revertButton, new LinearLayout.LayoutParams(0, UiKit.dp(this, 50), 1f));
 
-        applyButton = primaryButton("Apply theme");
+        applyButton = primaryButton(OrbitText.get(R.string.ui_apply_theme_2b9737, "Apply theme"));
         applyButton.setOnClickListener(v -> {
             UiKit.haptic(v, HapticFeedbackConstants.CONFIRM);
             applyDraft();
@@ -829,16 +829,16 @@ public final class ThemeStudioActivity extends Activity {
 
     private View coloursCard() {
         LinearLayout card = card();
-        card.addView(cardTitle("Colors"));
-        card.addView(cardNote("Choose Orbit's main colors. Supporting colors, text, links and "
-                + "surfaces adapt automatically."));
+        card.addView(cardTitle(OrbitText.get(R.string.ui_colors_88c45d, "Colors")));
+        card.addView(cardNote(OrbitText.get(R.string.ui_choose_orbit_s_main_colors_supporting_colo_b6dd7d, "Choose Orbit's main colors. Supporting colors, text, links and ")
+                + OrbitText.get(R.string.ui_surfaces_adapt_automatically_5c03c7, "surfaces adapt automatically.")));
         card.addView(colourRows, matchWrap(10));
 
         amoledSwitch = new OrbitSwitch(this);
         amoledSwitch.setChecked(draft.amoled, false);
         amoledSwitch.setOnCheckedChangeListener((view, checked) -> edit(draft.withAmoled(checked)));
-        LinearLayout amoledRow = UiKit.switchRow(this, "True black AMOLED background",
-                "Uses pure black for the page. Cards keep their own color so they stay visible.",
+        LinearLayout amoledRow = UiKit.switchRow(this, OrbitText.get(R.string.ui_true_black_amoled_background_4640b8, "True black AMOLED background"),
+                OrbitText.get(R.string.ui_uses_pure_black_for_the_page_cards_keep_th_9d5e5b, "Uses pure black for the page. Cards keep their own color so they stay visible."),
                 amoledSwitch);
         card.addView(amoledRow, matchWrap(14));
 
@@ -849,11 +849,11 @@ public final class ThemeStudioActivity extends Activity {
         // between Presets and Orbit Pro would have put a third major heading on the screen for a single
         // choice and disturbed the Colors, Presets, Orbit Pro ordering that v0.8.0.0-beta.3 settled.
         // It goes last in this card because it is the one control here that is not a colour.
-        card.addView(dividerNote("Floating controls",
-                "The material Orbit's floating search and filter controls are made of."),
+        card.addView(dividerNote(OrbitText.get(R.string.ui_floating_controls_1a6c18, "Floating controls"),
+                OrbitText.get(R.string.ui_the_material_orbit_s_floating_search_and_f_595010, "The material Orbit's floating search and filter controls are made of.")),
                 matchWrap(16));
         materialSegment = new OrbitSegmented(this);
-        materialSegment.setTitle("Floating controls");
+        materialSegment.setTitle(OrbitText.get(R.string.ui_floating_controls_1a6c18, "Floating controls"));
         String[] materials = OrbitTheme.materials();
         String[] labels = new String[materials.length];
         for (int i = 0; i < materials.length; i++) labels[i] = OrbitTheme.materialLabel(materials[i]);
@@ -887,19 +887,19 @@ public final class ThemeStudioActivity extends Activity {
         colourRows.removeAllViews();
         OrbitThemeTokens tokens = OrbitThemeTokens.resolve(this, draft);
 
-        colourRows.addView(colourRow("Accent", "Icons, chips, controls and highlights",
+        colourRows.addView(colourRow(OrbitText.get(R.string.ui_accent_a5c6fb, "Accent"), OrbitText.get(R.string.ui_icons_chips_controls_and_highlights_12f0f5, "Icons, chips, controls and highlights"),
                 tokens.accent, draft.accent, accentSummary(),
                 anchor -> chooseAccent(anchor, tokens)), matchWrap(0));
-        colourRows.addView(colourRow("Your messages", "The bubble your own messages use",
+        colourRows.addView(colourRow(OrbitText.get(R.string.ui_your_messages_befc6e, "Your messages"), OrbitText.get(R.string.ui_the_bubble_your_own_messages_use_26c70a, "The bubble your own messages use"),
                 tokens.userBubble, draft.userBubble, bubbleSummary(draft.userBubble),
                 anchor -> chooseBubble(anchor, true, tokens)), matchWrap(10));
-        colourRows.addView(colourRow("Orbit's replies", "The bubble Orbit answers in",
+        colourRows.addView(colourRow(OrbitText.get(R.string.ui_orbit_s_replies_6d8dbd, "Orbit's replies"), OrbitText.get(R.string.ui_the_bubble_orbit_answers_in_f9341a, "The bubble Orbit answers in"),
                 tokens.assistantBubble, draft.assistantBubble, bubbleSummary(draft.assistantBubble),
                 anchor -> chooseBubble(anchor, false, tokens)), matchWrap(10));
-        colourRows.addView(colourRow("Cards", "Panels, sheets and Deck tiles",
+        colourRows.addView(colourRow(OrbitText.get(R.string.ui_cards_a52fcb, "Cards"), OrbitText.get(R.string.ui_panels_sheets_and_deck_tiles_d74643, "Panels, sheets and Deck tiles"),
                 tokens.surface, draft.surface, surfaceSummary(draft.surface),
                 anchor -> chooseSurface(anchor, true, tokens)), matchWrap(10));
-        colourRows.addView(colourRow("Background", "The page behind everything",
+        colourRows.addView(colourRow(OrbitText.get(R.string.ui_background_ea2b8a, "Background"), OrbitText.get(R.string.ui_the_page_behind_everything_fbbd62, "The page behind everything"),
                 tokens.background, draft.background, backgroundSummary(),
                 anchor -> chooseSurface(anchor, false, tokens)), matchWrap(10));
     }
@@ -920,8 +920,8 @@ public final class ThemeStudioActivity extends Activity {
         row.setBackground(UiKit.rippleOutlined(UiKit.SURFACE_2,
                 UiKit.withAlpha(UiKit.accent(this), 60), UiKit.accent(this), 16, this));
         row.setMinimumHeight(UiKit.dp(this, 62));
-        row.setContentDescription(title + ". " + description + ". Currently "
-                + OrbitColorName.describe("", resolved) + ", " + summary + ". Opens a color editor.");
+        row.setContentDescription(title + ". " + description + OrbitText.get(R.string.ui_currently_247633, ". Currently ")
+                + OrbitColorName.describe("", resolved) + ", " + summary + OrbitText.get(R.string.ui_opens_a_color_editor_c410fb, ". Opens a color editor."));
         UiKit.pressScale(row);
         row.setOnClickListener(v -> {
             UiKit.haptic(v, HapticFeedbackConstants.VIRTUAL_KEY);
@@ -969,11 +969,11 @@ public final class ThemeStudioActivity extends Activity {
     }
 
     private String surfaceSummary(String token) {
-        return OrbitTheme.isHexToken(token) ? "custom " + token : "Orbit default";
+        return OrbitTheme.isHexToken(token) ? OrbitText.get(R.string.ui_custom_2ea4d0, "custom ") + token : OrbitText.get(R.string.ui_orbit_default_a40572, "Orbit default");
     }
 
     private String backgroundSummary() {
-        if (draft.amoled) return "AMOLED true black";
+        if (draft.amoled) return OrbitText.get(R.string.ui_amoled_true_black_420681, "AMOLED true black");
         return surfaceSummary(draft.background);
     }
 
@@ -987,15 +987,15 @@ public final class ThemeStudioActivity extends Activity {
             labels.add(UiKit.accentLabels()[i]);
             colours.add(UiKit.accentForName(this, keys[i]));
         }
-        labels.add("Custom color…");
+        labels.add(OrbitText.get(R.string.ui_custom_color_cb28f3, "Custom color…"));
         colours.add(tokens.accent);
 
         int selected = indexOfToken(keys, draft.accent);
-        showColourChoice(anchor, "Accent", labels, colours, selected, index -> {
+        showColourChoice(anchor, OrbitText.get(R.string.ui_accent_a5c6fb, "Accent"), labels, colours, selected, index -> {
             if (index < keys.length) {
                 edit(draft.withAccent(keys[index]));
             } else {
-                pickCustom("Accent", tokens.accent, accentSuggestions(),
+                pickCustom(OrbitText.get(R.string.ui_accent_a5c6fb, "Accent"), tokens.accent, accentSuggestions(),
                         colour -> edit(draft.withAccent(OrbitPalette.tokenFor(colour))));
             }
         });
@@ -1014,11 +1014,11 @@ public final class ThemeStudioActivity extends Activity {
                     : OrbitTheme.ACCENT.equals(keys[i]) ? tokens.accent
                     : UiKit.accentForName(this, keys[i]));
         }
-        labels.add("Custom color…");
+        labels.add(OrbitText.get(R.string.ui_custom_color_cb28f3, "Custom color…"));
         colours.add(user ? tokens.userBubble : tokens.assistantBubble);
 
         String token = user ? draft.userBubble : draft.assistantBubble;
-        String role = user ? "Your messages" : "Orbit's replies";
+        String role = user ? OrbitText.get(R.string.ui_your_messages_befc6e, "Your messages") : OrbitText.get(R.string.ui_orbit_s_replies_6d8dbd, "Orbit's replies");
         showColourChoice(anchor, role, labels, colours, indexOfToken(keys, token), index -> {
             if (index < keys.length) {
                 edit(user ? draft.withUserBubble(keys[index]) : draft.withAssistantBubble(keys[index]));
@@ -1034,12 +1034,12 @@ public final class ThemeStudioActivity extends Activity {
     }
 
     private void chooseSurface(View anchor, boolean surface, OrbitThemeTokens tokens) {
-        String role = surface ? "Cards" : "Background";
+        String role = surface ? OrbitText.get(R.string.ui_cards_a52fcb, "Cards") : OrbitText.get(R.string.ui_background_ea2b8a, "Background");
         List<String> labels = new ArrayList<>();
         List<Integer> colours = new ArrayList<>();
-        labels.add("Orbit default");
+        labels.add(OrbitText.get(R.string.ui_orbit_default_a40572, "Orbit default"));
         colours.add(surface ? UiKit.classicSurface() : UiKit.classicBackground());
-        labels.add("Custom color…");
+        labels.add(OrbitText.get(R.string.ui_custom_color_cb28f3, "Custom color…"));
         colours.add(surface ? tokens.surface : tokens.background);
 
         String token = surface ? draft.surface : draft.background;
@@ -1138,8 +1138,8 @@ public final class ThemeStudioActivity extends Activity {
         box.setBackground(UiKit.outlined(UiKit.SURFACE_2,
                 UiKit.withAlpha(UiKit.DANGER, 110), 14, this));
 
-        StringBuilder spoken = new StringBuilder("Low contrast. ");
-        box.addView(UiKit.text(this, "Low contrast", 13, UiKit.DANGER, true));
+        StringBuilder spoken = new StringBuilder(OrbitText.get(R.string.ui_low_contrast_3816e3, "Low contrast. "));
+        box.addView(UiKit.text(this, OrbitText.get(R.string.ui_low_contrast_2d6e75, "Low contrast"), 13, UiKit.DANGER, true));
         for (OrbitThemeTokens.Check check : failing) {
             // One ratio format everywhere, and no em dash: "Orbit's replies: 3.0:1".
             String line = check.label + ": "
@@ -1150,7 +1150,7 @@ public final class ThemeStudioActivity extends Activity {
             spoken.append(check.label).append(". ");
         }
         box.setContentDescription(spoken.toString()
-                + "This theme can still be applied, but some text will be hard to read.");
+                + OrbitText.get(R.string.ui_this_theme_can_still_be_applied_but_some_t_a2b46a, "This theme can still be applied, but some text will be hard to read."));
         warningStrip.addView(box, new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
     }
@@ -1262,7 +1262,7 @@ public final class ThemeStudioActivity extends Activity {
      */
     private void buildProTeaser() {
         TextView what = UiKit.text(this,
-                "Advanced message styling, Liquid Glass and advanced backgrounds", 13.5f,
+                OrbitText.get(R.string.ui_advanced_message_styling_liquid_glass_and_1a55ad, "Advanced message styling, Liquid Glass and advanced backgrounds"), 13.5f,
                 UiKit.TEXT, false);
         what.setLineSpacing(0, 1.15f);
         proBody.addView(what, matchWrap(0));
@@ -1271,8 +1271,8 @@ public final class ThemeStudioActivity extends Activity {
         note.setLineSpacing(0, 1.15f);
         proBody.addView(note, matchWrap(6));
 
-        proBody.setContentDescription("Orbit Pro. Advanced message styling, Liquid Glass and "
-                + "advanced backgrounds, locked. " + proUnavailableNote());
+        proBody.setContentDescription(OrbitText.get(R.string.ui_orbit_pro_advanced_message_styling_liquid_7018e0, "Orbit Pro. Advanced message styling, Liquid Glass and ")
+                + OrbitText.get(R.string.ui_advanced_backgrounds_locked_6ad73c, "advanced backgrounds, locked. ") + proUnavailableNote());
         proBody.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_YES);
         what.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_NO_HIDE_DESCENDANTS);
         note.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_NO_HIDE_DESCENDANTS);
@@ -1293,18 +1293,18 @@ public final class ThemeStudioActivity extends Activity {
         proBody.setContentDescription(null);
 
         TextView intro = UiKit.text(this,
-                "Fine detail on top of your theme. Nothing changes in Orbit until you apply.",
+                OrbitText.get(R.string.ui_fine_detail_on_top_of_your_theme_nothing_c_447b60, "Fine detail on top of your theme. Nothing changes in Orbit until you apply."),
                 12, UiKit.MUTED, false);
         proBody.addView(intro, matchWrap(0));
 
         LinearLayout messages = toolPanel();
-        messages.addView(toolTitle("Message style"), matchWrap(0));
+        messages.addView(toolTitle(OrbitText.get(R.string.ui_message_style_2aff03, "Message style")), matchWrap(0));
         messagePreview = new MessageStylePreview(this);
         messages.addView(messagePreview, matchWrap(10));
 
         bubbleRadiusValue = valueLabel(draft.pro.bubbleRadiusLabel());
         bubbleRadiusSlider = new OrbitSlider(this);
-        messages.addView(proControl("Bubble roundness", bubbleRadiusValue, bubbleRadiusSlider,
+        messages.addView(proControl(OrbitText.get(R.string.ui_bubble_roundness_db32d0, "Bubble roundness"), bubbleRadiusValue, bubbleRadiusSlider,
                 OrbitProStyle.BUBBLE_RADIUS_MIN, OrbitProStyle.BUBBLE_RADIUS_MAX,
                 draft.pro.bubbleRadiusDp,
                 v -> OrbitProStyle.DEFAULT.withBubbleRadiusDp(v).bubbleRadiusLabel(),
@@ -1312,7 +1312,7 @@ public final class ThemeStudioActivity extends Activity {
 
         bubbleOutlineValue = valueLabel(draft.pro.bubbleOutlineLabel());
         bubbleOutlineSlider = new OrbitSlider(this);
-        messages.addView(proControl("Bubble outline", bubbleOutlineValue, bubbleOutlineSlider,
+        messages.addView(proControl(OrbitText.get(R.string.ui_bubble_outline_139075, "Bubble outline"), bubbleOutlineValue, bubbleOutlineSlider,
                 OrbitProStyle.OUTLINE_OFF, OrbitProStyle.OUTLINE_DEFINED,
                 draft.pro.bubbleOutline,
                 OrbitProStyle::outlineLabel,
@@ -1320,7 +1320,7 @@ public final class ThemeStudioActivity extends Activity {
         proBody.addView(messages, matchWrap(14));
 
         LinearLayout glass = toolPanel();
-        glass.addView(toolTitle("Glass"), matchWrap(0));
+        glass.addView(toolTitle(OrbitText.get(R.string.ui_glass_82c268, "Glass")), matchWrap(0));
         glassPreview = new GlassStylePreview(this);
         glass.addView(glassPreview, matchWrap(10));
 
@@ -1332,7 +1332,7 @@ public final class ThemeStudioActivity extends Activity {
 
         glassOpacityValue = valueLabel(draft.pro.glassOpacityLabel());
         glassOpacitySlider = new OrbitSlider(this);
-        glassControls.addView(proControl("Glass opacity", glassOpacityValue, glassOpacitySlider,
+        glassControls.addView(proControl(OrbitText.get(R.string.ui_glass_opacity_e7c672, "Glass opacity"), glassOpacityValue, glassOpacitySlider,
                 OrbitProStyle.GLASS_OPACITY_MIN, OrbitProStyle.GLASS_OPACITY_MAX,
                 draft.pro.glassOpacity,
                 v -> OrbitProStyle.DEFAULT.withGlassOpacity(v).glassOpacityLabel(),
@@ -1340,7 +1340,7 @@ public final class ThemeStudioActivity extends Activity {
 
         glassTintValue = valueLabel(draft.pro.glassTintLabel());
         glassTintSlider = new OrbitSlider(this);
-        glassControls.addView(proControl("Glass tint", glassTintValue, glassTintSlider,
+        glassControls.addView(proControl(OrbitText.get(R.string.ui_glass_tint_fb8247, "Glass tint"), glassTintValue, glassTintSlider,
                 OrbitProStyle.GLASS_TINT_MIN, OrbitProStyle.GLASS_TINT_MAX,
                 draft.pro.glassTint,
                 OrbitProStyle::strengthLabel,
@@ -1348,7 +1348,7 @@ public final class ThemeStudioActivity extends Activity {
 
         glassEdgeValue = valueLabel(draft.pro.glassEdgeLabel());
         glassEdgeSlider = new OrbitSlider(this);
-        glassControls.addView(proControl("Glass edge", glassEdgeValue, glassEdgeSlider,
+        glassControls.addView(proControl(OrbitText.get(R.string.ui_glass_edge_987937, "Glass edge"), glassEdgeValue, glassEdgeSlider,
                 OrbitProStyle.GLASS_EDGE_MIN, OrbitProStyle.GLASS_EDGE_MAX,
                 draft.pro.glassEdge,
                 OrbitProStyle::strengthLabel,
@@ -1377,13 +1377,13 @@ public final class ThemeStudioActivity extends Activity {
      */
     private View buildBackgroundTool() {
         LinearLayout panel = toolPanel();
-        panel.addView(toolTitle("Background"), matchWrap(0));
+        panel.addView(toolTitle(OrbitText.get(R.string.ui_background_ea2b8a, "Background")), matchWrap(0));
 
         backgroundPreview = new BackgroundStylePreview(this);
         panel.addView(backgroundPreview, matchWrap(10));
 
         backgroundModeSegment = new OrbitSegmented(this);
-        backgroundModeSegment.setTitle("Background");
+        backgroundModeSegment.setTitle(OrbitText.get(R.string.ui_background_ea2b8a, "Background"));
         backgroundModeSegment.setOptions(new String[]{
                 OrbitProStyle.backgroundModeLabel(OrbitProStyle.BACKGROUND_SOLID),
                 OrbitProStyle.backgroundModeLabel(OrbitProStyle.BACKGROUND_LINEAR),
@@ -1401,10 +1401,10 @@ public final class ThemeStudioActivity extends Activity {
 
         linearControls = new LinearLayout(this);
         linearControls.setOrientation(LinearLayout.VERTICAL);
-        linearControls.addView(effectColourRow("Gradient color",
-                "The color the background runs into"), matchWrap(0));
+        linearControls.addView(effectColourRow(OrbitText.get(R.string.ui_gradient_color_8db561, "Gradient color"),
+                OrbitText.get(R.string.ui_the_color_the_background_runs_into_f29d66, "The color the background runs into")), matchWrap(0));
         directionValue = UiKit.text(this, draft.pro.directionLabel(), 14, UiKit.TEXT, true);
-        directionRow = selectorRow("Direction", directionValue, v -> chooseDirection(v));
+        directionRow = selectorRow(OrbitText.get(R.string.ui_direction_9c8a95, "Direction"), directionValue, v -> chooseDirection(v));
         linearControls.addView(directionRow, matchWrap(10));
 
         // How far the gradient actually travels. The v0.8.0.0-beta.4 gradient was all or nothing, and
@@ -1412,7 +1412,7 @@ public final class ThemeStudioActivity extends Activity {
         // makes Linear usable on an everyday theme rather than only on a showcase one.
         gradientStrengthValue = valueLabel(draft.pro.gradientStrengthLabel());
         gradientStrengthSlider = new OrbitSlider(this);
-        linearControls.addView(proControl("Gradient strength", gradientStrengthValue,
+        linearControls.addView(proControl(OrbitText.get(R.string.ui_gradient_strength_9d8d4b, "Gradient strength"), gradientStrengthValue,
                 gradientStrengthSlider,
                 OrbitProStyle.GRADIENT_STRENGTH_MIN, OrbitProStyle.GRADIENT_STRENGTH_MAX,
                 draft.pro.gradientStrength,
@@ -1422,11 +1422,11 @@ public final class ThemeStudioActivity extends Activity {
 
         glowControls = new LinearLayout(this);
         glowControls.setOrientation(LinearLayout.VERTICAL);
-        glowControls.addView(effectColourRow("Glow color", "The color of the light"), matchWrap(0));
+        glowControls.addView(effectColourRow(OrbitText.get(R.string.ui_glow_color_9dbac9, "Glow color"), OrbitText.get(R.string.ui_the_color_of_the_light_fddba3, "The color of the light")), matchWrap(0));
 
         glowStrengthValue = valueLabel(draft.pro.glowStrengthLabel());
         glowStrengthSlider = new OrbitSlider(this);
-        glowControls.addView(proControl("Glow strength", glowStrengthValue, glowStrengthSlider,
+        glowControls.addView(proControl(OrbitText.get(R.string.ui_glow_strength_389bd2, "Glow strength"), glowStrengthValue, glowStrengthSlider,
                 OrbitProStyle.GLOW_STRENGTH_MIN, OrbitProStyle.GLOW_STRENGTH_MAX,
                 draft.pro.glowStrength,
                 OrbitProStyle::glowStrengthLabel,
@@ -1434,15 +1434,15 @@ public final class ThemeStudioActivity extends Activity {
 
         glowSizeValue = valueLabel(draft.pro.glowSizeLabel());
         glowSizeSlider = new OrbitSlider(this);
-        glowControls.addView(proControl("Glow size", glowSizeValue, glowSizeSlider,
+        glowControls.addView(proControl(OrbitText.get(R.string.ui_glow_size_9ddd0e, "Glow size"), glowSizeValue, glowSizeSlider,
                 OrbitProStyle.GLOW_SIZE_MIN, OrbitProStyle.GLOW_SIZE_MAX,
                 draft.pro.glowSize,
                 OrbitProStyle::glowSizeLabel,
                 (v, settled) -> editPro(draft.pro.withGlowSize(v), settled)), matchWrap(12));
 
-        glowControls.addView(UiKit.text(this, "Position", 13.5f, UiKit.TEXT, false), matchWrap(12));
+        glowControls.addView(UiKit.text(this, OrbitText.get(R.string.ui_position_6d031a, "Position"), 13.5f, UiKit.TEXT, false), matchWrap(12));
         glowPositionSegment = new OrbitSegmented(this);
-        glowPositionSegment.setTitle("Glow position");
+        glowPositionSegment.setTitle(OrbitText.get(R.string.ui_glow_position_339141, "Glow position"));
         glowPositionSegment.setOptions(new String[]{
                 OrbitProStyle.glowPositionLabel(OrbitProStyle.GLOW_TOP),
                 OrbitProStyle.glowPositionLabel(OrbitProStyle.GLOW_CENTER),
@@ -1505,7 +1505,7 @@ public final class ThemeStudioActivity extends Activity {
         chevron.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_NO);
         row.addView(chevron);
 
-        row.setContentDescription(title + ". " + description + ". Opens a color editor.");
+        row.setContentDescription(title + ". " + description + OrbitText.get(R.string.ui_opens_a_color_editor_c410fb, ". Opens a color editor."));
         return row;
     }
 
@@ -1547,7 +1547,7 @@ public final class ThemeStudioActivity extends Activity {
         List<Integer> colours = new ArrayList<>();
         List<String> tokensForIndex = new ArrayList<>();
 
-        labels.add("Theme accent");
+        labels.add(OrbitText.get(R.string.ui_theme_accent_e0c12f, "Theme accent"));
         colours.add(tokens.accent);
         tokensForIndex.add(OrbitTheme.ACCENT);
         for (String key : keys) {
@@ -1557,14 +1557,14 @@ public final class ThemeStudioActivity extends Activity {
             tokensForIndex.add(key);
         }
         int current = draft.pro.backgroundEffectColor(this, tokens.accent);
-        labels.add("Custom color…");
+        labels.add(OrbitText.get(R.string.ui_custom_color_cb28f3, "Custom color…"));
         colours.add(current);
 
         int selected = tokensForIndex.indexOf(draft.pro.backgroundEffectColor);
         final int customIndex = labels.size() - 1;
-        showColourChoice(anchor, "Background effect", labels, colours, selected, index -> {
+        showColourChoice(anchor, OrbitText.get(R.string.ui_background_effect_62fa1d, "Background effect"), labels, colours, selected, index -> {
             if (index == customIndex) {
-                pickCustom("Background effect", current, effectColourSuggestions(tokens),
+                pickCustom(OrbitText.get(R.string.ui_background_effect_62fa1d, "Background effect"), current, effectColourSuggestions(tokens),
                         colour -> editPro(draft.pro.withBackgroundEffectColor(
                                 OrbitTheme.colorToken(colour)), true));
             } else {
@@ -1712,22 +1712,22 @@ public final class ThemeStudioActivity extends Activity {
 
     private View presetsCard() {
         LinearLayout card = card();
-        card.addView(cardTitle("Presets"));
-        card.addView(cardNote("Selecting one loads it into the preview. Nothing changes in Orbit "
-                + "until you apply it."));
+        card.addView(cardTitle(OrbitText.get(R.string.ui_presets_954f93, "Presets")));
+        card.addView(cardNote(OrbitText.get(R.string.ui_selecting_one_loads_it_into_the_preview_no_fdc6c3, "Selecting one loads it into the preview. Nothing changes in Orbit ")
+                + OrbitText.get(R.string.ui_until_you_apply_it_7d4957, "until you apply it.")));
         card.addView(presetGrid, matchWrap(8));
 
         LinearLayout actions = new LinearLayout(this);
         actions.setOrientation(LinearLayout.HORIZONTAL);
-        Button save = secondaryButton("Save as preset");
+        Button save = secondaryButton(OrbitText.get(R.string.ui_save_as_preset_853c85, "Save as preset"));
         save.setOnClickListener(v -> {
             UiKit.haptic(v, HapticFeedbackConstants.VIRTUAL_KEY);
             promptSavePreset();
         });
         actions.addView(save, new LinearLayout.LayoutParams(0, UiKit.dp(this, 48), 1f));
 
-        Button reset = secondaryButton("Orbit Default");
-        reset.setContentDescription("Reset the preview to Orbit Default");
+        Button reset = secondaryButton(OrbitText.get(R.string.ui_orbit_default_85a4dc, "Orbit Default"));
+        reset.setContentDescription(OrbitText.get(R.string.ui_reset_the_preview_to_orbit_default_fea148, "Reset the preview to Orbit Default"));
         reset.setOnClickListener(v -> {
             UiKit.haptic(v, HapticFeedbackConstants.VIRTUAL_KEY);
             resetToOrbitDefault();
@@ -1829,7 +1829,7 @@ public final class ThemeStudioActivity extends Activity {
             UiKit.setTextWeight(card.name, selected);
             card.tick.setVisibility(selected ? View.VISIBLE : View.GONE);
             card.view.setContentDescription(
-                    card.spokenBase + (selected ? ", selected" : "") + card.spokenTail);
+                    card.spokenBase + (selected ? OrbitText.get(R.string.ui_selected_bd44f3, ", selected") : "") + card.spokenTail);
         }
     }
 
@@ -1852,9 +1852,9 @@ public final class ThemeStudioActivity extends Activity {
         // Selection is stated, not only drawn. A ring around a card of colours is exactly the kind
         // of state that disappears for anyone who cannot rely on colour to carry it.
         String spokenBase = preset.name
-                + (preset.premium() ? ", Orbit Pro preset"
-                        : preset.builtIn ? ", Orbit preset" : ", your theme")
-                + (locked ? ", locked" : "")
+                + (preset.premium() ? OrbitText.get(R.string.ui_orbit_pro_preset_f706be, ", Orbit Pro preset")
+                        : preset.builtIn ? OrbitText.get(R.string.ui_orbit_preset_a2d917, ", Orbit preset") : OrbitText.get(R.string.ui_your_theme_09f4df, ", your theme"))
+                + (locked ? OrbitText.get(R.string.ui_locked_ff1e7b, ", locked") : "")
                 + (preset.note().isEmpty() ? "" : ", " + preset.note());
         UiKit.pressScale(card);
         card.setOnClickListener(v -> {
@@ -1894,10 +1894,10 @@ public final class ThemeStudioActivity extends Activity {
         // badge. Locked is stated in words here and in the card's spoken description, so the state
         // never depends on noticing a colour.
         String kindText = preset.premium()
-                ? (locked ? "Orbit Pro · locked" : "Orbit Pro preset")
+                ? (locked ? OrbitText.get(R.string.ui_orbit_pro_locked_e1156e, "Orbit Pro · locked") : OrbitText.get(R.string.ui_orbit_pro_preset_d5746a, "Orbit Pro preset"))
                 : preset.builtIn
-                ? (note.isEmpty() ? "Orbit preset" : "Orbit preset · " + note)
-                : "Your theme · hold to manage";
+                ? (note.isEmpty() ? OrbitText.get(R.string.ui_orbit_preset_2a35d1, "Orbit preset") : OrbitText.get(R.string.ui_orbit_preset_6f1096, "Orbit preset · ") + note)
+                : OrbitText.get(R.string.ui_your_theme_hold_to_manage_559e71, "Your theme · hold to manage");
         TextView kind = UiKit.text(this, kindText, 10.5f, UiKit.MUTED, false);
         kind.setSingleLine(true);
         kind.setEllipsize(android.text.TextUtils.TruncateAt.END);
@@ -1908,8 +1908,8 @@ public final class ThemeStudioActivity extends Activity {
                     View.IMPORTANT_FOR_ACCESSIBILITY_NO_HIDE_DESCENDANTS);
         }
 
-        String spokenTail = ". Background " + OrbitColorName.of(tokens.background)
-                + ", accent " + OrbitColorName.of(tokens.accent) + ".";
+        String spokenTail = OrbitText.get(R.string.ui_background_b5d009, ". Background ") + OrbitColorName.of(tokens.background)
+                + OrbitText.get(R.string.ui_accent_8e6967, ", accent ") + OrbitColorName.of(tokens.accent) + ".";
         // The selected state itself is left to syncPresetSelection, so there is exactly one place
         // that decides what a selected card looks like and says.
         return new PresetCard(preset, card, name, tick, spokenBase, spokenTail);
@@ -1935,7 +1935,7 @@ public final class ThemeStudioActivity extends Activity {
     }
 
     private void showPresetMenu(View anchor, OrbitTheme preset) {
-        String[] labels = {"Apply to preview", "Rename", "Duplicate", "Delete"};
+        String[] labels = {OrbitText.get(R.string.ui_apply_to_preview_8abae9, "Apply to preview"), OrbitText.get(R.string.ui_rename_3064d7, "Rename"), OrbitText.get(R.string.ui_duplicate_02cdaa, "Duplicate"), OrbitText.get(R.string.ui_delete_e2d0a5, "Delete")};
         UiKit.showOrbitMenu(this, anchor, labels, -1, (index, label) -> {
             if (index == 0) selectPreset(preset);
             else if (index == 1) promptRename(preset);
@@ -1947,26 +1947,26 @@ public final class ThemeStudioActivity extends Activity {
     private void duplicate(OrbitTheme preset) {
         OrbitTheme copy = OrbitThemeStore.duplicatePreset(this, preset.id);
         if (copy == null) {
-            Toast.makeText(this, "Orbit could not duplicate that theme.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, OrbitText.get(R.string.ui_orbit_could_not_duplicate_that_theme_87e41c, "Orbit could not duplicate that theme."), Toast.LENGTH_SHORT).show();
             return;
         }
         onThemeLibraryChanged();
-        Toast.makeText(this, "Saved as " + copy.name, Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, OrbitText.get(R.string.ui_saved_as_b0ac8a, "Saved as ") + copy.name, Toast.LENGTH_SHORT).show();
     }
 
     private void confirmDelete(OrbitTheme preset) {
         AlertDialog dialog = new AlertDialog.Builder(this)
-                .setTitle("Delete " + preset.name + "?")
-                .setMessage("This removes the saved theme. Orbit's own appearance does not change.")
-                .setNegativeButton("Cancel", null)
-                .setPositiveButton("Delete", (d, which) -> {
+                .setTitle(OrbitText.get(R.string.ui_delete_85941f, "Delete ") + preset.name + "?")
+                .setMessage(OrbitText.get(R.string.ui_this_removes_the_saved_theme_orbit_s_own_a_e19173, "This removes the saved theme. Orbit's own appearance does not change."))
+                .setNegativeButton(OrbitText.get(R.string.ui_cancel_19766e, "Cancel"), null)
+                .setPositiveButton(OrbitText.get(R.string.ui_delete_e2d0a5, "Delete"), (d, which) -> {
                     if (!OrbitThemeStore.deletePreset(this, preset.id)) {
-                        Toast.makeText(this, "Orbit could not delete that theme.",
+                        Toast.makeText(this, OrbitText.get(R.string.ui_orbit_could_not_delete_that_theme_e4e0bc, "Orbit could not delete that theme."),
                                 Toast.LENGTH_SHORT).show();
                         return;
                     }
                     onThemeLibraryChanged();
-                    Toast.makeText(this, preset.name + " deleted", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, preset.name + OrbitText.get(R.string.ui_deleted_ad9b13, " deleted"), Toast.LENGTH_SHORT).show();
                 })
                 .create();
         UiKit.styleOrbitDialog(dialog, this, true);
@@ -1974,9 +1974,9 @@ public final class ThemeStudioActivity extends Activity {
     }
 
     private void promptRename(OrbitTheme preset) {
-        nameDialog("Rename theme", preset.name, "Save", name -> {
+        nameDialog(OrbitText.get(R.string.ui_rename_theme_f0b0db, "Rename theme"), preset.name, OrbitText.get(R.string.ui_save_1509f5, "Save"), name -> {
             if (!OrbitThemeStore.renamePreset(this, preset.id, name)) {
-                Toast.makeText(this, "Orbit could not rename that theme.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, OrbitText.get(R.string.ui_orbit_could_not_rename_that_theme_814871, "Orbit could not rename that theme."), Toast.LENGTH_SHORT).show();
                 return;
             }
             onThemeLibraryChanged();
@@ -1984,11 +1984,11 @@ public final class ThemeStudioActivity extends Activity {
     }
 
     private void promptSavePreset() {
-        String suggestion = draft.builtIn ? draft.name + " copy" : draft.name;
-        nameDialog("Save theme", suggestion, "Save", name -> {
+        String suggestion = draft.builtIn ? draft.name + OrbitText.get(R.string.ui_copy_f06ae4, " copy") : draft.name;
+        nameDialog(OrbitText.get(R.string.ui_save_theme_a8dd5d, "Save theme"), suggestion, OrbitText.get(R.string.ui_save_1509f5, "Save"), name -> {
             OrbitTheme saved = OrbitThemeStore.savePreset(this, draft.asCustomNamed(name));
             if (saved == null) {
-                Toast.makeText(this, "Orbit could not save that theme.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, OrbitText.get(R.string.ui_orbit_could_not_save_that_theme_b13a4b, "Orbit could not save that theme."), Toast.LENGTH_SHORT).show();
                 return;
             }
             // The draft now *is* that preset, so the gallery shows it selected. Saving still does
@@ -1996,7 +1996,7 @@ public final class ThemeStudioActivity extends Activity {
             draft = saved;
             onThemeLibraryChanged();
             syncAllToDraft();
-            Toast.makeText(this, "Saved " + saved.name, Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, OrbitText.get(R.string.ui_saved_3fb966, "Saved ") + saved.name, Toast.LENGTH_SHORT).show();
         });
     }
 
@@ -2016,8 +2016,8 @@ public final class ThemeStudioActivity extends Activity {
         field.setSelection(field.length());
         field.setTextColor(UiKit.TEXT);
         field.setHintTextColor(UiKit.MUTED);
-        field.setHint("Theme name");
-        field.setContentDescription("Theme name");
+        field.setHint(OrbitText.get(R.string.ui_theme_name_e41991, "Theme name"));
+        field.setContentDescription(OrbitText.get(R.string.ui_theme_name_e41991, "Theme name"));
         field.setTextSize(15);
         field.setPadding(UiKit.dp(this, 14), 0, UiKit.dp(this, 14), 0);
         field.setBackground(UiKit.outlined(UiKit.SURFACE_2,
@@ -2028,7 +2028,7 @@ public final class ThemeStudioActivity extends Activity {
         AlertDialog dialog = new AlertDialog.Builder(this)
                 .setTitle(title)
                 .setView(form)
-                .setNegativeButton("Cancel", null)
+                .setNegativeButton(OrbitText.get(R.string.ui_cancel_19766e, "Cancel"), null)
                 .setPositiveButton(confirm, null)
                 .create();
         UiKit.styleOrbitDialog(dialog, this, false,
@@ -2071,7 +2071,7 @@ public final class ThemeStudioActivity extends Activity {
         try {
             startActivityForResult(intent, REQ_IMPORT_THEME);
         } catch (Exception e) {
-            Toast.makeText(this, "No file picker is available on this device.",
+            Toast.makeText(this, OrbitText.get(R.string.ui_no_file_picker_is_available_on_this_device_74f167, "No file picker is available on this device."),
                     Toast.LENGTH_SHORT).show();
         }
     }
@@ -2093,7 +2093,7 @@ public final class ThemeStudioActivity extends Activity {
         try {
             startActivityForResult(intent, REQ_EXPORT_THEME);
         } catch (Exception e) {
-            Toast.makeText(this, "No file picker is available on this device.",
+            Toast.makeText(this, OrbitText.get(R.string.ui_no_file_picker_is_available_on_this_device_74f167, "No file picker is available on this device."),
                     Toast.LENGTH_SHORT).show();
         }
     }
@@ -2119,13 +2119,13 @@ public final class ThemeStudioActivity extends Activity {
                 // Anything the content provider itself did — a revoked grant, a file that vanished,
                 // a provider that threw. The user gets the same sentence as a bad file, because
                 // from where they are standing it is the same outcome.
-                failure = "Orbit could not open that file.";
+                failure = OrbitText.get(R.string.ui_orbit_could_not_open_that_file_c3ca0a, "Orbit could not open that file.");
             }
             final OrbitTheme result = imported;
             final String message = failure;
             runOnUiThread(() -> {
                 if (isFinishing() || isDestroyed()) return;
-                if (result == null) showThemeFileError("Theme not imported", message);
+                if (result == null) showThemeFileError(OrbitText.get(R.string.ui_theme_not_imported_c6c1e1, "Theme not imported"), message);
                 else showImportReview(result);
             });
         }, "orbit-theme-import").start();
@@ -2136,7 +2136,7 @@ public final class ThemeStudioActivity extends Activity {
         final OrbitTheme subject = theme == null ? draft : theme;
         final String document = OrbitThemeFileCodec.encode(subject);
         if (document.isEmpty()) {
-            showThemeFileError("Theme not exported", "Orbit could not export that theme.");
+            showThemeFileError(OrbitText.get(R.string.ui_theme_not_exported_02c450, "Theme not exported"), OrbitText.get(R.string.ui_orbit_could_not_export_that_theme_67b6ac, "Orbit could not export that theme."));
             return;
         }
         new Thread(() -> {
@@ -2153,9 +2153,9 @@ public final class ThemeStudioActivity extends Activity {
             runOnUiThread(() -> {
                 if (isFinishing() || isDestroyed()) return;
                 if (saved) {
-                    Toast.makeText(this, subject.name + " exported", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, subject.name + OrbitText.get(R.string.ui_exported_5c6af6, " exported"), Toast.LENGTH_SHORT).show();
                 } else {
-                    showThemeFileError("Theme not exported", "Orbit could not write that file.");
+                    showThemeFileError(OrbitText.get(R.string.ui_theme_not_exported_02c450, "Theme not exported"), OrbitText.get(R.string.ui_orbit_could_not_write_that_file_973330, "Orbit could not write that file."));
                 }
             });
         }, "orbit-theme-export").start();
@@ -2164,8 +2164,8 @@ public final class ThemeStudioActivity extends Activity {
     private void showThemeFileError(String title, String message) {
         AlertDialog dialog = new AlertDialog.Builder(this)
                 .setTitle(title)
-                .setMessage(message == null ? "This isn't a supported Orbit theme." : message)
-                .setPositiveButton("OK", null)
+                .setMessage(message == null ? OrbitText.get(R.string.ui_this_isn_t_a_supported_orbit_theme_31d513, "This isn't a supported Orbit theme.") : message)
+                .setPositiveButton(OrbitText.get(R.string.ui_ok_565339, "OK"), null)
                 .create();
         UiKit.styleOrbitDialog(dialog, this, false);
         dialog.show();
@@ -2201,9 +2201,9 @@ public final class ThemeStudioActivity extends Activity {
 
         boolean dirty = isDirty();
         String note = dirty
-                ? "Orbit will add this to your themes. Your unapplied changes stay in the preview."
-                : "Orbit will add this to your themes and load it into the preview. Your current "
-                        + "appearance does not change until you apply it.";
+                ? OrbitText.get(R.string.ui_orbit_will_add_this_to_your_themes_your_un_9e387a, "Orbit will add this to your themes. Your unapplied changes stay in the preview.")
+                : OrbitText.get(R.string.ui_orbit_will_add_this_to_your_themes_and_loa_c7ee58, "Orbit will add this to your themes and load it into the preview. Your current ")
+                        + OrbitText.get(R.string.ui_appearance_does_not_change_until_you_apply_1032d7, "appearance does not change until you apply it.");
         TextView explanation = UiKit.text(this, note, 12, UiKit.MUTED, false);
         explanation.setPadding(0, UiKit.dp(this, 10), 0, 0);
         body.addView(explanation);
@@ -2212,12 +2212,12 @@ public final class ThemeStudioActivity extends Activity {
         wrapper.addView(body);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this)
-                .setTitle("Import theme")
+                .setTitle(OrbitText.get(R.string.ui_import_theme_f9cc63, "Import theme"))
                 .setView(wrapper)
-                .setNegativeButton("Cancel", null)
-                .setPositiveButton("Import", (d, which) -> importTheme(imported, !dirty));
+                .setNegativeButton(OrbitText.get(R.string.ui_cancel_19766e, "Cancel"), null)
+                .setPositiveButton(OrbitText.get(R.string.ui_import_2cff9b, "Import"), (d, which) -> importTheme(imported, !dirty));
         if (dirty) {
-            builder.setNeutralButton("Import and preview",
+            builder.setNeutralButton(OrbitText.get(R.string.ui_import_and_preview_e03f07, "Import and preview"),
                     (d, which) -> importTheme(imported, true));
         }
         AlertDialog dialog = builder.create();
@@ -2236,14 +2236,14 @@ public final class ThemeStudioActivity extends Activity {
     void importTheme(OrbitTheme imported, boolean loadIntoPreview) {
         OrbitTheme saved = OrbitThemeStore.savePreset(this, imported);
         if (saved == null) {
-            showThemeFileError("Theme not imported",
-                    "Orbit could not save that theme. You may have reached the limit of "
-                            + OrbitThemeStore.MAX_CUSTOM_PRESETS + " saved themes.");
+            showThemeFileError(OrbitText.get(R.string.ui_theme_not_imported_c6c1e1, "Theme not imported"),
+                    OrbitText.get(R.string.ui_orbit_could_not_save_that_theme_you_may_ha_08575a, "Orbit could not save that theme. You may have reached the limit of ")
+                            + OrbitThemeStore.MAX_CUSTOM_PRESETS + OrbitText.get(R.string.ui_saved_themes_5d3602, " saved themes."));
             return;
         }
         if (loadIntoPreview) { selectPreset(saved); onThemeLibraryChanged(); }
         else onThemeLibraryChanged();
-        Toast.makeText(this, "Imported " + saved.name, Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, OrbitText.get(R.string.ui_imported_946503, "Imported ") + saved.name, Toast.LENGTH_SHORT).show();
     }
 
     /**

@@ -70,7 +70,7 @@ public final class ScreenSelectionActivity extends Activity {
         if (callbackToken == null) callbackToken = "";
         Bitmap original = ScreenSelectionStore.load(this, sourcePath);
         if (original == null) {
-            Toast.makeText(this, "Orbit could not open this screen image", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, OrbitText.get(R.string.ui_orbit_could_not_open_this_screen_image_99a718, "Orbit could not open this screen image"), Toast.LENGTH_LONG).show();
             if (callbackToken.isEmpty()) cancelAndFinish();
             else failAndFinish();
             return;
@@ -99,15 +99,15 @@ public final class ScreenSelectionActivity extends Activity {
 
         LinearLayout top = new LinearLayout(this);
         top.setGravity(Gravity.CENTER_VERTICAL);
-        Button cancel = quietButton("Cancel", "Cancel screen selection");
+        Button cancel = quietButton(OrbitText.get(R.string.ui_cancel_19766e, "Cancel"), OrbitText.get(R.string.ui_cancel_screen_selection_734801, "Cancel screen selection"));
         cancel.setOnClickListener(v -> cancelAndFinish());
         top.addView(cancel, new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT, UiKit.dp(this, 40)));
-        TextView title = UiKit.text(this, "Screen selection", 17, UiKit.TEXT, true);
+        TextView title = UiKit.text(this, OrbitText.get(R.string.ui_screen_selection_583c1f, "Screen selection"), 17, UiKit.TEXT, true);
         title.setGravity(Gravity.CENTER);
         top.addView(title, new LinearLayout.LayoutParams(0,
                 ViewGroup.LayoutParams.WRAP_CONTENT, 1));
-        Button reset = quietButton("Reset", "Reset crop and markup");
+        Button reset = quietButton(OrbitText.get(R.string.ui_reset_daee76, "Reset"), OrbitText.get(R.string.ui_reset_crop_and_markup_56778d, "Reset crop and markup"));
         reset.setOnClickListener(v -> {
             editor.reset();
             selectTool(ScreenSelectionView.Tool.CROP, false);
@@ -130,7 +130,7 @@ public final class ScreenSelectionActivity extends Activity {
         editorLp.setMargins(0, UiKit.dp(this, 1), 0, UiKit.dp(this, 1));
         root.addView(editor, editorLp);
 
-        instruction = UiKit.text(this, "Drag to select an area", 12, UiKit.MUTED, false);
+        instruction = UiKit.text(this, OrbitText.get(R.string.ui_drag_to_select_an_area_cf38e5, "Drag to select an area"), 12, UiKit.MUTED, false);
         instruction.setGravity(Gravity.CENTER);
         LinearLayout.LayoutParams instructionLp = new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -139,7 +139,7 @@ public final class ScreenSelectionActivity extends Activity {
 
         undoRow = new LinearLayout(this);
         undoRow.setGravity(Gravity.END | Gravity.CENTER_VERTICAL);
-        undoButton = secondaryButton("Undo", "Undo last markup stroke");
+        undoButton = secondaryButton(OrbitText.get(R.string.ui_undo_a8283a, "Undo"), OrbitText.get(R.string.ui_undo_last_markup_stroke_777976, "Undo last markup stroke"));
         undoButton.setOnClickListener(v -> editor.undoMarkup());
         undoRow.addView(undoButton, new LinearLayout.LayoutParams(
                 UiKit.dp(this, 84), UiKit.dp(this, 34)));
@@ -152,10 +152,10 @@ public final class ScreenSelectionActivity extends Activity {
                 UiKit.dp(this, 3), UiKit.dp(this, 3));
         tools.setBackground(UiKit.outlined(UiKit.SURFACE_2,
                 UiKit.withAlpha(UiKit.accent(this), 70), 17, this));
-        cropButton = toolButton("Crop", "Crop tool");
+        cropButton = toolButton(OrbitText.get(R.string.ui_crop_98caf7, "Crop"), OrbitText.get(R.string.ui_crop_tool_4a4fe7, "Crop tool"));
         cropButton.setOnClickListener(v -> selectTool(ScreenSelectionView.Tool.CROP, true));
         tools.addView(cropButton, new LinearLayout.LayoutParams(0, UiKit.dp(this, 44), 1));
-        markupButton = toolButton("Mark up", "Mark up tool");
+        markupButton = toolButton(OrbitText.get(R.string.ui_mark_up_f71acd, "Mark up"), OrbitText.get(R.string.ui_mark_up_tool_fefd89, "Mark up tool"));
         markupButton.setOnClickListener(v -> selectTool(ScreenSelectionView.Tool.MARKUP, true));
         LinearLayout.LayoutParams markupLp = new LinearLayout.LayoutParams(0,
                 UiKit.dp(this, 44), 1);
@@ -186,13 +186,13 @@ public final class ScreenSelectionActivity extends Activity {
         actions.addView(vaultButton, new LinearLayout.LayoutParams(
                 UiKit.dp(this, VAULT_ACTION_WIDTH_DP), UiKit.dp(this, 46)));
 
-        Button full = secondaryButton("Use full screen", "Use full screen");
+        Button full = secondaryButton(OrbitText.get(R.string.ui_use_full_screen_a4fee0, "Use full screen"), OrbitText.get(R.string.ui_use_full_screen_a4fee0, "Use full screen"));
         full.setOnClickListener(v -> complete(true));
         LinearLayout.LayoutParams fullLp = new LinearLayout.LayoutParams(0, UiKit.dp(this, 46), 1);
         fullLp.setMargins(UiKit.dp(this, 8), 0, 0, 0);
         actions.addView(full, fullLp);
 
-        Button use = primaryButton("Use selection", "Use screen selection");
+        Button use = primaryButton(OrbitText.get(R.string.ui_use_selection_f58bbe, "Use selection"), OrbitText.get(R.string.ui_use_screen_selection_874bde, "Use screen selection"));
         use.setOnClickListener(v -> complete(false));
         // A little more than an equal share, so the strongest action still reads as the strongest
         // one now that it is sharing the row with two others rather than one.
@@ -218,12 +218,12 @@ public final class ScreenSelectionActivity extends Activity {
     private void refreshControls() {
         if (editor == null || cropButton == null) return;
         boolean crop = editor.getTool() == ScreenSelectionView.Tool.CROP;
-        styleTool(cropButton, crop, "Crop tool");
-        styleTool(markupButton, !crop, "Mark up tool");
+        styleTool(cropButton, crop, OrbitText.get(R.string.ui_crop_tool_4a4fe7, "Crop tool"));
+        styleTool(markupButton, !crop, OrbitText.get(R.string.ui_mark_up_tool_fefd89, "Mark up tool"));
         instruction.setText(crop
-                ? (editor.hasCrop() ? "Drag to move or use the handles to resize"
-                : "Drag to select an area")
-                : "Mark what you want Orbit to notice");
+                ? (editor.hasCrop() ? OrbitText.get(R.string.ui_drag_to_move_or_use_the_handles_to_resize_0555f1, "Drag to move or use the handles to resize")
+                : OrbitText.get(R.string.ui_drag_to_select_an_area_cf38e5, "Drag to select an area"))
+                : OrbitText.get(R.string.ui_mark_what_you_want_orbit_to_notice_3756ba, "Mark what you want Orbit to notice"));
         boolean canUndo = !crop && editor.canUndo();
         undoRow.setVisibility(canUndo ? View.VISIBLE : View.GONE);
         undoButton.setEnabled(canUndo);
@@ -231,7 +231,7 @@ public final class ScreenSelectionActivity extends Activity {
 
     private void styleTool(Button button, boolean selected, String description) {
         button.setSelected(selected);
-        button.setContentDescription(description + (selected ? ", selected" : ", not selected"));
+        button.setContentDescription(description + (selected ? OrbitText.get(R.string.ui_selected_bd44f3, ", selected") : OrbitText.get(R.string.ui_not_selected_ec3f69, ", not selected")));
         button.setTextColor(selected ? UiKit.onAccent(this) : UiKit.TEXT);
         button.setBackground(selected
                 ? UiKit.ripple(UiKit.accent(this), UiKit.onAccent(this), 14, this)
@@ -253,14 +253,14 @@ public final class ScreenSelectionActivity extends Activity {
     private void saveSelectionToVault() {
         if (editor == null || finished) return;
         if (!Prefs.vaultEnabled(this)) {
-            Toast.makeText(this, "Orbit Vault is turned off", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, OrbitText.get(R.string.ui_orbit_vault_is_turned_off_cd728c, "Orbit Vault is turned off"), Toast.LENGTH_SHORT).show();
             return;
         }
         Bitmap result;
         try { result = editor.renderResult(false); }
         catch (Exception e) { result = null; }
         if (result == null) {
-            Toast.makeText(this, "Orbit could not render this selection", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, OrbitText.get(R.string.ui_orbit_could_not_render_this_selection_d56424, "Orbit could not render this selection"), Toast.LENGTH_LONG).show();
             return;
         }
         // The words on the screen travel with a full-screen save, so the screenshot can be found
@@ -276,7 +276,7 @@ public final class ScreenSelectionActivity extends Activity {
         if (!result.isRecycled()) result.recycle();
         if (saved == null) {
             Toast.makeText(this, OrbitVaultStore.saveFailureMessage(this,
-                    "Orbit could not save this selection"), Toast.LENGTH_LONG).show();
+                    OrbitText.get(R.string.ui_orbit_could_not_save_this_selection_f0e43f, "Orbit could not save this selection")), Toast.LENGTH_LONG).show();
             return;
         }
         performTick();
@@ -289,7 +289,7 @@ public final class ScreenSelectionActivity extends Activity {
         try { result = editor.renderResult(useFullScreen); }
         catch (Exception e) { result = null; }
         if (result == null) {
-            Toast.makeText(this, "Orbit could not render this selection", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, OrbitText.get(R.string.ui_orbit_could_not_render_this_selection_d56424, "Orbit could not render this selection"), Toast.LENGTH_LONG).show();
             if (!callbackToken.isEmpty()) failAndFinish();
             return;
         }
@@ -305,7 +305,7 @@ public final class ScreenSelectionActivity extends Activity {
             finishAndRemoveTask();
             return;
         }
-        instruction.setText("Preparing selection...");
+        instruction.setText(OrbitText.get(R.string.ui_preparing_selection_62237c, "Preparing selection..."));
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LOCKED);
         new Thread(() -> {
             String resultPath = ScreenSelectionStore.saveResult(this, renderedResult);
@@ -314,7 +314,7 @@ public final class ScreenSelectionActivity extends Activity {
                     finished = false;
                     setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
                     refreshControls();
-                    Toast.makeText(this, "Orbit could not save this selection",
+                    Toast.makeText(this, OrbitText.get(R.string.ui_orbit_could_not_save_this_selection_f0e43f, "Orbit could not save this selection"),
                             Toast.LENGTH_LONG).show();
                     return;
                 }
@@ -403,7 +403,7 @@ public final class ScreenSelectionActivity extends Activity {
      * meaning on its own.
      */
     private Button compactVaultButton() {
-        Button button = secondaryButton(SAVE_TO_VAULT, "Save this selection to your Vault");
+        Button button = secondaryButton(OrbitText.get(R.string.ui_vault_5d55c4, SAVE_TO_VAULT), OrbitText.get(R.string.ui_save_this_selection_to_your_vault_a6f69f, "Save this selection to your Vault"));
         button.setTextSize(12);
         button.setPadding(UiKit.dp(this, 6), 0, UiKit.dp(this, 6), 0);
         button.setCompoundDrawablePadding(UiKit.dp(this, 5));

@@ -142,7 +142,7 @@ public final class OrbitVaultItemActivity extends Activity {
             // Reached by opening an item that has since been deleted, including from another
             // Orbit screen. Saying so is better than an empty page or a crash.
             LinearLayout gone = card();
-            gone.addView(UiKit.text(this, "This item is no longer in your Vault", 15,
+            gone.addView(UiKit.text(this, OrbitText.get(R.string.ui_this_item_is_no_longer_in_your_vault_3445da, "This item is no longer in your Vault"), 15,
                     UiKit.TEXT, true));
             page.addView(gone, cardLp());
             return;
@@ -166,10 +166,10 @@ public final class OrbitVaultItemActivity extends Activity {
         if (item.hasCapturedText()) page.addView(capturedTextCard(item), cardLp());
         String recognized = OrbitVaultAttachment.recognizedText(this, item);
         if (!recognized.isEmpty()) {
-            page.addView(derivedTextCard(RECOGNIZED_HEADING, recognized), cardLp());
+            page.addView(derivedTextCard(OrbitText.get(R.string.ui_text_orbit_read_in_this_picture_523020, RECOGNIZED_HEADING), recognized), cardLp());
         }
         String pageText = pageText(item);
-        if (!pageText.isEmpty()) page.addView(derivedTextCard(PAGE_TEXT_HEADING, pageText), cardLp());
+        if (!pageText.isEmpty()) page.addView(derivedTextCard(OrbitText.get(R.string.ui_text_from_the_saved_page_02fc90, PAGE_TEXT_HEADING), pageText), cardLp());
 
         page.addView(noteCard(item), cardLp());
         View smart = smartCard(item);
@@ -208,15 +208,15 @@ public final class OrbitVaultItemActivity extends Activity {
 
     /** Screen text saved with the item. It is part of the item, so the user can remove it. */
     private View capturedTextCard(OrbitVaultItem item) {
-        LinearLayout card = (LinearLayout) derivedTextCard(CAPTURED_HEADING, item.capturedText);
-        Button remove = UiKit.button(this, "Remove screen text", false);
+        LinearLayout card = (LinearLayout) derivedTextCard(OrbitText.get(R.string.ui_text_from_the_screen_291e6c, CAPTURED_HEADING), item.capturedText);
+        Button remove = UiKit.button(this, OrbitText.get(R.string.ui_remove_screen_text_c36312, "Remove screen text"), false);
         remove.setOnClickListener(v -> {
             AlertDialog dialog = new AlertDialog.Builder(this)
-                    .setTitle("Remove screen text?")
-                    .setMessage("The text that was on the screen will be removed from this item. "
-                            + "The picture stays.")
-                    .setNegativeButton("Cancel", null)
-                    .setPositiveButton("Remove", (d, w) -> {
+                    .setTitle(OrbitText.get(R.string.ui_remove_screen_text_b29ccf, "Remove screen text?"))
+                    .setMessage(OrbitText.get(R.string.ui_the_text_that_was_on_the_screen_will_be_re_45dda6, "The text that was on the screen will be removed from this item. ")
+                            + OrbitText.get(R.string.ui_the_picture_stays_563a81, "The picture stays."))
+                    .setNegativeButton(OrbitText.get(R.string.ui_cancel_19766e, "Cancel"), null)
+                    .setPositiveButton(OrbitText.get(R.string.ui_remove_c3812f, "Remove"), (d, w) -> {
                         OrbitVaultStore.clearCapturedText(this, item.id);
                         rebuild();
                     })
@@ -243,12 +243,12 @@ public final class OrbitVaultItemActivity extends Activity {
         body.setPadding(0, UiKit.dp(this, 7), 0, 0);
         card.addView(body);
         if (text.length() > 280) {
-            TextView more = UiKit.text(this, "Show all", 12, UiKit.accent(this), true);
+            TextView more = UiKit.text(this, OrbitText.get(R.string.ui_show_all_2150d8, "Show all"), 12, UiKit.accent(this), true);
             more.setPadding(0, UiKit.dp(this, 8), 0, 0);
             more.setOnClickListener(v -> {
                 boolean expanded = body.getMaxLines() == Integer.MAX_VALUE;
                 body.setMaxLines(expanded ? 6 : Integer.MAX_VALUE);
-                more.setText(expanded ? "Show all" : "Show less");
+                more.setText(expanded ? OrbitText.get(R.string.ui_show_all_2150d8, "Show all") : OrbitText.get(R.string.ui_show_less_94ea9b, "Show less"));
             });
             card.addView(more);
         }
@@ -269,30 +269,30 @@ public final class OrbitVaultItemActivity extends Activity {
         if (!enabled && !hasSuggestions && item.topics.isEmpty()) return null;
 
         LinearLayout card = card();
-        card.addView(UiKit.text(this, hasSuggestions ? SUGGESTED_HEADING : TOPICS_HEADING, 12,
+        card.addView(UiKit.text(this, hasSuggestions ? OrbitText.get(R.string.ui_orbit_suggested_3fc1cf, SUGGESTED_HEADING) : OrbitText.get(R.string.ui_topics_e22820, TOPICS_HEADING), 12,
                 UiKit.MUTED, true));
 
         if (hasSuggestions && !item.suggestionsAreCurrent() && s.generatedAt > 0) {
-            TextView stale = UiKit.text(this, "Written before this item was last edited.", 12,
+            TextView stale = UiKit.text(this, OrbitText.get(R.string.ui_written_before_this_item_was_last_edited_4194d7, "Written before this item was last edited."), 12,
                     UiKit.MUTED, false);
             stale.setPadding(0, UiKit.dp(this, 5), 0, 0);
             card.addView(stale);
         }
 
         if (item.titleIsSuggested()) {
-            TextView title = UiKit.text(this, "Title: " + s.title, 14, UiKit.TEXT, false);
+            TextView title = UiKit.text(this, OrbitText.get(R.string.ui_title_74ad42, "Title: ") + s.title, 14, UiKit.TEXT, false);
             title.setPadding(0, UiKit.dp(this, 8), 0, 0);
             card.addView(title);
             LinearLayout row = new LinearLayout(this);
             row.setOrientation(LinearLayout.HORIZONTAL);
-            Button keep = UiKit.button(this, "Keep title", false);
+            Button keep = UiKit.button(this, OrbitText.get(R.string.ui_keep_title_00e60a, "Keep title"), false);
             keep.setOnClickListener(v -> {
                 OrbitVaultStore.keepSuggestedTitle(this, item.id);
-                Toast.makeText(this, "Title kept", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, OrbitText.get(R.string.ui_title_kept_5558e8, "Title kept"), Toast.LENGTH_SHORT).show();
                 rebuild();
             });
             row.addView(keep, new LinearLayout.LayoutParams(0, UiKit.dp(this, 38), 1));
-            Button rename = UiKit.button(this, "Rename", false);
+            Button rename = UiKit.button(this, OrbitText.get(R.string.ui_rename_3064d7, "Rename"), false);
             rename.setOnClickListener(v -> {
                 OrbitVaultItem now = OrbitVaultStore.get(this, item.id);
                 if (now != null) edit(now);
@@ -301,8 +301,8 @@ public final class OrbitVaultItemActivity extends Activity {
                     0, UiKit.dp(this, 38), 1);
             renameLp.setMargins(UiKit.dp(this, 8), 0, 0, 0);
             row.addView(rename, renameLp);
-            Button drop = UiKit.button(this, "Remove", false);
-            drop.setContentDescription("Remove the suggested title");
+            Button drop = UiKit.button(this, OrbitText.get(R.string.ui_remove_c3812f, "Remove"), false);
+            drop.setContentDescription(OrbitText.get(R.string.ui_remove_the_suggested_title_b3cdf5, "Remove the suggested title"));
             drop.setOnClickListener(v -> {
                 OrbitVaultStore.updateSuggestions(this, item.id, s.withoutTitle());
                 rebuild();
@@ -324,7 +324,7 @@ public final class OrbitVaultItemActivity extends Activity {
             summary.setTextIsSelectable(true);
             summary.setPadding(0, UiKit.dp(this, 10), 0, 0);
             card.addView(summary);
-            TextView removeSummary = UiKit.text(this, "Remove summary", 12, UiKit.accent(this), true);
+            TextView removeSummary = UiKit.text(this, OrbitText.get(R.string.ui_remove_summary_7027fb, "Remove summary"), 12, UiKit.accent(this), true);
             removeSummary.setPadding(0, UiKit.dp(this, 6), 0, 0);
             removeSummary.setOnClickListener(v -> {
                 OrbitVaultStore.updateSuggestions(this, item.id, s.withoutSummary());
@@ -341,8 +341,8 @@ public final class OrbitVaultItemActivity extends Activity {
         for (String topic : item.topics) chips.addView(topicChip(item, topic, false), chipLp());
         for (String topic : item.suggestedTopics()) chips.addView(topicChip(item, topic, true), chipLp());
         if (item.topics.size() < VaultTopics.MAX_PER_ITEM) {
-            TextView add = chip("+ " + ACTION_ADD_TOPIC, false);
-            add.setContentDescription(ACTION_ADD_TOPIC);
+            TextView add = chip("+ " + OrbitText.get(R.string.ui_add_topic_dd88f6, ACTION_ADD_TOPIC), false);
+            add.setContentDescription(OrbitText.get(R.string.ui_add_topic_dd88f6, ACTION_ADD_TOPIC));
             add.setOnClickListener(v -> addTopic(item));
             chips.addView(add, chipLp());
         }
@@ -352,8 +352,8 @@ public final class OrbitVaultItemActivity extends Activity {
         scrollLp.setMargins(0, UiKit.dp(this, 10), 0, 0);
         card.addView(scroller, scrollLp);
         if (!item.suggestedTopics().isEmpty()) {
-            TextView hint = UiKit.text(this, "Topics marked ✦ are Orbit's suggestions. "
-                    + "Tap one to keep or remove it.", 11, UiKit.MUTED, false);
+            TextView hint = UiKit.text(this, OrbitText.get(R.string.ui_topics_marked_are_orbit_s_suggestions_45ca90, "Topics marked ✦ are Orbit's suggestions. ")
+                    + OrbitText.get(R.string.ui_tap_one_to_keep_or_remove_it_34a88c, "Tap one to keep or remove it."), 11, UiKit.MUTED, false);
             hint.setPadding(0, UiKit.dp(this, 6), 0, 0);
             card.addView(hint);
         }
@@ -369,13 +369,13 @@ public final class OrbitVaultItemActivity extends Activity {
             LinearLayout row = new LinearLayout(this);
             row.setOrientation(LinearLayout.HORIZONTAL);
             if (enabled) {
-                Button suggest = UiKit.button(this, hasSuggestions ? ACTION_REGENERATE
-                        : ACTION_SUGGEST, false);
+                Button suggest = UiKit.button(this, hasSuggestions ? OrbitText.get(R.string.ui_suggest_again_bba9f4, ACTION_REGENERATE)
+                        : OrbitText.get(R.string.ui_suggest_details_df0d6e, ACTION_SUGGEST), false);
                 suggest.setOnClickListener(v -> requestSuggestions(item));
                 row.addView(suggest, new LinearLayout.LayoutParams(0, UiKit.dp(this, 40), 1));
             }
             if (hasSuggestions) {
-                Button clear = UiKit.button(this, ACTION_CLEAR_SUGGESTIONS, false);
+                Button clear = UiKit.button(this, OrbitText.get(R.string.ui_remove_suggestions_8de9ad, ACTION_CLEAR_SUGGESTIONS), false);
                 clear.setOnClickListener(v -> {
                     OrbitVaultStore.updateSuggestions(this, item.id, s.onlyRejections());
                     rebuild();
@@ -413,26 +413,26 @@ public final class OrbitVaultItemActivity extends Activity {
 
     private View topicChip(OrbitVaultItem item, String topic, boolean suggested) {
         TextView chip = chip((suggested ? "✦ " : "# ") + topic, suggested);
-        chip.setContentDescription((suggested ? "Suggested topic " : "Topic ") + topic
-                + ". Tap for options.");
+        chip.setContentDescription((suggested ? OrbitText.get(R.string.ui_suggested_topic_3b16c1, "Suggested topic ") : OrbitText.get(R.string.ui_topic_6dd627, "Topic ")) + topic
+                + OrbitText.get(R.string.ui_tap_for_options_517f6f, ". Tap for options."));
         chip.setOnClickListener(v -> {
             String[] options = suggested
-                    ? new String[]{"Keep topic", "Remove suggestion", "Show items with this topic"}
-                    : new String[]{"Remove topic", "Show items with this topic"};
+                    ? new String[]{OrbitText.get(R.string.ui_keep_topic_011d1a, "Keep topic"), OrbitText.get(R.string.ui_remove_suggestion_1212c9, "Remove suggestion"), OrbitText.get(R.string.ui_show_items_with_this_topic_d8fd44, "Show items with this topic")}
+                    : new String[]{OrbitText.get(R.string.ui_remove_topic_c35276, "Remove topic"), OrbitText.get(R.string.ui_show_items_with_this_topic_d8fd44, "Show items with this topic")};
             UiKit.showOrbitMenu(this, v, options, -1, (index, label) -> {
                 OrbitVaultItem now = OrbitVaultStore.get(this, item.id);
                 if (now == null) return;
-                if ("Keep topic".equals(label)) {
+                if (OrbitText.get(R.string.ui_keep_topic_011d1a, "Keep topic").equals(label)) {
                     List<String> next = new ArrayList<>(now.topics);
                     next.add(topic);
                     OrbitVaultStore.setTopics(this, now.id, next);
-                } else if ("Remove suggestion".equals(label) && now.suggestions != null) {
+                } else if (OrbitText.get(R.string.ui_remove_suggestion_1212c9, "Remove suggestion").equals(label) && now.suggestions != null) {
                     OrbitVaultStore.updateSuggestions(this, now.id, now.suggestions.rejecting(topic));
-                } else if ("Remove topic".equals(label)) {
+                } else if (OrbitText.get(R.string.ui_remove_topic_c35276, "Remove topic").equals(label)) {
                     List<String> next = new ArrayList<>(now.topics);
                     next.remove(topic);
                     OrbitVaultStore.setTopics(this, now.id, next);
-                } else if ("Show items with this topic".equals(label)) {
+                } else if (OrbitText.get(R.string.ui_show_items_with_this_topic_d8fd44, "Show items with this topic").equals(label)) {
                     Prefs.setVaultFilter(this, OrbitVaultFilter.NONE.withTopic(topic));
                     startActivity(new Intent(this, OrbitVaultActivity.class)
                             .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
@@ -450,14 +450,14 @@ public final class OrbitVaultItemActivity extends Activity {
     private void addTopic(OrbitVaultItem item) {
         EditText field = new EditText(this);
         field.setSingleLine(true);
-        field.setHint("Topic, like recipes or travel");
+        field.setHint(OrbitText.get(R.string.ui_topic_like_recipes_or_travel_66ea42, "Topic, like recipes or travel"));
         field.setTextColor(UiKit.TEXT);
         field.setHintTextColor(UiKit.MUTED);
         AlertDialog dialog = new AlertDialog.Builder(this)
-                .setTitle(ACTION_ADD_TOPIC)
+                .setTitle(OrbitText.get(R.string.ui_add_topic_dd88f6, ACTION_ADD_TOPIC))
                 .setView(field)
-                .setNegativeButton("Cancel", null)
-                .setPositiveButton("Add", (d, w) -> {
+                .setNegativeButton(OrbitText.get(R.string.ui_cancel_19766e, "Cancel"), null)
+                .setPositiveButton(OrbitText.get(R.string.ui_add_9fd728, "Add"), (d, w) -> {
                     OrbitVaultItem now = OrbitVaultStore.get(this, item.id);
                     if (now == null) return;
                     String topic = VaultTopics.reuse(field.getText().toString(),
@@ -485,8 +485,8 @@ public final class OrbitVaultItemActivity extends Activity {
         }
         int queued = SmartVault.queueSuggestions(this, java.util.Collections.singletonList(item.id));
         Toast.makeText(this, queued > 0
-                ? "Orbit will send this item to " + SmartVault.providerName(this) + " for suggestions"
-                : "Orbit could not queue suggestions", Toast.LENGTH_SHORT).show();
+                ? OrbitText.get(R.string.ui_orbit_will_send_this_item_to_1e0ccf, "Orbit will send this item to ") + SmartVault.providerName(this) + OrbitText.get(R.string.ui_for_suggestions_df7c6c, " for suggestions")
+                : OrbitText.get(R.string.ui_orbit_could_not_queue_suggestions_7b9ecd, "Orbit could not queue suggestions"), Toast.LENGTH_SHORT).show();
         rebuild();
     }
 
@@ -509,7 +509,7 @@ public final class OrbitVaultItemActivity extends Activity {
         if (related.isEmpty()) return null;
         LinearLayout section = new LinearLayout(this);
         section.setOrientation(LinearLayout.VERTICAL);
-        TextView heading = UiKit.text(this, RELATED_HEADING, 12, UiKit.MUTED, true);
+        TextView heading = UiKit.text(this, OrbitText.get(R.string.ui_related_in_your_vault_33b6d6, RELATED_HEADING), 12, UiKit.MUTED, true);
         heading.setLetterSpacing(0.18f);
         heading.setPadding(UiKit.dp(this, 3), UiKit.dp(this, 26), 0, UiKit.dp(this, 10));
         section.addView(heading);
@@ -526,7 +526,7 @@ public final class OrbitVaultItemActivity extends Activity {
             }
             row.setBackground(UiKit.rippleOutlined(UiKit.SURFACE,
                     UiKit.withAlpha(UiKit.accent(this), 30), UiKit.accent(this), 18, this));
-            row.setContentDescription("Related: " + other.typeLabel() + ", "
+            row.setContentDescription(OrbitText.get(R.string.ui_related_7a75fb, "Related: ") + other.typeLabel() + ", "
                     + other.displayTitle());
             row.setOnClickListener(v -> {
                 startActivity(new Intent(this, OrbitVaultItemActivity.class)
@@ -552,10 +552,10 @@ public final class OrbitVaultItemActivity extends Activity {
      */
     private View noteCard(OrbitVaultItem item) {
         LinearLayout card = card();
-        card.addView(UiKit.text(this, NOTE_HEADING, 12, UiKit.MUTED, true));
+        card.addView(UiKit.text(this, OrbitText.get(R.string.ui_your_note_5331e4, NOTE_HEADING), 12, UiKit.MUTED, true));
 
         TextView value = UiKit.text(this,
-                item.hasNote() ? item.note : NOTE_EMPTY,
+                item.hasNote() ? item.note : OrbitText.get(R.string.ui_add_a_note_322c0e, NOTE_EMPTY),
                 item.hasNote() ? Prefs.chatTextSp(this, 14) : 14,
                 item.hasNote() ? UiKit.TEXT : UiKit.MUTED, false);
         value.setLineSpacing(0, UiKit.CHAT_LINE_SPACING);
@@ -566,8 +566,8 @@ public final class OrbitVaultItemActivity extends Activity {
                 UiKit.withAlpha(UiKit.accent(this), item.hasNote() ? 34 : 22),
                 UiKit.accent(this), 20, this));
         card.setContentDescription(item.hasNote()
-                ? "Your note: " + item.note + ". Tap to edit."
-                : "Add a note about why you saved this");
+                ? OrbitText.get(R.string.ui_your_note_e528ae, "Your note: ") + item.note + OrbitText.get(R.string.ui_tap_to_edit_00d101, ". Tap to edit.")
+                : OrbitText.get(R.string.ui_add_a_note_about_why_you_saved_this_26e7d3, "Add a note about why you saved this"));
         card.setOnClickListener(v -> editNote(item));
         UiKit.pressScale(card);
         return card;
@@ -577,17 +577,17 @@ public final class OrbitVaultItemActivity extends Activity {
         LinearLayout top = new LinearLayout(this);
         top.setGravity(Gravity.CENTER_VERTICAL);
 
-        ImageButton back = iconButton(R.drawable.ic_back, "Back to Vault");
+        ImageButton back = iconButton(R.drawable.ic_back, OrbitText.get(R.string.ui_back_to_vault_6a9560, "Back to Vault"));
         back.setOnClickListener(v -> navigation.performBack());
         top.addView(back, new LinearLayout.LayoutParams(UiKit.dp(this, 48), UiKit.dp(this, 48)));
 
         LinearLayout titles = new LinearLayout(this);
         titles.setOrientation(LinearLayout.VERTICAL);
-        titles.addView(UiKit.text(this, item == null ? "Vault item" : item.displayTitle(),
+        titles.addView(UiKit.text(this, item == null ? OrbitText.get(R.string.ui_vault_item_dc97f7, "Vault item") : item.displayTitle(),
                 22, UiKit.TEXT, true));
         // A suggested title is marked as Orbit's right under it, so it is never mistaken for one
         // the user chose.
-        titles.addView(UiKit.text(this, item == null ? "Vault" : item.typeLabel()
+        titles.addView(UiKit.text(this, item == null ? OrbitText.get(R.string.ui_vault_5d55c4, "Vault") : item.typeLabel()
                         + (item.titleIsSuggested() ? " 00b7 2726 Suggested title" : ""),
                 12, UiKit.MUTED, false));
         LinearLayout.LayoutParams titleLp = new LinearLayout.LayoutParams(
@@ -612,10 +612,10 @@ public final class OrbitVaultItemActivity extends Activity {
     private void togglePin(OrbitVaultItem item) {
         boolean wanted = !item.pinned;
         if (!OrbitVaultStore.setPinned(this, item.id, wanted)) {
-            Toast.makeText(this, "Orbit could not update that item", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, OrbitText.get(R.string.ui_orbit_could_not_update_that_item_bdf85b, "Orbit could not update that item"), Toast.LENGTH_SHORT).show();
             return;
         }
-        Toast.makeText(this, wanted ? "Pinned" : "Unpinned", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, wanted ? OrbitText.get(R.string.ui_pinned_f20c87, "Pinned") : OrbitText.get(R.string.ui_unpinned_ebe3b5, "Unpinned"), Toast.LENGTH_SHORT).show();
         rebuild();
     }
 
@@ -634,11 +634,11 @@ public final class OrbitVaultItemActivity extends Activity {
         boolean page = item.isDocumentPage();
         if (picture == null) {
             card.addView(UiKit.text(this, page
-                            ? "This saved page image is no longer on this device"
-                            : "This image is no longer on this device",
+                            ? OrbitText.get(R.string.ui_this_saved_page_image_is_no_longer_on_this_988edf, "This saved page image is no longer on this device")
+                            : OrbitText.get(R.string.ui_this_image_is_no_longer_on_this_device_f70bda, "This image is no longer on this device"),
                     14, UiKit.TEXT, false));
             TextView why = UiKit.text(this,
-                    "Its file was removed. The saved details below are still here.",
+                    OrbitText.get(R.string.ui_its_file_was_removed_the_saved_details_bel_a2eb54, "Its file was removed. The saved details below are still here."),
                     12, UiKit.MUTED, false);
             why.setPadding(0, UiKit.dp(this, 6), 0, 0);
             card.addView(why);
@@ -648,7 +648,7 @@ public final class OrbitVaultItemActivity extends Activity {
         view.setImageBitmap(picture);
         view.setAdjustViewBounds(true);
         view.setScaleType(ImageView.ScaleType.FIT_CENTER);
-        view.setContentDescription((page ? "Saved page: " : "Saved image: ") + item.displayTitle());
+        view.setContentDescription((page ? OrbitText.get(R.string.ui_saved_page_1cf37c, "Saved page: ") : OrbitText.get(R.string.ui_saved_image_2cc222, "Saved image: ")) + item.displayTitle());
         card.addView(view, new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         return card;
@@ -659,7 +659,7 @@ public final class OrbitVaultItemActivity extends Activity {
         // A saved page's body is text Orbit extracted from a document rather than words the user
         // wrote, so it is labelled. Everything else is the thing itself and needs no heading.
         if (item.isDocumentPage()) {
-            card.addView(UiKit.text(this, "Text on this page", 12, UiKit.MUTED, true));
+            card.addView(UiKit.text(this, OrbitText.get(R.string.ui_text_on_this_page_9eabcf, "Text on this page"), 12, UiKit.MUTED, true));
         }
         TextView body = UiKit.text(this, item.body, Prefs.chatTextSp(this, 15), UiKit.TEXT, false);
         body.setLineSpacing(0, UiKit.CHAT_LINE_SPACING);
@@ -680,9 +680,9 @@ public final class OrbitVaultItemActivity extends Activity {
         }
         // Honest either way: with "Read saved links" on, Smart Vault has read the page once.
         TextView note = UiKit.text(this, pageText(item).isEmpty()
-                        ? "Orbit has not opened or read this address. It opens only when you choose to."
-                        : "Smart Vault read this page once so you can search its text. It opens "
-                                + "only when you choose to.",
+                        ? OrbitText.get(R.string.ui_orbit_has_not_opened_or_read_this_address_5b3866, "Orbit has not opened or read this address. It opens only when you choose to.")
+                        : OrbitText.get(R.string.ui_smart_vault_read_this_page_once_so_you_can_0d70e8, "Smart Vault read this page once so you can search its text. It opens ")
+                                + OrbitText.get(R.string.ui_only_when_you_choose_to_c2aa69, "only when you choose to."),
                 12, UiKit.MUTED, false);
         note.setPadding(0, UiKit.dp(this, 8), 0, 0);
         card.addView(note);
@@ -699,7 +699,7 @@ public final class OrbitVaultItemActivity extends Activity {
         // The document's own name, once, in the details rather than glued into the source line.
         // A filename can be very long and the source line has to stay one readable phrase.
         if (item.isDocumentPage() && !item.documentName.isEmpty()) {
-            TextView from = UiKit.text(this, "From " + item.documentName, 12, UiKit.MUTED, false);
+            TextView from = UiKit.text(this, OrbitText.get(R.string.ui_from_e484a9, "From ") + item.documentName, 12, UiKit.MUTED, false);
             from.setPadding(0, UiKit.dp(this, 4), 0, 0);
             card.addView(from);
         }
@@ -708,7 +708,7 @@ public final class OrbitVaultItemActivity extends Activity {
         // that pushes the dates off the card. The whole address is still what Open source opens.
         String sourceHost = item.sourceHostLabel();
         if (!sourceHost.isEmpty()) {
-            TextView from = UiKit.text(this, "From " + sourceHost, 12, UiKit.MUTED, false);
+            TextView from = UiKit.text(this, OrbitText.get(R.string.ui_from_e484a9, "From ") + sourceHost, 12, UiKit.MUTED, false);
             from.setPadding(0, UiKit.dp(this, 4), 0, 0);
             card.addView(from);
         }
@@ -744,41 +744,41 @@ public final class OrbitVaultItemActivity extends Activity {
             // Open link keeps the priority it earned in Beta 1: it is what a saved address is for,
             // it is the action the device testing singled out as good, and it stays the one filled
             // control. Ask Orbit sits beside it, obvious without competing.
-            primary.addView(filledAction(ACTION_OPEN_LINK, v -> openLink(item)), primaryCellLp(0));
-            primary.addView(outlinedAction(ACTION_ASK, v -> askOrbit(item)), primaryCellLp(9));
+            primary.addView(filledAction(OrbitText.get(R.string.ui_open_link_aab63f, ACTION_OPEN_LINK), v -> openLink(item)), primaryCellLp(0));
+            primary.addView(outlinedAction(OrbitText.get(R.string.ui_ask_orbit_18ea29, ACTION_ASK), v -> askOrbit(item)), primaryCellLp(9));
         } else if (item.hasSourceUrl()) {
             // A saved picture that remembers its page. Ask Orbit stays the filled control, because
             // the picture is the thing the user kept; Open source sits beside it for the times they
             // want to go back and read where it came from.
-            primary.addView(filledAction(ACTION_ASK, v -> askOrbit(item)), primaryCellLp(0));
-            primary.addView(outlinedAction(ACTION_OPEN_SOURCE, v -> openSource(item)), primaryCellLp(9));
+            primary.addView(filledAction(OrbitText.get(R.string.ui_ask_orbit_18ea29, ACTION_ASK), v -> askOrbit(item)), primaryCellLp(0));
+            primary.addView(outlinedAction(OrbitText.get(R.string.ui_open_source_67a0d2, ACTION_OPEN_SOURCE), v -> openSource(item)), primaryCellLp(9));
         } else {
-            primary.addView(filledAction(ACTION_ASK, v -> askOrbit(item)), primaryCellLp(0));
+            primary.addView(filledAction(OrbitText.get(R.string.ui_ask_orbit_18ea29, ACTION_ASK), v -> askOrbit(item)), primaryCellLp(0));
         }
         column.addView(primary, actionRowLp(ACTIONS_TOP_GAP_DP));
 
         // The everyday utilities, gathered before they are laid out, because how many there are is
         // what decides the shape of the rows below.
         List<View> utilities = new ArrayList<>();
-        utilities.add(compactAction(item.bodyIsEditable() ? ACTION_EDIT : ACTION_RENAME,
+        utilities.add(compactAction(item.bodyIsEditable() ? OrbitText.get(R.string.ui_edit_464c4f, ACTION_EDIT) : OrbitText.get(R.string.ui_rename_3064d7, ACTION_RENAME),
                 R.drawable.ic_edit, v -> edit(item)));
         // An image has no words to copy or share. A saved page has the text Orbit extracted
         // from it, which is exactly the thing somebody wants out of a page they kept.
         if (!item.isImage() && !item.body.isEmpty()) {
-            utilities.add(compactAction(ACTION_COPY, R.drawable.ic_copy,
-                    v -> MessageActions.copy(this, "Orbit Vault", item.body,
-                            () -> Toast.makeText(this, "Copied", Toast.LENGTH_SHORT).show())));
-            utilities.add(compactAction(ACTION_SHARE, R.drawable.ic_share,
+            utilities.add(compactAction(OrbitText.get(R.string.ui_copy_e21f93, ACTION_COPY), R.drawable.ic_copy,
+                    v -> MessageActions.copy(this, OrbitText.get(R.string.ui_orbit_vault_ecac6d, "Orbit Vault"), item.body,
+                            () -> Toast.makeText(this, OrbitText.get(R.string.ui_copied_8d525e, "Copied"), Toast.LENGTH_SHORT).show())));
+            utilities.add(compactAction(OrbitText.get(R.string.ui_share_29887a, ACTION_SHARE), R.drawable.ic_share,
                     v -> shareText(item)));
         }
         // Pin arrives here from the header. It is still one tap and still without leaving the
         // page, and it now sits beside the other one-tap actions instead of eating the title.
-        String pinLabel = item.pinned ? ACTION_UNPIN : ACTION_PIN;
+        String pinLabel = item.pinned ? OrbitText.get(R.string.ui_unpin_ee3c71, ACTION_UNPIN) : OrbitText.get(R.string.ui_pin_ff1cee, ACTION_PIN);
         utilities.add(compactAction(pinLabel, R.drawable.ic_pin,
-                pinLabel + " this saved item", v -> togglePin(item)));
+                pinLabel + OrbitText.get(R.string.ui_this_saved_item_6e08f3, " this saved item"), v -> togglePin(item)));
         addUtilityRows(column, utilities);
 
-        Button delete = outlinedAction(ACTION_DELETE, v -> confirmDelete(item));
+        Button delete = outlinedAction(OrbitText.get(R.string.ui_delete_e2d0a5, ACTION_DELETE), v -> confirmDelete(item));
         delete.setTextColor(UiKit.DANGER);
         delete.setBackground(UiKit.rippleOutlined(UiKit.SURFACE_2,
                 UiKit.withAlpha(UiKit.DANGER, 90), UiKit.DANGER, 15, this));
@@ -808,7 +808,7 @@ public final class OrbitVaultItemActivity extends Activity {
                     .putExtra(ChatActivity.EXTRA_FOCUS_COMPOSER, true));
             UiKit.applyPageTransition(this);
         } catch (Exception ignored) {
-            Toast.makeText(this, "Could not open a conversation", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, OrbitText.get(R.string.ui_could_not_open_a_conversation_21ee1d, "Could not open a conversation"), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -829,21 +829,21 @@ public final class OrbitVaultItemActivity extends Activity {
         // One clearly bounded Orbit surface rather than a tall blank area with a rule under it.
         // The box is where the note goes, it starts two lines high, and it grows as the user
         // writes; nothing about it can be mistaken for a length indicator.
-        EditText note = UiKit.input(this, "Why did you save this?", true);
-        note.setContentDescription("Your note");
+        EditText note = UiKit.input(this, OrbitText.get(R.string.ui_why_did_you_save_this_bd46ba, "Why did you save this?"), true);
+        note.setContentDescription(OrbitText.get(R.string.ui_your_note_5331e4, "Your note"));
         note.setText(item.note);
         note.setSelection(note.length());
         form.addView(note, new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
         TextView why = UiKit.text(this,
-                "Your note is yours. It does not change what was saved, and it stays on this "
-                        + "device until you attach this item to a message yourself.",
+                OrbitText.get(R.string.ui_your_note_is_yours_it_does_not_change_what_7abc79, "Your note is yours. It does not change what was saved, and it stays on this ")
+                        + OrbitText.get(R.string.ui_device_until_you_attach_this_item_to_a_mes_4a629f, "device until you attach this item to a message yourself."),
                 12, UiKit.MUTED, false);
         why.setPadding(0, UiKit.dp(this, 12), 0, 0);
         form.addView(why);
 
-        TextView customTitle = UiKit.text(this, item.hasNote() ? "Edit your note" : "Add a note",
+        TextView customTitle = UiKit.text(this, item.hasNote() ? OrbitText.get(R.string.ui_edit_your_note_eb95fa, "Edit your note") : OrbitText.get(R.string.ui_add_a_note_322c0e, "Add a note"),
                 20, UiKit.TEXT, true);
         customTitle.setPadding(UiKit.dp(this, 20), UiKit.dp(this, 18), UiKit.dp(this, 20),
                 UiKit.dp(this, 8));
@@ -852,12 +852,12 @@ public final class OrbitVaultItemActivity extends Activity {
         AlertDialog.Builder builder = new AlertDialog.Builder(this)
                 .setCustomTitle(customTitle)
                 .setView(form)
-                .setNegativeButton("Cancel", null)
-                .setPositiveButton("Save", null);
+                .setNegativeButton(OrbitText.get(R.string.ui_cancel_19766e, "Cancel"), null)
+                .setPositiveButton(OrbitText.get(R.string.ui_save_1509f5, "Save"), null);
         // Offered only when there is something to remove, so the dialog for a first note has two
         // buttons rather than a third that would do nothing.
         if (item.hasNote()) {
-            builder.setNeutralButton("Remove", (d, w) -> {
+            builder.setNeutralButton(OrbitText.get(R.string.ui_remove_c3812f, "Remove"), (d, w) -> {
                 OrbitVaultStore.updateNote(this, item.id, "");
                 rebuild();
             });
@@ -868,7 +868,7 @@ public final class OrbitVaultItemActivity extends Activity {
             if (save == null) return;
             save.setOnClickListener(v -> {
                 if (!OrbitVaultStore.updateNote(this, item.id, note.getText().toString())) {
-                    Toast.makeText(this, "Orbit could not save that note",
+                    Toast.makeText(this, OrbitText.get(R.string.ui_orbit_could_not_save_that_note_1b242b, "Orbit could not save that note"),
                             Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -885,14 +885,14 @@ public final class OrbitVaultItemActivity extends Activity {
         form.setPadding(UiKit.dp(this, 20), UiKit.dp(this, 4), UiKit.dp(this, 20), UiKit.dp(this, 14));
         form.setBackgroundColor(UiKit.SURFACE);
 
-        EditText title = UiKit.input(this, "Title", false);
+        EditText title = UiKit.input(this, OrbitText.get(R.string.ui_title_7e8cd2, "Title"), false);
         title.setText(item.title);
         form.addView(title, new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
         final EditText body;
         if (item.bodyIsEditable()) {
-            body = UiKit.input(this, "Text", true);
+            body = UiKit.input(this, OrbitText.get(R.string.ui_text_71988c, "Text"), true);
             body.setText(item.body);
             LinearLayout.LayoutParams bodyLp = new LinearLayout.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -903,14 +903,14 @@ public final class OrbitVaultItemActivity extends Activity {
             // Said plainly rather than hidden behind a disabled field: a saved answer, a link and a
             // picture are records, and the title is the part that belongs to the user.
             TextView why = UiKit.text(this, item.isOrbitReply()
-                            ? "The answer itself stays exactly as Orbit wrote it."
-                            : "Only the title can be changed for this kind of item.",
+                            ? OrbitText.get(R.string.ui_the_answer_itself_stays_exactly_as_orbit_w_d245ac, "The answer itself stays exactly as Orbit wrote it.")
+                            : OrbitText.get(R.string.ui_only_the_title_can_be_changed_for_this_kin_0d5ae8, "Only the title can be changed for this kind of item."),
                     12, UiKit.MUTED, false);
             why.setPadding(0, UiKit.dp(this, 12), 0, 0);
             form.addView(why);
         }
 
-        TextView customTitle = UiKit.text(this, item.bodyIsEditable() ? "Edit item" : "Rename item",
+        TextView customTitle = UiKit.text(this, item.bodyIsEditable() ? OrbitText.get(R.string.ui_edit_item_9f84ee, "Edit item") : OrbitText.get(R.string.ui_rename_item_14374d, "Rename item"),
                 20, UiKit.TEXT, true);
         customTitle.setPadding(UiKit.dp(this, 20), UiKit.dp(this, 18), UiKit.dp(this, 20),
                 UiKit.dp(this, 8));
@@ -919,8 +919,8 @@ public final class OrbitVaultItemActivity extends Activity {
         AlertDialog dialog = new AlertDialog.Builder(this)
                 .setCustomTitle(customTitle)
                 .setView(form)
-                .setNegativeButton("Cancel", null)
-                .setPositiveButton("Save", null)
+                .setNegativeButton(OrbitText.get(R.string.ui_cancel_19766e, "Cancel"), null)
+                .setPositiveButton(OrbitText.get(R.string.ui_save_1509f5, "Save"), null)
                 .create();
         UiKit.styleOrbitDialog(dialog, this, false, () -> {
             Button save = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
@@ -932,13 +932,13 @@ public final class OrbitVaultItemActivity extends Activity {
                 } else {
                     String text = body.getText().toString().trim();
                     if (text.isEmpty()) {
-                        Toast.makeText(this, "Text cannot be empty", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, OrbitText.get(R.string.ui_text_cannot_be_empty_04b0ff, "Text cannot be empty"), Toast.LENGTH_SHORT).show();
                         return;
                     }
                     ok = OrbitVaultStore.updateText(this, item.id, title.getText().toString(), text);
                 }
                 if (!ok) {
-                    Toast.makeText(this, "Orbit could not save that change",
+                    Toast.makeText(this, OrbitText.get(R.string.ui_orbit_could_not_save_that_change_cd12b8, "Orbit could not save that change"),
                             Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -959,14 +959,14 @@ public final class OrbitVaultItemActivity extends Activity {
     private void openLink(OrbitVaultItem item) {
         String url = OrbitVaultItem.singleLinkOrEmpty(item.body);
         if (url.isEmpty()) {
-            Toast.makeText(this, "That is not a web address Orbit can open",
+            Toast.makeText(this, OrbitText.get(R.string.ui_that_is_not_a_web_address_orbit_can_open_4c6d2f, "That is not a web address Orbit can open"),
                     Toast.LENGTH_SHORT).show();
             return;
         }
         try {
             startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
         } catch (Exception ignored) {
-            Toast.makeText(this, "Could not open link", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, OrbitText.get(R.string.ui_could_not_open_link_dfa30a, "Could not open link"), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -980,14 +980,14 @@ public final class OrbitVaultItemActivity extends Activity {
      */
     private void openSource(OrbitVaultItem item) {
         if (item == null || !RichAnswerUrlPolicy.isOpenableWebUrl(item.sourceUrl)) {
-            Toast.makeText(this, "That is not a web address Orbit can open",
+            Toast.makeText(this, OrbitText.get(R.string.ui_that_is_not_a_web_address_orbit_can_open_4c6d2f, "That is not a web address Orbit can open"),
                     Toast.LENGTH_SHORT).show();
             return;
         }
         try {
             startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(item.sourceUrl)));
         } catch (Exception ignored) {
-            Toast.makeText(this, "Could not open this source", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, OrbitText.get(R.string.ui_could_not_open_this_source_b933a1, "Could not open this source"), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -1005,18 +1005,18 @@ public final class OrbitVaultItemActivity extends Activity {
         try {
             Intent send = new Intent(Intent.ACTION_SEND).setType("text/plain")
                     .putExtra(Intent.EXTRA_TEXT, text);
-            startActivity(Intent.createChooser(send, "Share saved item"));
+            startActivity(Intent.createChooser(send, OrbitText.get(R.string.ui_share_saved_item_fbfff1, "Share saved item")));
         } catch (Exception ignored) {
-            Toast.makeText(this, "Could not share that item", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, OrbitText.get(R.string.ui_could_not_share_that_item_d3db9b, "Could not share that item"), Toast.LENGTH_SHORT).show();
         }
     }
 
     private void confirmDelete(OrbitVaultItem item) {
         AlertDialog dialog = new AlertDialog.Builder(this)
-                .setTitle(DELETE_TITLE)
-                .setMessage(DELETE_MESSAGE)
-                .setNegativeButton("Cancel", null)
-                .setPositiveButton("Delete", (d, w) -> {
+                .setTitle(OrbitText.get(R.string.ui_delete_from_vault_17723b, DELETE_TITLE))
+                .setMessage(OrbitText.get(R.string.ui_this_item_will_be_removed_from_this_device_6cf1cd, DELETE_MESSAGE))
+                .setNegativeButton(OrbitText.get(R.string.ui_cancel_19766e, "Cancel"), null)
+                .setPositiveButton(OrbitText.get(R.string.ui_delete_e2d0a5, "Delete"), (d, w) -> {
                     OrbitVaultStore.delete(this, item.id);
                     finish();
                     UiKit.applyPageTransition(this);

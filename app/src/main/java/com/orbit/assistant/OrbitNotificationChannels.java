@@ -65,17 +65,17 @@ public final class OrbitNotificationChannels {
 
     private static List<Definition> definitions() {
         List<Definition> out = new ArrayList<>(4);
-        out.add(new Definition(BACKGROUND_RESPONSES, "Background responses",
-                "Notifies you when an Orbit response finishes after you leave the chat.",
+        out.add(new Definition(BACKGROUND_RESPONSES, OrbitText.get(R.string.ui_background_responses_be297a, "Background responses"),
+                OrbitText.get(R.string.ui_notifies_you_when_an_orbit_response_finish_2d6065, "Notifies you when an Orbit response finishes after you leave the chat."),
                 NotificationManager.IMPORTANCE_DEFAULT));
-        out.add(new Definition(REMINDERS, "Reminders",
-                "Reminders you create through Orbit.",
+        out.add(new Definition(REMINDERS, OrbitText.get(R.string.ui_reminders_7971dd, "Reminders"),
+                OrbitText.get(R.string.ui_reminders_you_create_through_orbit_513358, "Reminders you create through Orbit."),
                 NotificationManager.IMPORTANCE_HIGH));
-        out.add(new Definition(ROUTINE_TRIGGERS, "Routine triggers",
-                "Only alerts you when an automatic Orbit routine needs attention or a foreground step.",
+        out.add(new Definition(ROUTINE_TRIGGERS, OrbitText.get(R.string.ui_routine_triggers_46ac0d, "Routine triggers"),
+                OrbitText.get(R.string.ui_only_alerts_you_when_an_automatic_orbit_ro_4f2548, "Only alerts you when an automatic Orbit routine needs attention or a foreground step."),
                 NotificationManager.IMPORTANCE_DEFAULT));
-        out.add(new Definition(UPDATES, "Orbit updates",
-                "Notifies you when a verified Orbit release is available.",
+        out.add(new Definition(UPDATES, OrbitText.get(R.string.ui_orbit_updates_8e1c2b, "Orbit updates"),
+                OrbitText.get(R.string.ui_notifies_you_when_a_verified_orbit_release_b44f66, "Notifies you when a verified Orbit release is available."),
                 NotificationManager.IMPORTANCE_DEFAULT));
         return out;
     }

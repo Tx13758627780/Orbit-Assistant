@@ -204,7 +204,7 @@ public final class DeckActivity extends Activity {
 
         page.addView(buildHeader());
 
-        firstRunHint = UiKit.text(this, "Long-press a tile to customize your Deck.",
+        firstRunHint = UiKit.text(this, OrbitText.get(R.string.ui_long_press_a_tile_to_customize_your_deck_9ff66e, "Long-press a tile to customize your Deck."),
                 12.5f, UiKit.MUTED, false);
         firstRunHint.setPadding(UiKit.dp(this, 3), UiKit.dp(this, 14), 0, 0);
         firstRunHint.setVisibility(View.GONE);
@@ -220,7 +220,7 @@ public final class DeckActivity extends Activity {
 
         deckHeadingRow = new LinearLayout(this);
         deckHeadingRow.setOrientation(LinearLayout.VERTICAL);
-        deckHeadingRow.addView(sectionLabel("MY DECK"));
+        deckHeadingRow.addView(sectionLabel(OrbitText.get(R.string.ui_my_deck_98450d, "MY DECK")));
         LinearLayout.LayoutParams headingLp = new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         headingLp.topMargin = UiKit.dp(this, 22);
@@ -272,7 +272,7 @@ public final class DeckActivity extends Activity {
         LinearLayout header = new LinearLayout(this);
         header.setGravity(Gravity.CENTER_VERTICAL);
 
-        ImageButton back = iconButton(R.drawable.ic_back, "Back");
+        ImageButton back = iconButton(R.drawable.ic_back, OrbitText.get(R.string.ui_back_76900f, "Back"));
         back.setOnClickListener(v -> {
             if (backHandler != null) backHandler.performBack();
         });
@@ -283,8 +283,8 @@ public final class DeckActivity extends Activity {
 
         LinearLayout titles = new LinearLayout(this);
         titles.setOrientation(LinearLayout.VERTICAL);
-        titles.addView(UiKit.text(this, "Orbit Deck", 26, UiKit.TEXT, true));
-        headerSubtitle = UiKit.text(this, "Your shortcuts", 12, UiKit.MUTED, false);
+        titles.addView(UiKit.text(this, OrbitText.get(R.string.ui_orbit_deck_9ba2c9, "Orbit Deck"), 26, UiKit.TEXT, true));
+        headerSubtitle = UiKit.text(this, OrbitText.get(R.string.ui_your_shortcuts_81d815, "Your shortcuts"), 12, UiKit.MUTED, false);
         titles.addView(headerSubtitle);
         header.addView(titles, new LinearLayout.LayoutParams(
                 0, ViewGroup.LayoutParams.WRAP_CONTENT, 1));
@@ -305,12 +305,12 @@ public final class DeckActivity extends Activity {
         lp.leftMargin = UiKit.dp(this, 2);
 
         if (editing) {
-            ImageButton options = iconButton(R.drawable.ic_more, "Deck options");
+            ImageButton options = iconButton(R.drawable.ic_more, OrbitText.get(R.string.ui_deck_options_df85e2, "Deck options"));
             options.setOnClickListener(this::showDeckOptions);
             headerControls.addView(options, lp);
 
             Button done = new Button(this);
-            done.setText("Done");
+            done.setText(OrbitText.get(R.string.ui_done_11a676, "Done"));
             done.setAllCaps(false);
             done.setTextSize(14);
             done.setTextColor(UiKit.onAccent(this));
@@ -328,11 +328,11 @@ public final class DeckActivity extends Activity {
             return;
         }
 
-        ImageButton customize = iconButton(R.drawable.ic_tune, "Customize Deck");
+        ImageButton customize = iconButton(R.drawable.ic_tune, OrbitText.get(R.string.ui_customize_deck_a80258, "Customize Deck"));
         customize.setOnClickListener(v -> setEditing(true));
         headerControls.addView(customize, lp);
 
-        ImageButton add = iconButton(R.drawable.ic_add, "Add tile");
+        ImageButton add = iconButton(R.drawable.ic_add, OrbitText.get(R.string.ui_add_tile_3f05e3, "Add tile"));
         add.setOnClickListener(v -> openAddSheet());
         headerControls.addView(add, lp);
     }
@@ -345,18 +345,18 @@ public final class DeckActivity extends Activity {
         int pad = UiKit.dp(this, 26);
         block.setPadding(pad, UiKit.dp(this, 32), pad, UiKit.dp(this, 32));
 
-        TextView title = UiKit.text(this, "Build your Deck", 19, UiKit.TEXT, true);
+        TextView title = UiKit.text(this, OrbitText.get(R.string.ui_build_your_deck_a9b709, "Build your Deck"), 19, UiKit.TEXT, true);
         title.setGravity(Gravity.CENTER);
         block.addView(title);
 
-        TextView note = UiKit.text(this, "Add the Orbit tools you want one tap away.",
+        TextView note = UiKit.text(this, OrbitText.get(R.string.ui_add_the_orbit_tools_you_want_one_tap_away_b77ea3, "Add the Orbit tools you want one tap away."),
                 13.5f, UiKit.MUTED, false);
         note.setGravity(Gravity.CENTER);
         note.setPadding(0, UiKit.dp(this, 8), 0, UiKit.dp(this, 20));
         block.addView(note);
 
         Button add = new Button(this);
-        add.setText("Add tile");
+        add.setText(OrbitText.get(R.string.ui_add_tile_3f05e3, "Add tile"));
         add.setAllCaps(false);
         add.setTextSize(15);
         add.setTextColor(UiKit.onAccent(this));
@@ -408,14 +408,14 @@ public final class DeckActivity extends Activity {
     private void updateHeaderSubtitle(DeckLayout deck) {
         boolean switchable = OrbitProEntitlement.hasPro(this)
                 && DeckLayoutStore.layoutCount(this) > 1;
-        String text = switchable ? deck.name : "Your shortcuts";
-        if (editing) text = switchable ? "Editing · " + deck.name : "Editing";
+        String text = switchable ? deck.name : OrbitText.get(R.string.ui_your_shortcuts_81d815, "Your shortcuts");
+        if (editing) text = switchable ? OrbitText.get(R.string.ui_editing_ad78d1, "Editing · ") + deck.name : OrbitText.get(R.string.ui_editing_fab453, "Editing");
         headerSubtitle.setText(text);
         headerSubtitle.setOnClickListener(switchable ? v -> openLayoutSwitcher() : null);
         headerSubtitle.setClickable(switchable);
         headerSubtitle.setFocusable(switchable);
         headerSubtitle.setContentDescription(switchable
-                ? "Switch Deck layout. Active layout " + deck.name : text);
+                ? OrbitText.get(R.string.ui_switch_deck_layout_active_layout_32f0f1, "Switch Deck layout. Active layout ") + deck.name : text);
         headerSubtitle.setPadding(0, UiKit.dp(this, 2), switchable ? UiKit.dp(this, 8) : 0,
                 switchable ? UiKit.dp(this, 3) : 0);
         headerSubtitle.setBackground(switchable
@@ -444,8 +444,8 @@ public final class DeckActivity extends Activity {
         TextView view = sectionLabel(section.title.toUpperCase(Locale.US));
         view.setPadding(UiKit.dp(this, 3), UiKit.dp(this, 12), UiKit.dp(this, 3), UiKit.dp(this, 8));
         view.setAccessibilityHeading(true);
-        view.setContentDescription(section.title + ", section heading"
-                + (editing ? ", editing. Double tap for options." : ""));
+        view.setContentDescription(section.title + OrbitText.get(R.string.ui_section_heading_c5bbc5, ", section heading")
+                + (editing ? OrbitText.get(R.string.ui_editing_double_tap_for_options_4e5546, ", editing. Double tap for options.") : ""));
         view.setFocusable(true);
         view.setOnClickListener(v -> { if (editing) showStructuralOptions(section, v); });
         view.setOnLongClickListener(v -> { if (!editing) setEditing(true); showStructuralOptions(section, v); return true; });
@@ -471,12 +471,12 @@ public final class DeckActivity extends Activity {
         title.setPadding(0, UiKit.dp(this, 12), 0, 0);
         title.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_NO);
         card.addView(title);
-        String count = folder.tiles.size() == 1 ? "1 tile" : folder.tiles.size() + " tiles";
+        String count = folder.tiles.size() == 1 ? OrbitText.get(R.string.ui_1_tile_8c7a98, "1 tile") : folder.tiles.size() + OrbitText.get(R.string.ui_tiles_ae89f1, " tiles");
         TextView meta = UiKit.text(this, count, 12, UiKit.MUTED, false);
         meta.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_NO);
         card.addView(meta);
-        card.setContentDescription(folder.title + ", folder, " + count
-                + (editing ? ", editing. Double tap for options." : ""));
+        card.setContentDescription(folder.title + OrbitText.get(R.string.ui_folder_1737e5, ", folder, ") + count
+                + (editing ? OrbitText.get(R.string.ui_editing_double_tap_for_options_4e5546, ", editing. Double tap for options.") : ""));
         card.setFocusable(true);
         card.setOnClickListener(v -> {
             if (editing) showStructuralOptions(folder, v); else openFolder(folder.id);
@@ -537,7 +537,7 @@ public final class DeckActivity extends Activity {
         }
 
         suggestedBlock.setVisibility(View.VISIBLE);
-        suggestedBlock.addView(sectionLabel("SUGGESTED"));
+        suggestedBlock.addView(sectionLabel(OrbitText.get(R.string.ui_suggested_aa0a0d, "SUGGESTED")));
         LinearLayout row = new LinearLayout(this);
         row.setOrientation(LinearLayout.HORIZONTAL);
         suggestedBlock.addView(row, new LinearLayout.LayoutParams(
@@ -607,13 +607,13 @@ public final class DeckActivity extends Activity {
 
     private void offerAddSuggestion(DeckSuggestionEngine.Suggestion suggestion) {
         String expectedLayoutId = activeLayoutId;
-        UiKit.showOrbitMenu(this, suggestedBlock, new String[]{"Add to Deck"}, -1, (index, label) -> {
+        UiKit.showOrbitMenu(this, suggestedBlock, new String[]{OrbitText.get(R.string.ui_add_to_deck_d6122b, "Add to Deck")}, -1, (index, label) -> {
             if (DeckLayoutStore.wouldDuplicate(this, suggestion.addable)) {
-                toast("That is already on your Deck.");
+                toast(OrbitText.get(R.string.ui_that_is_already_on_your_deck_872fa3, "That is already on your Deck."));
                 return;
             }
             if (DeckLayoutStore.add(this, expectedLayoutId, suggestion.addable)) {
-                toast("Added to Deck");
+                toast(OrbitText.get(R.string.ui_added_to_deck_f3e666, "Added to Deck"));
                 refresh();
             }
         });
@@ -626,33 +626,33 @@ public final class DeckActivity extends Activity {
     private void openLayoutSwitcher() {
         if (!OrbitProEntitlement.hasPro(this) || DeckLayoutStore.layoutCount(this) < 2) return;
         DeckCollection collection = DeckLayoutStore.collection(this);
-        LinearLayout column = openSheet("Switch Deck", "Active layout: " + collection.active().name);
+        LinearLayout column = openSheet(OrbitText.get(R.string.ui_switch_deck_761009, "Switch Deck"), OrbitText.get(R.string.ui_active_layout_4af9c6, "Active layout: ") + collection.active().name);
         for (DeckLayout layout : collection.layouts) {
             column.addView(layoutRow(layout, false), rowLp());
         }
-        Button manage = primaryButton("Manage layouts");
+        Button manage = primaryButton(OrbitText.get(R.string.ui_manage_layouts_7909c9, "Manage layouts"));
         manage.setOnClickListener(v -> openLayoutManager());
         column.addView(manage, fieldLp(UiKit.dp(this, 48)));
     }
 
     private void openLayoutManager() {
         if (!OrbitProEntitlement.hasPro(this)) {
-            LinearLayout column = openSheet("Deck layouts · Orbit Pro",
-                    "Multiple saved Decks and layout templates are part of Orbit Pro.");
-            column.addView(emptyNote("Your active Deck and all Free organization tools remain fully available. "
+            LinearLayout column = openSheet(OrbitText.get(R.string.ui_deck_layouts_orbit_pro_f19d64, "Deck layouts · Orbit Pro"),
+                    OrbitText.get(R.string.ui_multiple_saved_decks_and_layout_templates_d9f50e, "Multiple saved Decks and layout templates are part of Orbit Pro."));
+            column.addView(emptyNote(OrbitText.get(R.string.ui_your_active_deck_and_all_free_organization_ddac4c, "Your active Deck and all Free organization tools remain fully available. ")
                     + OrbitProEntitlement.lockedGuidance(
-                            "Enable Pro Preview in Diagnostics to try saved layouts.")));
+                            OrbitText.get(R.string.ui_enable_pro_preview_in_diagnostics_to_try_s_59eee2, "Enable Pro Preview in Diagnostics to try saved layouts."))));
             return;
         }
         DeckCollection collection = DeckLayoutStore.collection(this);
-        String count = collection.layouts.size() == 1 ? "1 saved layout"
-                : collection.layouts.size() + " saved layouts";
-        LinearLayout column = openSheet("Deck layouts", count);
+        String count = collection.layouts.size() == 1 ? OrbitText.get(R.string.ui_1_saved_layout_e29526, "1 saved layout")
+                : collection.layouts.size() + OrbitText.get(R.string.ui_saved_layouts_79a5b5, " saved layouts");
+        LinearLayout column = openSheet(OrbitText.get(R.string.ui_deck_layouts_22209e, "Deck layouts"), count);
 
         LinearLayout actions = new LinearLayout(this);
         actions.setGravity(Gravity.CENTER_VERTICAL);
-        Button create = primaryButton("New layout");
-        Button templates = primaryButton("Templates");
+        Button create = primaryButton(OrbitText.get(R.string.ui_new_layout_ef02e1, "New layout"));
+        Button templates = primaryButton(OrbitText.get(R.string.ui_templates_56b564, "Templates"));
         boolean room = collection.layouts.size() < DeckLayoutStore.MAX_LAYOUTS;
         create.setEnabled(room);
         templates.setEnabled(room);
@@ -664,9 +664,9 @@ public final class DeckActivity extends Activity {
         templateLp.leftMargin = UiKit.dp(this, 8);
         actions.addView(templates, templateLp);
         column.addView(actions, rowLp());
-        if (!room) column.addView(emptyNote("You have reached the maximum of 10 saved layouts."));
+        if (!room) column.addView(emptyNote(OrbitText.get(R.string.ui_you_have_reached_the_maximum_of_10_saved_l_826b0b, "You have reached the maximum of 10 saved layouts.")));
 
-        column.addView(sectionLabel("SAVED LAYOUTS"));
+        column.addView(sectionLabel(OrbitText.get(R.string.ui_saved_layouts_9c1a02, "SAVED LAYOUTS")));
         for (DeckLayout layout : collection.layouts) {
             column.addView(layoutRow(layout, true), rowLp());
         }
@@ -690,8 +690,8 @@ public final class DeckActivity extends Activity {
         name.setEllipsize(TextUtils.TruncateAt.END);
         text.addView(name);
         int tiles = layout.allTiles().size();
-        String metadata = (active ? "Active · " : "") + tiles
-                + (tiles == 1 ? " tile" : " tiles");
+        String metadata = (active ? OrbitText.get(R.string.ui_active_5a6262, "Active · ") : "") + tiles
+                + (tiles == 1 ? OrbitText.get(R.string.ui_tile_c16927, " tile") : OrbitText.get(R.string.ui_tiles_ae89f1, " tiles"));
         text.addView(UiKit.text(this, metadata, 12, UiKit.MUTED, false));
         text.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_NO);
         row.addView(text, new LinearLayout.LayoutParams(0,
@@ -699,13 +699,13 @@ public final class DeckActivity extends Activity {
 
         if (management) {
             ImageButton options = iconButton(R.drawable.ic_more,
-                    "Options for " + layout.name);
+                    OrbitText.get(R.string.ui_options_for_64aca3, "Options for ") + layout.name);
             options.setOnClickListener(v -> showLayoutOptions(layout, v));
             row.addView(options, new LinearLayout.LayoutParams(
                     UiKit.dp(this, 44), UiKit.dp(this, 44)));
         }
         row.setContentDescription(layout.name + ", " + metadata
-                + (active ? "" : ". Double tap to switch."));
+                + (active ? "" : OrbitText.get(R.string.ui_double_tap_to_switch_98125f, ". Double tap to switch.")));
         row.setFocusable(true);
         if (!active) row.setOnClickListener(v -> switchToLayout(layout.id));
         return row;
@@ -716,16 +716,16 @@ public final class DeckActivity extends Activity {
         List<String> labels = new ArrayList<>();
         List<Runnable> actions = new ArrayList<>();
         if (!layout.id.equals(collection.activeLayoutId)) {
-            labels.add("Switch");
+            labels.add(OrbitText.get(R.string.ui_switch_39921a, "Switch"));
             actions.add(() -> switchToLayout(layout.id));
         }
-        labels.add("Rename");
-        actions.add(() -> openLayoutNameSheet("Rename layout", layout.name,
+        labels.add(OrbitText.get(R.string.ui_rename_3064d7, "Rename"));
+        actions.add(() -> openLayoutNameSheet(OrbitText.get(R.string.ui_rename_layout_f0630e, "Rename layout"), layout.name,
                 name -> DeckLayoutStore.renameLayout(this, layout.id, name)));
-        labels.add("Duplicate");
+        labels.add(OrbitText.get(R.string.ui_duplicate_02cdaa, "Duplicate"));
         actions.add(() -> duplicateLayout(layout));
         if (collection.layouts.size() > 1) {
-            labels.add("Delete");
+            labels.add(OrbitText.get(R.string.ui_delete_e2d0a5, "Delete"));
             actions.add(() -> confirmDeleteLayout(layout));
         }
         UiKit.showOrbitMenu(this, anchor, labels.toArray(new String[0]), -1,
@@ -737,57 +737,57 @@ public final class DeckActivity extends Activity {
     private void openNewLayoutSheet() {
         if (!ensureLayoutRoom()) return;
         DeckLayout active = DeckLayoutStore.deck(this);
-        LinearLayout column = openSheet("New layout", "Choose a simple starting point");
-        column.addView(pickerRow(R.drawable.ic_add, "Blank", "Start with an empty Deck", null,
-                () -> openLayoutNameSheet("Name blank layout", "New Deck", name ->
+        LinearLayout column = openSheet(OrbitText.get(R.string.ui_new_layout_ef02e1, "New layout"), OrbitText.get(R.string.ui_choose_a_simple_starting_point_8d2f84, "Choose a simple starting point"));
+        column.addView(pickerRow(R.drawable.ic_add, OrbitText.get(R.string.ui_blank_2c3d37, "Blank"), OrbitText.get(R.string.ui_start_with_an_empty_deck_68a2dc, "Start with an empty Deck"), null,
+                () -> openLayoutNameSheet(OrbitText.get(R.string.ui_name_blank_layout_e95f7b, "Name blank layout"), OrbitText.get(R.string.ui_new_deck_28ab8d, "New Deck"), name ->
                         DeckLayoutStore.createBlankLayout(this, name) != null)), rowLp());
-        column.addView(pickerRow(R.drawable.ic_deck, "Duplicate current",
-                "Copy " + active.name + " with independent items", null,
+        column.addView(pickerRow(R.drawable.ic_deck, OrbitText.get(R.string.ui_duplicate_current_d58751, "Duplicate current"),
+                OrbitText.get(R.string.ui_copy_26dd02, "Copy ") + active.name + OrbitText.get(R.string.ui_with_independent_items_531729, " with independent items"), null,
                 () -> duplicateLayout(active)), rowLp());
-        column.addView(pickerRow(R.drawable.ic_deck_sparkle, "Template",
-                "Start from a curated Orbit layout", null, this::openTemplateSheet), rowLp());
+        column.addView(pickerRow(R.drawable.ic_deck_sparkle, OrbitText.get(R.string.ui_template_0575f2, "Template"),
+                OrbitText.get(R.string.ui_start_from_a_curated_orbit_layout_eea9cd, "Start from a curated Orbit layout"), null, this::openTemplateSheet), rowLp());
     }
 
     private void duplicateLayout(DeckLayout source) {
         if (!ensureLayoutRoom()) return;
-        String suggested = DeckLayout.sanitizeName(source.name + " copy");
-        openLayoutNameSheet("Name duplicate", suggested, name ->
+        String suggested = DeckLayout.sanitizeName(source.name + OrbitText.get(R.string.ui_copy_f06ae4, " copy"));
+        openLayoutNameSheet(OrbitText.get(R.string.ui_name_duplicate_b77519, "Name duplicate"), suggested, name ->
                 DeckLayoutStore.duplicateLayout(this, source.id, name) != null);
     }
 
     private void openTemplateSheet() {
         if (!ensureLayoutRoom()) return;
-        LinearLayout column = openSheet("Layout templates",
-                "Each template creates a new saved Deck");
+        LinearLayout column = openSheet(OrbitText.get(R.string.ui_layout_templates_b12040, "Layout templates"),
+                OrbitText.get(R.string.ui_each_template_creates_a_new_saved_deck_b2f52f, "Each template creates a new saved Deck"));
         for (DeckLayoutTemplates.Template template : DeckLayoutTemplates.all()) {
             column.addView(pickerRow(R.drawable.ic_deck_sparkle, template.name,
                     template.description, null,
-                    () -> openLayoutNameSheet("Name layout", template.name, name ->
+                    () -> openLayoutNameSheet(OrbitText.get(R.string.ui_name_layout_1b3916, "Name layout"), template.name, name ->
                             DeckLayoutStore.createTemplateLayout(
                                     this, template.id, name) != null)), rowLp());
         }
     }
 
     private void openLayoutNameSheet(String title, String initial, LayoutNameSaver saver) {
-        LinearLayout column = openSheet(title, "Up to 30 characters");
+        LinearLayout column = openSheet(title, OrbitText.get(R.string.ui_up_to_30_characters_f35daa, "Up to 30 characters"));
         EditText name = new EditText(this);
-        name.setHint("Layout name");
+        name.setHint(OrbitText.get(R.string.ui_layout_name_38a82a, "Layout name"));
         name.setText(initial);
         name.selectAll();
         styleField(name, false);
         column.addView(name, fieldLp(UiKit.dp(this, 48)));
-        Button save = primaryButton("Save");
+        Button save = primaryButton(OrbitText.get(R.string.ui_save_1509f5, "Save"));
         column.addView(save, fieldLp(UiKit.dp(this, 48)));
         bindSingleLineSubmit(name, save, () -> {
             String clean = DeckLayout.sanitizeName(name.getText().toString());
             if (clean.isEmpty()) {
-                toast("Give this layout a name.");
+                toast(OrbitText.get(R.string.ui_give_this_layout_a_name_a5ecd3, "Give this layout a name."));
                 return;
             }
             if (!saver.save(clean)) {
                 toast(DeckLayoutStore.layoutCount(this) >= DeckLayoutStore.MAX_LAYOUTS
-                        ? "You have reached the maximum of 10 saved layouts."
-                        : "That layout could not be saved.");
+                        ? OrbitText.get(R.string.ui_you_have_reached_the_maximum_of_10_saved_l_826b0b, "You have reached the maximum of 10 saved layouts.")
+                        : OrbitText.get(R.string.ui_that_layout_could_not_be_saved_a74b6f, "That layout could not be saved."));
                 return;
             }
             closeSheet();
@@ -803,7 +803,7 @@ public final class DeckActivity extends Activity {
             return false;
         }
         if (DeckLayoutStore.layoutCount(this) >= DeckLayoutStore.MAX_LAYOUTS) {
-            toast("You have reached the maximum of 10 saved layouts.");
+            toast(OrbitText.get(R.string.ui_you_have_reached_the_maximum_of_10_saved_l_826b0b, "You have reached the maximum of 10 saved layouts."));
             return false;
         }
         return true;
@@ -822,10 +822,10 @@ public final class DeckActivity extends Activity {
 
     private void confirmDeleteLayout(DeckLayout layout) {
         android.app.AlertDialog dialog = new android.app.AlertDialog.Builder(this)
-                .setTitle("Delete " + layout.name + "?")
-                .setMessage("This permanently deletes only this saved Deck. Other Orbit data is not affected.")
-                .setNegativeButton("Cancel", null)
-                .setPositiveButton("Delete", (d, w) -> {
+                .setTitle(OrbitText.get(R.string.ui_delete_85941f, "Delete ") + layout.name + "?")
+                .setMessage(OrbitText.get(R.string.ui_this_permanently_deletes_only_this_saved_d_8d889d, "This permanently deletes only this saved Deck. Other Orbit data is not affected."))
+                .setNegativeButton(OrbitText.get(R.string.ui_cancel_19766e, "Cancel"), null)
+                .setPositiveButton(OrbitText.get(R.string.ui_delete_e2d0a5, "Delete"), (d, w) -> {
                     cancelActiveDrag();
                     if (DeckLayoutStore.deleteLayout(this, layout.id)) {
                         closeSheet();
@@ -857,8 +857,8 @@ public final class DeckActivity extends Activity {
         DeckTileRegistry.Definition definition = DeckTileRegistry.definition(tile.type);
         boolean configurable = definition != null && definition.configurable;
         String[] options = configurable
-                ? new String[]{"Set up", "Remove from Deck"}
-                : new String[]{"Remove from Deck"};
+                ? new String[]{OrbitText.get(R.string.ui_set_up_4da10f, "Set up"), OrbitText.get(R.string.ui_remove_from_deck_364a43, "Remove from Deck")}
+                : new String[]{OrbitText.get(R.string.ui_remove_from_deck_364a43, "Remove from Deck")};
         UiKit.showOrbitMenu(this, grid, options, -1, (index, label) -> {
             if (configurable && index == 0) configure(tile);
             else removeTile(tile);
@@ -882,7 +882,7 @@ public final class DeckActivity extends Activity {
     private void showDeckOptions(View anchor) {
         String expectedLayoutId = activeLayoutId;
         UiKit.showOrbitMenu(this, anchor,
-                new String[]{"Deck layouts", "Add tile", "Add section", "Add folder", "Reset Deck"}, -1, (index, label) -> {
+                new String[]{OrbitText.get(R.string.ui_deck_layouts_22209e, "Deck layouts"), OrbitText.get(R.string.ui_add_tile_3f05e3, "Add tile"), OrbitText.get(R.string.ui_add_section_7c3690, "Add section"), OrbitText.get(R.string.ui_add_folder_5bbfc5, "Add folder"), OrbitText.get(R.string.ui_reset_deck_0b7553, "Reset Deck")}, -1, (index, label) -> {
             if (index == 0) openLayoutManager();
             else if (index == 1) openAddSheet();
             else if (index == 2) createSection(expectedLayoutId);
@@ -893,14 +893,14 @@ public final class DeckActivity extends Activity {
 
     private void confirmReset(String expectedLayoutId) {
         android.app.AlertDialog dialog = new android.app.AlertDialog.Builder(this)
-                .setTitle("Reset Deck")
-                .setMessage("Reset only this saved Deck to the default tiles. Your other saved "
-                        + "Decks, Routines, reminders, memories and chats are not affected.")
-                .setNegativeButton("Cancel", null)
-                .setPositiveButton("Reset", (d, w) -> {
+                .setTitle(OrbitText.get(R.string.ui_reset_deck_0b7553, "Reset Deck"))
+                .setMessage(OrbitText.get(R.string.ui_reset_only_this_saved_deck_to_the_default_6e03fd, "Reset only this saved Deck to the default tiles. Your other saved ")
+                        + OrbitText.get(R.string.ui_decks_routines_reminders_memories_and_chat_e91777, "Decks, Routines, reminders, memories and chats are not affected."))
+                .setNegativeButton(OrbitText.get(R.string.ui_cancel_19766e, "Cancel"), null)
+                .setPositiveButton(OrbitText.get(R.string.ui_reset_daee76, "Reset"), (d, w) -> {
                     DeckLayoutStore.reset(this, expectedLayoutId);
                     refresh();
-                    toast("Deck reset");
+                    toast(OrbitText.get(R.string.ui_deck_reset_7024c1, "Deck reset"));
                 })
                 .create();
         UiKit.styleOrbitDialog(dialog, this, true);
@@ -920,16 +920,16 @@ public final class DeckActivity extends Activity {
         List<Runnable> actions = new ArrayList<>();
 
         if (definition != null && definition.configurable) {
-            labels.add("Edit");
+            labels.add(OrbitText.get(R.string.ui_edit_464c4f, "Edit"));
             actions.add(() -> configure(tile, expectedLayoutId));
         }
         if (definition != null && definition.sizes.size() > 1) {
-            labels.add("Size");
+            labels.add(OrbitText.get(R.string.ui_size_1af851, "Size"));
             actions.add(() -> showSizeChooser(tile, view, expectedLayoutId));
         }
-        labels.add(OrbitProEntitlement.hasPro(this) ? "Appearance · Pro" : "Appearance");
+        labels.add(OrbitProEntitlement.hasPro(this) ? OrbitText.get(R.string.ui_appearance_pro_eba399, "Appearance · Pro") : OrbitText.get(R.string.ui_appearance_3907fa, "Appearance"));
         actions.add(() -> openAppearanceEditor(tile, expectedLayoutId));
-        labels.add("Rename");
+        labels.add(OrbitText.get(R.string.ui_rename_3064d7, "Rename"));
         actions.add(() -> openRenameSheet(tile, expectedLayoutId));
 
         String folderId = folderForTile(tile.instanceId);
@@ -937,18 +937,18 @@ public final class DeckActivity extends Activity {
         int containerSize = folderId == null ? DeckLayoutStore.deck(this).items.size()
                 : DeckLayoutStore.deck(this).folder(folderId).tiles.size();
         if (index > 0) {
-            labels.add("Move before");
+            labels.add(OrbitText.get(R.string.ui_move_before_5c3977, "Move before"));
             actions.add(() -> move(tile, index - 1, expectedLayoutId));
         }
         if (index >= 0 && index < containerSize - 1) {
-            labels.add("Move after");
+            labels.add(OrbitText.get(R.string.ui_move_after_fd47ce, "Move after"));
             actions.add(() -> move(tile, index + 1, expectedLayoutId));
         }
         if (!folders().isEmpty() || folderId != null) {
-            labels.add("Move to folder");
+            labels.add(OrbitText.get(R.string.ui_move_to_folder_91d631, "Move to folder"));
             actions.add(() -> openMoveTileSheet(tile, expectedLayoutId));
         }
-        labels.add("Remove");
+        labels.add(OrbitText.get(R.string.ui_remove_c3812f, "Remove"));
         actions.add(() -> removeTile(tile, expectedLayoutId));
 
         UiKit.showOrbitMenu(this, view, labels.toArray(new String[0]), -1,
@@ -995,7 +995,7 @@ public final class DeckActivity extends Activity {
 
     private void resize(DeckTile tile, DeckTile.Size size, String expectedLayoutId) {
         if (!DeckLayoutStore.resize(this, expectedLayoutId, tile.instanceId, size)) {
-            toast("That tile cannot be that size.");
+            toast(OrbitText.get(R.string.ui_that_tile_cannot_be_that_size_ffc121, "That tile cannot be that size."));
             return;
         }
         refresh();
@@ -1027,7 +1027,7 @@ public final class DeckActivity extends Activity {
     }
 
     private void createSection(String expectedLayoutId) {
-        if (!DeckLayoutStore.addSection(this, expectedLayoutId, "New section")) { toast("Your Deck has enough sections."); return; }
+        if (!DeckLayoutStore.addSection(this, expectedLayoutId, OrbitText.get(R.string.ui_new_section_843c4a, "New section"))) { toast(OrbitText.get(R.string.ui_your_deck_has_enough_sections_e99068, "Your Deck has enough sections.")); return; }
         DeckSection added = null;
         for (DeckItem item : DeckLayoutStore.deck(this).items) if (item instanceof DeckSection) added = (DeckSection) item;
         refresh();
@@ -1035,7 +1035,7 @@ public final class DeckActivity extends Activity {
     }
 
     private void createFolder(String expectedLayoutId) {
-        if (!DeckLayoutStore.addFolder(this, expectedLayoutId, "New folder")) { toast("Your Deck has enough folders."); return; }
+        if (!DeckLayoutStore.addFolder(this, expectedLayoutId, OrbitText.get(R.string.ui_new_folder_cf28f4, "New folder"))) { toast(OrbitText.get(R.string.ui_your_deck_has_enough_folders_ed4528, "Your Deck has enough folders.")); return; }
         DeckFolder added = null;
         for (DeckFolder folder : folders()) added = folder;
         refresh();
@@ -1050,13 +1050,13 @@ public final class DeckActivity extends Activity {
         List<String> labels = new ArrayList<>();
         List<Runnable> actions = new ArrayList<>();
         if (item instanceof DeckFolder) {
-            labels.add("Open folder"); actions.add(() -> openFolder(item.id, expectedLayoutId));
-            labels.add("Add from Deck"); actions.add(() -> openAddToFolderSheet(item.id, expectedLayoutId));
+            labels.add(OrbitText.get(R.string.ui_open_folder_6a9084, "Open folder")); actions.add(() -> openFolder(item.id, expectedLayoutId));
+            labels.add(OrbitText.get(R.string.ui_add_from_deck_c5021e, "Add from Deck")); actions.add(() -> openAddToFolderSheet(item.id, expectedLayoutId));
         }
-        labels.add("Rename"); actions.add(() -> openStructuralRenameSheet(item, expectedLayoutId));
-        if (index > 0) { int target = index - 1; labels.add("Move before"); actions.add(() -> moveItem(item.id, target, expectedLayoutId)); }
-        if (index >= 0 && index < deck.items.size() - 1) { int target = index + 1; labels.add("Move after"); actions.add(() -> moveItem(item.id, target, expectedLayoutId)); }
-        labels.add("Remove");
+        labels.add(OrbitText.get(R.string.ui_rename_3064d7, "Rename")); actions.add(() -> openStructuralRenameSheet(item, expectedLayoutId));
+        if (index > 0) { int target = index - 1; labels.add(OrbitText.get(R.string.ui_move_before_5c3977, "Move before")); actions.add(() -> moveItem(item.id, target, expectedLayoutId)); }
+        if (index >= 0 && index < deck.items.size() - 1) { int target = index + 1; labels.add(OrbitText.get(R.string.ui_move_after_fd47ce, "Move after")); actions.add(() -> moveItem(item.id, target, expectedLayoutId)); }
+        labels.add(OrbitText.get(R.string.ui_remove_c3812f, "Remove"));
         actions.add(() -> {
             if (item instanceof DeckFolder) confirmRemoveFolder((DeckFolder) item, expectedLayoutId);
             else { DeckLayoutStore.removeSection(this, expectedLayoutId, item.id); refresh(); }
@@ -1083,13 +1083,13 @@ public final class DeckActivity extends Activity {
     private void openStructuralRenameSheet(DeckItem item, String expectedLayoutId) {
         if (!expectedLayoutId.equals(activeLayoutId)) return;
         String current = item instanceof DeckSection ? ((DeckSection) item).title : ((DeckFolder) item).title;
-        LinearLayout column = openSheet(item instanceof DeckSection ? "Rename section" : "Rename folder", "Changes save immediately");
+        LinearLayout column = openSheet(item instanceof DeckSection ? OrbitText.get(R.string.ui_rename_section_ae32b9, "Rename section") : OrbitText.get(R.string.ui_rename_folder_7249f1, "Rename folder"), OrbitText.get(R.string.ui_changes_save_immediately_3cb8bf, "Changes save immediately"));
         EditText name = new EditText(this);
         name.setText(current);
-        name.setHint(item instanceof DeckSection ? "Section name" : "Folder name");
+        name.setHint(item instanceof DeckSection ? OrbitText.get(R.string.ui_section_name_7c0fad, "Section name") : OrbitText.get(R.string.ui_folder_name_14d34e, "Folder name"));
         styleField(name, false);
         column.addView(name, fieldLp(UiKit.dp(this, 48)));
-        Button save = primaryButton("Save");
+        Button save = primaryButton(OrbitText.get(R.string.ui_save_1509f5, "Save"));
         column.addView(save, fieldLp(UiKit.dp(this, 48)));
         bindSingleLineSubmit(name, save, () -> {
             DeckLayoutStore.renameItem(this, expectedLayoutId, item.id, name.getText().toString());
@@ -1104,10 +1104,10 @@ public final class DeckActivity extends Activity {
             return;
         }
         android.app.AlertDialog dialog = new android.app.AlertDialog.Builder(this)
-                .setTitle("Remove " + folder.title + "?")
-                .setMessage("Move its " + folder.tiles.size() + " tiles back to your Deck. No tile will be deleted.")
-                .setNegativeButton("Cancel", null)
-                .setPositiveButton("Move tiles and remove", (d, w) -> {
+                .setTitle(OrbitText.get(R.string.ui_remove_594895, "Remove ") + folder.title + "?")
+                .setMessage(OrbitText.get(R.string.ui_move_its_cc5ca6, "Move its ") + folder.tiles.size() + OrbitText.get(R.string.ui_tiles_back_to_your_deck_no_tile_will_be_de_2c0161, " tiles back to your Deck. No tile will be deleted."))
+                .setNegativeButton(OrbitText.get(R.string.ui_cancel_19766e, "Cancel"), null)
+                .setPositiveButton(OrbitText.get(R.string.ui_move_tiles_and_remove_b6ebe4, "Move tiles and remove"), (d, w) -> {
                     DeckLayoutStore.removeFolderMovingChildren(this, expectedLayoutId, folder.id);
                     refresh();
                 }).create();
@@ -1333,14 +1333,14 @@ public final class DeckActivity extends Activity {
         if (folder == null) return;
         openFolderId = folderId;
         LinearLayout column = openSheet(folder.title,
-                folder.tiles.size() == 1 ? "1 tile" : folder.tiles.size() + " tiles");
+                folder.tiles.size() == 1 ? OrbitText.get(R.string.ui_1_tile_8c7a98, "1 tile") : folder.tiles.size() + OrbitText.get(R.string.ui_tiles_ae89f1, " tiles"));
 
         LinearLayout actions = new LinearLayout(this);
         actions.setGravity(Gravity.CENTER_VERTICAL);
-        Button add = primaryButton("Add from Deck");
+        Button add = primaryButton(OrbitText.get(R.string.ui_add_from_deck_c5021e, "Add from Deck"));
         add.setOnClickListener(v -> openAddToFolderSheet(folderId, expectedLayoutId));
         actions.addView(add, new LinearLayout.LayoutParams(0, UiKit.dp(this, 44), 1f));
-        Button rename = primaryButton("Rename");
+        Button rename = primaryButton(OrbitText.get(R.string.ui_rename_3064d7, "Rename"));
         rename.setOnClickListener(v -> openStructuralRenameSheet(folder, expectedLayoutId));
         LinearLayout.LayoutParams renameLp = new LinearLayout.LayoutParams(0, UiKit.dp(this, 44), 1f);
         renameLp.leftMargin = UiKit.dp(this, 8);
@@ -1348,7 +1348,7 @@ public final class DeckActivity extends Activity {
         column.addView(actions, rowLp());
 
         if (folder.tiles.isEmpty()) {
-            column.addView(emptyNote("This folder is empty. Add an existing tile from your Deck."));
+            column.addView(emptyNote(OrbitText.get(R.string.ui_this_folder_is_empty_add_an_existing_tile_e6b853, "This folder is empty. Add an existing tile from your Deck.")));
             return;
         }
         folderGrid = new DeckGridLayout(this);
@@ -1450,16 +1450,16 @@ public final class DeckActivity extends Activity {
         if (!expectedLayoutId.equals(activeLayoutId)) return;
         DeckFolder folder = DeckLayoutStore.deck(this).folder(folderId);
         if (folder == null) return;
-        LinearLayout column = openSheet("Add to " + folder.title, "Move an existing root tile into this folder");
+        LinearLayout column = openSheet(OrbitText.get(R.string.ui_add_to_aa01aa, "Add to ") + folder.title, OrbitText.get(R.string.ui_move_an_existing_root_tile_into_this_folde_b1db71, "Move an existing root tile into this folder"));
         List<DeckTile> rootTiles = DeckLayoutStore.layout(this);
-        if (rootTiles.isEmpty()) { column.addView(emptyNote("There are no root tiles to move.")); return; }
+        if (rootTiles.isEmpty()) { column.addView(emptyNote(OrbitText.get(R.string.ui_there_are_no_root_tiles_to_move_632c36, "There are no root tiles to move."))); return; }
         for (DeckTile tile : rootTiles) {
             DeckTileResolver.Resolved resolved = DeckTileResolver.resolve(this, tile, live);
             column.addView(pickerRow(resolved.iconRes, resolved.title, resolved.subtitle,
                     resolved.appIcon, () -> {
                         if (!DeckLayoutStore.moveTile(this, expectedLayoutId,
                                 tile.instanceId, folderId)) {
-                            toast("That folder is full."); return;
+                            toast(OrbitText.get(R.string.ui_that_folder_is_full_0752b8, "That folder is full.")); return;
                         }
                         closeSheet(); refresh(); openFolder(folderId, expectedLayoutId);
                     }), rowLp());
@@ -1469,19 +1469,19 @@ public final class DeckActivity extends Activity {
     private void openMoveTileSheet(DeckTile tile, String expectedLayoutId) {
         if (!expectedLayoutId.equals(activeLayoutId)) return;
         String currentFolder = folderForTile(tile.instanceId);
-        LinearLayout column = openSheet("Move tile", "Moving keeps the same tile and settings");
+        LinearLayout column = openSheet(OrbitText.get(R.string.ui_move_tile_bfbb75, "Move tile"), OrbitText.get(R.string.ui_moving_keeps_the_same_tile_and_settings_c5d122, "Moving keeps the same tile and settings"));
         if (currentFolder != null) {
-            column.addView(pickerRow(R.drawable.ic_deck, "My Deck", "Move out of the folder", null, () -> {
+            column.addView(pickerRow(R.drawable.ic_deck, OrbitText.get(R.string.ui_my_deck_0282c6, "My Deck"), OrbitText.get(R.string.ui_move_out_of_the_folder_12faae, "Move out of the folder"), null, () -> {
                 DeckLayoutStore.moveTile(this, expectedLayoutId, tile.instanceId, null);
                 closeSheet(); syncBackHandler(); refresh();
             }), rowLp());
         }
         for (DeckFolder folder : folders()) {
             if (folder.id.equals(currentFolder)) continue;
-            String count = folder.tiles.size() == 1 ? "1 tile" : folder.tiles.size() + " tiles";
+            String count = folder.tiles.size() == 1 ? OrbitText.get(R.string.ui_1_tile_8c7a98, "1 tile") : folder.tiles.size() + OrbitText.get(R.string.ui_tiles_ae89f1, " tiles");
             column.addView(pickerRow(R.drawable.ic_deck, folder.title, count, null, () -> {
                 if (!DeckLayoutStore.moveTile(this, expectedLayoutId,
-                        tile.instanceId, folder.id)) { toast("That folder is full."); return; }
+                        tile.instanceId, folder.id)) { toast(OrbitText.get(R.string.ui_that_folder_is_full_0752b8, "That folder is full.")); return; }
                 closeSheet(); syncBackHandler(); refresh();
             }), rowLp());
         }
@@ -1495,7 +1495,7 @@ public final class DeckActivity extends Activity {
         for (DeckTile.Size size : DeckTile.Size.values()) {
             if (!definition.supports(size)) continue;
             sizes.add(size);
-            labels.add(size == DeckTile.Size.STANDARD ? "Standard" : size == DeckTile.Size.WIDE ? "Wide" : "Large");
+            labels.add(size == DeckTile.Size.STANDARD ? OrbitText.get(R.string.ui_standard_ef6691, "Standard") : size == DeckTile.Size.WIDE ? OrbitText.get(R.string.ui_wide_147170, "Wide") : OrbitText.get(R.string.ui_large_ab8054, "Large"));
         }
         int selected = sizes.indexOf(tile.size);
         UiKit.showOrbitMenu(this, anchor, labels.toArray(new String[0]), selected,
@@ -1507,16 +1507,16 @@ public final class DeckActivity extends Activity {
     private void openAppearanceEditor(DeckTile tile, String expectedLayoutId) {
         if (!expectedLayoutId.equals(activeLayoutId)) return;
         if (!OrbitProEntitlement.hasPro(this)) {
-            LinearLayout column = openSheet("Tile appearance · Orbit Pro",
-                    "Per-tile accent, material, icon, and label choices are part of Orbit Pro.");
+            LinearLayout column = openSheet(OrbitText.get(R.string.ui_tile_appearance_orbit_pro_bc144a, "Tile appearance · Orbit Pro"),
+                    OrbitText.get(R.string.ui_per_tile_accent_material_icon_and_label_ch_0d05ba, "Per-tile accent, material, icon, and label choices are part of Orbit Pro."));
             column.addView(emptyNote(OrbitProEntitlement.lockedGuidance(
-                    "Enable Pro Preview in Diagnostics to try these controls.")
-                    + " Your Deck organization remains Free."));
+                    OrbitText.get(R.string.ui_enable_pro_preview_in_diagnostics_to_try_t_a9b6a4, "Enable Pro Preview in Diagnostics to try these controls."))
+                    + OrbitText.get(R.string.ui_your_deck_organization_remains_free_a379dc, " Your Deck organization remains Free.")));
             return;
         }
         DeckTile current = tileById(expectedLayoutId, tile.instanceId);
         if (current == null) return;
-        LinearLayout column = openSheet("Tile appearance · Pro", "Changes save immediately");
+        LinearLayout column = openSheet(OrbitText.get(R.string.ui_tile_appearance_pro_511460, "Tile appearance · Pro"), OrbitText.get(R.string.ui_changes_save_immediately_3cb8bf, "Changes save immediately"));
 
         FrameLayout preview = new FrameLayout(this);
         preview.setPadding(0, UiKit.dp(this, 4), 0, UiKit.dp(this, 14));
@@ -1525,16 +1525,16 @@ public final class DeckActivity extends Activity {
                         ? UiKit.dp(this, 260) : UiKit.dp(this, 150)));
         renderAppearancePreview(preview, current.instanceId);
 
-        View accentRow = pickerRow(R.drawable.ic_tune, "Tile accent",
+        View accentRow = pickerRow(R.drawable.ic_tune, OrbitText.get(R.string.ui_tile_accent_d44c1d, "Tile accent"),
                 DeckTileAppearance.INHERIT.equals(current.appearance.accent)
-                        ? "Inherit" : OrbitPalette.labelFor(current.appearance.accent), null,
+                        ? OrbitText.get(R.string.ui_inherit_3f72f0, "Inherit") : OrbitPalette.labelFor(current.appearance.accent), null,
                 () -> chooseTileAccent(current.instanceId, preview, expectedLayoutId));
         column.addView(accentRow, rowLp());
 
-        column.addView(sectionLabel("SURFACE TREATMENT"));
+        column.addView(sectionLabel(OrbitText.get(R.string.ui_surface_treatment_ee64aa, "SURFACE TREATMENT")));
         OrbitSegmented material = new OrbitSegmented(this);
-        material.setTitle("Surface treatment");
-        material.setOptions(new String[]{"Inherit", "Solid", "Frosted", "Liquid"});
+        material.setTitle(OrbitText.get(R.string.ui_surface_treatment_2c390c, "Surface treatment"));
+        material.setOptions(new String[]{OrbitText.get(R.string.ui_inherit_3f72f0, "Inherit"), OrbitText.get(R.string.ui_solid_b8b311, "Solid"), OrbitText.get(R.string.ui_frosted_fd0181, "Frosted"), OrbitText.get(R.string.ui_liquid_9a8378, "Liquid")});
         String[] materialKeys = {DeckTileAppearance.INHERIT, OrbitTheme.MATERIAL_SOLID,
                 OrbitTheme.MATERIAL_FROSTED, OrbitTheme.MATERIAL_LIQUID};
         material.setSelected(indexOf(materialKeys, current.appearance.material));
@@ -1545,10 +1545,10 @@ public final class DeckActivity extends Activity {
         });
         column.addView(material, rowLp());
 
-        column.addView(sectionLabel("ICON TREATMENT"));
+        column.addView(sectionLabel(OrbitText.get(R.string.ui_icon_treatment_47e3dd, "ICON TREATMENT")));
         OrbitSegmented icon = new OrbitSegmented(this);
-        icon.setTitle("Icon treatment");
-        icon.setOptions(new String[]{"Inherit", "Accent", "Monochrome"});
+        icon.setTitle(OrbitText.get(R.string.ui_icon_treatment_d4eaf9, "Icon treatment"));
+        icon.setOptions(new String[]{OrbitText.get(R.string.ui_inherit_3f72f0, "Inherit"), OrbitText.get(R.string.ui_accent_a5c6fb, "Accent"), OrbitText.get(R.string.ui_monochrome_30cc92, "Monochrome")});
         String[] iconKeys = {DeckTileAppearance.INHERIT, DeckTileAppearance.ICON_ACCENT,
                 DeckTileAppearance.ICON_MONOCHROME};
         icon.setSelected(indexOf(iconKeys, current.appearance.iconTreatment));
@@ -1559,10 +1559,10 @@ public final class DeckActivity extends Activity {
         });
         column.addView(icon, rowLp());
 
-        column.addView(sectionLabel("LABEL VISIBILITY"));
+        column.addView(sectionLabel(OrbitText.get(R.string.ui_label_visibility_897288, "LABEL VISIBILITY")));
         OrbitSegmented label = new OrbitSegmented(this);
-        label.setTitle("Label visibility");
-        label.setOptions(new String[]{"Show", "Hide"});
+        label.setTitle(OrbitText.get(R.string.ui_label_visibility_a0f720, "Label visibility"));
+        label.setOptions(new String[]{OrbitText.get(R.string.ui_show_0df6f1, "Show"), OrbitText.get(R.string.ui_hide_ac20a5, "Hide")});
         label.setSelected(current.appearance.showLabel ? 0 : 1);
         label.setOnSelectListener((v, index) -> {
             DeckTile latest = tileById(expectedLayoutId, current.instanceId);
@@ -1578,9 +1578,9 @@ public final class DeckActivity extends Activity {
         String[] keys = UiKit.accentKeys();
         List<String> labels = new ArrayList<>();
         List<Integer> colors = new ArrayList<>();
-        labels.add("Inherit"); colors.add(UiKit.accent(this));
+        labels.add(OrbitText.get(R.string.ui_inherit_3f72f0, "Inherit")); colors.add(UiKit.accent(this));
         for (int i = 0; i < keys.length; i++) { labels.add(UiKit.accentLabels()[i]); colors.add(UiKit.accentForName(this, keys[i])); }
-        labels.add("Custom color…"); colors.add(DeckTileAppearance.INHERIT.equals(tile.appearance.accent)
+        labels.add(OrbitText.get(R.string.ui_custom_color_cb28f3, "Custom color…")); colors.add(DeckTileAppearance.INHERIT.equals(tile.appearance.accent)
                 ? UiKit.accent(this) : UiKit.accentForName(this, tile.appearance.accent));
         int selected = DeckTileAppearance.INHERIT.equals(tile.appearance.accent) ? 0 : indexOf(keys, tile.appearance.accent) + 1;
         int[] values = new int[colors.size()];
@@ -1593,7 +1593,7 @@ public final class DeckActivity extends Activity {
             else {
                 List<Integer> suggestions = new ArrayList<>();
                 for (String key : keys) suggestions.add(UiKit.accentForName(this, key));
-                OrbitColorPicker.show(this, "Tile accent", values[values.length - 1], suggestions,
+                OrbitColorPicker.show(this, OrbitText.get(R.string.ui_tile_accent_d44c1d, "Tile accent"), values[values.length - 1], suggestions,
                         color -> {
                             DeckTile current = tileById(expectedLayoutId, tileId);
                             if (current != null) updateTileAppearance(tileId,
@@ -1631,7 +1631,7 @@ public final class DeckActivity extends Activity {
         if (tile == null) return;
         preview.removeAllViews();
         DeckTileView view = new DeckTileView(this, tile, DeckTileResolver.resolve(this, tile, live), null);
-        view.setContentDescription("Live preview. " + view.getContentDescription());
+        view.setContentDescription(OrbitText.get(R.string.ui_live_preview_d72153, "Live preview. ") + view.getContentDescription());
         FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(
                 tile.size == DeckTile.Size.STANDARD ? UiKit.dp(this, 170) : ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT, Gravity.CENTER);
@@ -1661,7 +1661,7 @@ public final class DeckActivity extends Activity {
         View scrim = new View(this);
         scrim.setBackgroundColor(Color.argb(150, 0, 0, 0));
         scrim.setOnClickListener(v -> { closeSheet(); syncBackHandler(); });
-        scrim.setContentDescription("Close");
+        scrim.setContentDescription(OrbitText.get(R.string.ui_close_7d9eb7, "Close"));
         sheetHost.addView(scrim, new FrameLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
 
@@ -1745,7 +1745,7 @@ public final class DeckActivity extends Activity {
     // ---- add flow ---------------------------------------------------------------------------------
 
     private void openAddSheet() {
-        LinearLayout column = openSheet("Add tile", "Choose what this tile should do");
+        LinearLayout column = openSheet(OrbitText.get(R.string.ui_add_tile_3f05e3, "Add tile"), OrbitText.get(R.string.ui_choose_what_this_tile_should_do_376f05, "Choose what this tile should do"));
         for (DeckTileRegistry.Category category : DeckTileRegistry.categories()) {
             List<DeckTileRegistry.Definition> offered = new ArrayList<>();
             for (DeckTileRegistry.Definition definition : DeckTileRegistry.inCategory(category)) {
@@ -1789,7 +1789,7 @@ public final class DeckActivity extends Activity {
                 alreadyPlaced ? UiKit.MUTED : UiKit.TEXT, true);
         text.addView(title);
         TextView desc = UiKit.text(this,
-                alreadyPlaced ? "Already on your Deck" : definition.description,
+                alreadyPlaced ? OrbitText.get(R.string.ui_already_on_your_deck_b01ccb, "Already on your Deck") : definition.description,
                 12, UiKit.MUTED, false);
         desc.setMaxLines(2);
         text.addView(desc);
@@ -1798,7 +1798,7 @@ public final class DeckActivity extends Activity {
                 0, ViewGroup.LayoutParams.WRAP_CONTENT, 1));
 
         row.setContentDescription(definition.title + ", " + (alreadyPlaced
-                ? "already on your Deck" : definition.description));
+                ? OrbitText.get(R.string.ui_already_on_your_deck_9e5182, "already on your Deck") : definition.description));
         row.setFocusable(true);
         row.setEnabled(!alreadyPlaced);
         if (!alreadyPlaced) row.setOnClickListener(v -> chooseTile(definition));
@@ -1830,13 +1830,13 @@ public final class DeckActivity extends Activity {
 
     private void place(DeckTile tile, String expectedLayoutId) {
         if (DeckLayoutStore.wouldDuplicate(this, tile)) {
-            toast("That is already on your Deck.");
+            toast(OrbitText.get(R.string.ui_that_is_already_on_your_deck_872fa3, "That is already on your Deck."));
             closeSheet();
             syncBackHandler();
             return;
         }
         if (!DeckLayoutStore.add(this, expectedLayoutId, tile)) {
-            toast("Your Deck is full.");
+            toast(OrbitText.get(R.string.ui_your_deck_is_full_523ee3, "Your Deck is full."));
             return;
         }
         closeSheet();
@@ -1860,18 +1860,18 @@ public final class DeckActivity extends Activity {
     // ---- routine picker ---------------------------------------------------------------------------
 
     private void openRoutinePicker(DeckTile existing) {
-        LinearLayout column = openSheet("Choose a Routine",
-                "The tile runs it exactly as the Routines screen does");
+        LinearLayout column = openSheet(OrbitText.get(R.string.ui_choose_a_routine_3d88d1, "Choose a Routine"),
+                OrbitText.get(R.string.ui_the_tile_runs_it_exactly_as_the_routines_s_ac5a83, "The tile runs it exactly as the Routines screen does"));
         String expectedLayoutId = sheetLayoutId;
         List<RoutineStore.Routine> routines = RoutineStore.list(this);
         if (routines.isEmpty()) {
-            column.addView(emptyNote("You have no saved Routines yet."));
+            column.addView(emptyNote(OrbitText.get(R.string.ui_you_have_no_saved_routines_yet_49c6f0, "You have no saved Routines yet.")));
             return;
         }
         for (RoutineStore.Routine routine : routines) {
             int steps = routine.actions == null ? 0 : routine.actions.size();
             column.addView(pickerRow(R.drawable.ic_routine_tile, routine.name,
-                    steps == 1 ? "1 action" : steps + " actions",
+                    steps == 1 ? OrbitText.get(R.string.ui_1_action_85654e, "1 action") : steps + OrbitText.get(R.string.ui_actions_04d2a6, " actions"),
                     null, () -> {
                         if (existing == null) {
                             place(DeckTile.of(DeckTileRegistry.TYPE_ROUTINE, DeckTile.Size.STANDARD)
@@ -1897,12 +1897,12 @@ public final class DeckActivity extends Activity {
      * user asks for this sheet. Opening Deck itself never touches PackageManager for a list.
      */
     private void openAppPicker(DeckTile existing) {
-        LinearLayout column = openSheet("Choose an app", "Launches the app from your Deck");
+        LinearLayout column = openSheet(OrbitText.get(R.string.ui_choose_an_app_8b9b4f, "Choose an app"), OrbitText.get(R.string.ui_launches_the_app_from_your_deck_840a7f, "Launches the app from your Deck"));
         String expectedLayoutId = sheetLayoutId;
         long expectedSheetGeneration = sheetGeneration;
 
         EditText search = new EditText(this);
-        search.setHint("Search apps");
+        search.setHint(OrbitText.get(R.string.ui_search_apps_a10a36, "Search apps"));
         search.setHintTextColor(Color.rgb(113, 119, 135));
         search.setTextColor(UiKit.TEXT);
         search.setTextSize(14);
@@ -1920,7 +1920,7 @@ public final class DeckActivity extends Activity {
         results.setOrientation(LinearLayout.VERTICAL);
         column.addView(results);
 
-        TextView loading = emptyNote("Loading apps…");
+        TextView loading = emptyNote(OrbitText.get(R.string.ui_loading_apps_f8bcca, "Loading apps…"));
         results.addView(loading);
 
         EXEC.execute(() -> {
@@ -1962,7 +1962,7 @@ public final class DeckActivity extends Activity {
             }), rowLp());
             shown++;
         }
-        if (shown == 0) into.addView(emptyNote("No apps match that."));
+        if (shown == 0) into.addView(emptyNote(OrbitText.get(R.string.ui_no_apps_match_that_7b3779, "No apps match that.")));
     }
 
     private static final class LaunchableApp {
@@ -2007,18 +2007,18 @@ public final class DeckActivity extends Activity {
      * Diagnostics. It is sent only when the user opens the tile and presses send themselves.
      */
     private void openPromptEditor(DeckTile existing) {
-        LinearLayout column = openSheet(existing == null ? "New prompt tile" : "Edit prompt tile",
-                "Opens a new chat with this text ready to send");
+        LinearLayout column = openSheet(existing == null ? OrbitText.get(R.string.ui_new_prompt_tile_46123f, "New prompt tile") : OrbitText.get(R.string.ui_edit_prompt_tile_df41a2, "Edit prompt tile"),
+                OrbitText.get(R.string.ui_opens_a_new_chat_with_this_text_ready_to_s_412a2e, "Opens a new chat with this text ready to send"));
         String expectedLayoutId = sheetLayoutId;
 
         EditText name = new EditText(this);
-        name.setHint("Tile name");
+        name.setHint(OrbitText.get(R.string.ui_tile_name_6a6da4, "Tile name"));
         name.setText(existing == null ? "" : existing.config(DeckTile.CONFIG_TITLE));
         styleField(name, false);
         column.addView(name, fieldLp(UiKit.dp(this, 48)));
 
         EditText prompt = new EditText(this);
-        prompt.setHint("Prompt text, for example: Explain this clearly and concisely:");
+        prompt.setHint(OrbitText.get(R.string.ui_prompt_text_for_example_explain_this_clear_becfcc, "Prompt text, for example: Explain this clearly and concisely:"));
         prompt.setText(existing == null ? "" : existing.config(DeckTile.CONFIG_PROMPT));
         styleField(prompt, true);
         name.setImeOptions(EditorInfo.IME_ACTION_NEXT);
@@ -2030,14 +2030,14 @@ public final class DeckActivity extends Activity {
         });
         column.addView(prompt, fieldLp(UiKit.dp(this, 112)));
 
-        column.addView(sectionLabel("ICON"));
+        column.addView(sectionLabel(OrbitText.get(R.string.ui_icon_386b0d, "ICON")));
         final String[] chosen = {existing == null
                 ? DeckIcons.DEFAULT_KEY : existing.config(DeckTile.CONFIG_ICON)};
         if (!DeckIcons.knows(chosen[0])) chosen[0] = DeckIcons.DEFAULT_KEY;
         column.addView(iconPicker(chosen));
 
         Button save = new Button(this);
-        save.setText("Save");
+        save.setText(OrbitText.get(R.string.ui_save_1509f5, "Save"));
         save.setAllCaps(false);
         save.setTextSize(15);
         save.setTextColor(UiKit.onAccent(this));
@@ -2053,9 +2053,9 @@ public final class DeckActivity extends Activity {
 
         save.setOnClickListener(v -> {
             String text = DeckTile.sanitizePrompt(prompt.getText().toString());
-            if (text.isEmpty()) { toast("Give the tile some prompt text."); return; }
+            if (text.isEmpty()) { toast(OrbitText.get(R.string.ui_give_the_tile_some_prompt_text_051318, "Give the tile some prompt text.")); return; }
             String label = DeckTile.sanitizeTitle(name.getText().toString());
-            if (label.isEmpty()) label = "Prompt";
+            if (label.isEmpty()) label = OrbitText.get(R.string.ui_prompt_5c3912, "Prompt");
             if (existing == null) {
                 place(DeckTile.of(DeckTileRegistry.TYPE_PROMPT, DeckTile.Size.STANDARD)
                         .withConfig(DeckTile.CONFIG_PROMPT, text)
@@ -2136,7 +2136,7 @@ public final class DeckActivity extends Activity {
     private void openRenameSheet(DeckTile tile, String expectedLayoutId) {
         if (!expectedLayoutId.equals(activeLayoutId)) return;
         DeckTileResolver.Resolved resolved = DeckTileResolver.resolve(this, tile, live);
-        LinearLayout column = openSheet("Rename tile", "Leave it empty to use the original name");
+        LinearLayout column = openSheet(OrbitText.get(R.string.ui_rename_tile_fba927, "Rename tile"), OrbitText.get(R.string.ui_leave_it_empty_to_use_the_original_name_1f8aac, "Leave it empty to use the original name"));
 
         EditText name = new EditText(this);
         name.setHint(resolved.title);
@@ -2145,7 +2145,7 @@ public final class DeckActivity extends Activity {
         column.addView(name, fieldLp(UiKit.dp(this, 48)));
 
         Button save = new Button(this);
-        save.setText("Save");
+        save.setText(OrbitText.get(R.string.ui_save_1509f5, "Save"));
         save.setAllCaps(false);
         save.setTextSize(15);
         save.setTextColor(UiKit.onAccent(this));
@@ -2337,7 +2337,7 @@ public final class DeckActivity extends Activity {
     View sheetPanelForTest() { return sheetPanel; }
     void openLayoutManagerForTest() { openLayoutManager(); }
     void openLayoutNameForTest() {
-        openLayoutNameSheet("Name layout", "New Deck", name -> false);
+        openLayoutNameSheet(OrbitText.get(R.string.ui_name_layout_1b3916, "Name layout"), OrbitText.get(R.string.ui_new_deck_28ab8d, "New Deck"), name -> false);
     }
     void openStructuralRenameForTest(DeckItem item) {
         openStructuralRenameSheet(item, activeLayoutId);

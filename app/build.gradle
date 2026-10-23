@@ -2,6 +2,8 @@ plugins {
     id 'com.android.application'
 }
 
+apply from: rootProject.file('gradle/localized-signing.gradle')
+
 def orbitSigningPropertiesFile = rootProject.file('orbit-signing.properties')
 def orbitSigningProperties = new Properties()
 if (orbitSigningPropertiesFile.exists()) {
@@ -46,6 +48,8 @@ android {
 
     defaultConfig {
         applicationId 'com.orbit.assistant'
+        buildConfigField 'String', 'ORBIT_LOCAL_CERTIFICATE_SHA256', '"' + orbitLocalCertificate + '"'
+        buildConfigField 'boolean', 'BUNDLED_ORBIT_LOCAL', orbitBundledLocal.toString()
         minSdk 29
         targetSdk 36
         versionCode 818
@@ -147,6 +151,14 @@ afterEvaluate {
             if (!orbitReleaseSigningReady) {
                 throw new GradleException('Release signing is not configured. Set all four ORBIT_RELEASE_* values in the ignored orbit-signing.properties file or environment variables.')
             }
+            if (orbitBundledLocal) {
+                def store = java.security.KeyStore.getInstance(file(orbitReleaseStoreFile), orbitReleaseStorePassword.toCharArray())
+                def certificate = store.getCertificate(orbitReleaseKeyAlias)
+                def actualPin = java.security.MessageDigest.getInstance('SHA-256').digest(certificate.encoded).encodeHex().toString()
+                if (!actualPin.equalsIgnoreCase(orbitLocalCertificate)) {
+                    throw new GradleException('The localization certificate pin does not match the configured release signing key.')
+                }
+            }
         }
     }
     tasks.named('prePlayBuild').configure {
@@ -186,4 +198,45 @@ dependencies {
     androidTestImplementation "androidx.test:core:1.6.1"
     androidTestImplementation "androidx.test.ext:junit:1.2.1"
     androidTestImplementation "androidx.test:runner:1.6.2"
+}
+
+// The fork carries its matching, signed optional installer. Ordinary upstream builds do not.
+if (orbitBundledLocal) {
+    android.sourceSets.main.assets.srcDir(layout.buildDirectory.dir('bundledLocalAssets'))
+    def bundleLocal = tasks.register('bundleOrbitLocal') {
+        dependsOn ':local:assembleRelease'
+        def apk = rootProject.file('local/build/outputs/apk/release/local-release.apk')
+        inputs.file(apk)
+        inputs.property('certificate', orbitLocalCertificate)
+        outputs.dir(layout.buildDirectory.dir('bundledLocalAssets'))
+        doLast {
+            def assetDir = layout.buildDirectory.dir('bundledLocalAssets/orbit-local').get().asFile
+            assetDir.mkdirs()
+            def digest = java.security.MessageDigest.getInstance('SHA-256')
+            apk.withInputStream { input ->
+                byte[] bytes = new byte[32768]
+                int count
+                while ((count = input.read(bytes)) != -1) digest.update(bytes, 0, count)
+            }
+            def assetName = "Orbit-Local-v${android.defaultConfig.versionName}.apk"
+            copy { from apk; into assetDir; rename { assetName } }
+            def component = [packageName: 'com.orbit.assistant.local',
+                versionName: android.defaultConfig.versionName,
+                versionCode: android.defaultConfig.versionCode, apkAssetName: assetName,
+                apkSha256: digest.digest().encodeHex().toString(),
+                certificateSha256: orbitLocalCertificate, protocol: 3, apkSize: apk.length()]
+            new File(assetDir, 'orbit-update.json').text = groovy.json.JsonOutput.toJson([component: component])
+        }
+    }
+    tasks.configureEach { task ->
+        if (task.name == 'preBuild' || task.name ==~ /merge(Debug|Release)Assets/
+                || task.name.toLowerCase(java.util.Locale.ROOT).contains('lint')) {
+            task.dependsOn bundleLocal
+        }
+        if (task.name == 'preDebugBuild' || task.name == 'prePlayBuild') {
+            task.doFirst {
+                throw new GradleException('The bundled localization requires assembleRelease and the matching release signing identity.')
+            }
+        }
+    }
 }

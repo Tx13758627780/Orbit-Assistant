@@ -140,7 +140,7 @@ public class AppProfileActivity extends Activity {
 
         LinearLayout top = new LinearLayout(this);
         top.setGravity(Gravity.CENTER_VERTICAL);
-        ImageButton back = iconButton(R.drawable.ic_back,"Back");
+        ImageButton back = iconButton(R.drawable.ic_back,OrbitText.get(R.string.ui_back_76900f, "Back"));
         back.setOnClickListener(v -> navigation.performBack());
         top.addView(back,new LinearLayout.LayoutParams(UiKit.dp(this,48),UiKit.dp(this,48)));
         LinearLayout titles = new LinearLayout(this);
@@ -161,50 +161,50 @@ public class AppProfileActivity extends Activity {
         ScreenContextClassifier.Result auto = ScreenContextClassifier.classify(this,"",false,pkg,label);
 
         LinearLayout preview = card();
-        TextView previewTitle = UiKit.text(this, "ORBIT BEHAVIOR", 11, UiKit.accent(this), true);
+        TextView previewTitle = UiKit.text(this, OrbitText.get(R.string.ui_orbit_behavior_c371cf, "ORBIT BEHAVIOR"), 11, UiKit.accent(this), true);
         preview.addView(previewTitle);
         String detected = AppProfileStore.CATEGORY_AUTO.equals(current.category)
-                ? (auto.confidence >= 65 ? auto.label : "Automatic")
+                ? (auto.confidence >= 65 ? auto.label : OrbitText.get(R.string.ui_automatic_d461a4, "Automatic"))
                 : AppProfileStore.categoryLabel(current.category);
-        preview.addView(infoLine("Context", detected));
-        preview.addView(infoLine("Privacy", AppProfileStore.effectivePrivacyLabel(this,pkg)));
+        preview.addView(infoLine(OrbitText.get(R.string.ui_context_a6e600, "Context"), detected));
+        preview.addView(infoLine(OrbitText.get(R.string.ui_privacy_54a57c, "Privacy"), AppProfileStore.effectivePrivacyLabel(this,pkg)));
         TextView previewNote = UiKit.text(this,
-                "Automatic adapts from the app and whatever is actually on screen. Your overrides always win.",
+                OrbitText.get(R.string.ui_automatic_adapts_from_the_app_and_whatever_45dab7, "Automatic adapts from the app and whatever is actually on screen. Your overrides always win."),
                 12, UiKit.MUTED, false);
         previewNote.setPadding(0,UiKit.dp(this,8),0,0);
         preview.addView(previewNote);
         root.addView(preview, cardLp());
 
-        root.addView(section("BEHAVIOR"));
+        root.addView(section(OrbitText.get(R.string.ui_behavior_a9b068, "BEHAVIOR")));
         LinearLayout behavior = card();
-        category = addSelector(behavior,"Screen type",CATEGORY_LABELS,CATEGORY_VALUES,current.category);
+        category = addSelector(behavior,OrbitText.get(R.string.ui_screen_type_01df74, "Screen type"),OrbitText.labels(CATEGORY_LABELS, R.string.ui_automatic_d461a4, R.string.ui_conversation_ccca18, R.string.ui_product_shopping_382beb, R.string.ui_article_webpage_8ca960, R.string.ui_settings_74a883, R.string.ui_media_d35717, R.string.ui_map_navigation_3eeed2, R.string.ui_document_d6bd8c, R.string.ui_email_969ccb, R.string.ui_generic_0228c6),CATEGORY_VALUES,current.category);
         root.addView(behavior,cardLp());
 
-        root.addView(section("PRIVACY"));
+        root.addView(section(OrbitText.get(R.string.ui_privacy_39d98d, "PRIVACY")));
         LinearLayout privacyCard = card();
-        privacy = addSelector(privacyCard,"Privacy level",PRIVACY_LABELS,PRIVACY_VALUES,current.privacyPolicy);
-        screen = addSelector(privacyCard,"Screen context",SCREEN_LABELS,SCREEN_VALUES,current.screenPolicy);
-        screenshot = addSelector(privacyCard,"Screenshots",SHOT_LABELS,SHOT_VALUES,current.screenshotPolicy);
+        privacy = addSelector(privacyCard,OrbitText.get(R.string.ui_privacy_level_cbcd2d, "Privacy level"),OrbitText.labels(PRIVACY_LABELS, R.string.ui_automatic_d461a4, R.string.ui_normal_a7248e, R.string.ui_sensitive_manual_screen_only_c127a5, R.string.ui_no_screen_access_e48611),PRIVACY_VALUES,current.privacyPolicy);
+        screen = addSelector(privacyCard,OrbitText.get(R.string.ui_screen_context_956600, "Screen context"),OrbitText.labels(SCREEN_LABELS, R.string.ui_use_global_setting_75b7a7, R.string.ui_attach_by_default_747e8c, R.string.ui_never_use_screen_b2be63),SCREEN_VALUES,current.screenPolicy);
+        screenshot = addSelector(privacyCard,OrbitText.get(R.string.ui_screenshots_067348, "Screenshots"),OrbitText.labels(SHOT_LABELS, R.string.ui_use_global_setting_75b7a7, R.string.ui_allow_when_globally_enabled_3ab3eb, R.string.ui_block_screenshots_e64267),SHOT_VALUES,current.screenshotPolicy);
         TextView privacyNote = UiKit.text(this,
-                "Sensitive never auto-attaches the screen and blocks screenshots. No screen access blocks all screen context for this app.",
+                OrbitText.get(R.string.ui_sensitive_never_auto_attaches_the_screen_a_1823cc, "Sensitive never auto-attaches the screen and blocks screenshots. No screen access blocks all screen context for this app."),
                 12,UiKit.MUTED,false);
         privacyNote.setPadding(0,UiKit.dp(this,8),0,0);
         privacyCard.addView(privacyNote);
         root.addView(privacyCard,cardLp());
 
-        root.addView(section("QUICK ACTIONS"));
+        root.addView(section(OrbitText.get(R.string.ui_quick_actions_649151, "QUICK ACTIONS")));
         LinearLayout actions = card();
         TextView actionNote = UiKit.text(this,
-                "Leave a slot Automatic and Orbit will choose it from the screen. Customize any slot you want to keep consistent in this app.",
+                OrbitText.get(R.string.ui_leave_a_slot_automatic_and_orbit_will_choo_0d5e4c, "Leave a slot Automatic and Orbit will choose it from the screen. Customize any slot you want to keep consistent in this app."),
                 12, UiKit.MUTED, false);
         actionNote.setPadding(0,0,0,UiKit.dp(this,5));
         actions.addView(actionNote);
-        action1 = addSelector(actions,"Action 1",ACTION_LABELS,ACTION_VALUES,current.action1);
-        action2 = addSelector(actions,"Action 2",ACTION_LABELS,ACTION_VALUES,current.action2);
-        action3 = addSelector(actions,"Action 3",ACTION_LABELS,ACTION_VALUES,current.action3);
+        action1 = addSelector(actions,OrbitText.get(R.string.ui_action_1_6e97f7, "Action 1"),OrbitText.labels(ACTION_LABELS, R.string.ui_automatic_d461a4, R.string.ui_draft_reply_020639, R.string.ui_summarize_e26837, R.string.ui_explain_3b61e4, R.string.ui_explain_tone_c56540, R.string.ui_needs_action_348b68, R.string.ui_worth_it_acaf9c, R.string.ui_compare_e88815, R.string.ui_key_specs_2659b8, R.string.ui_key_points_c925a0, R.string.ui_recommend_beef09, R.string.ui_what_matters_145182, R.string.ui_which_option_cf0b32, R.string.ui_route_summary_4b9b75, R.string.ui_what_next_5c8fb4),ACTION_VALUES,current.action1);
+        action2 = addSelector(actions,OrbitText.get(R.string.ui_action_2_9b5e92, "Action 2"),OrbitText.labels(ACTION_LABELS, R.string.ui_automatic_d461a4, R.string.ui_draft_reply_020639, R.string.ui_summarize_e26837, R.string.ui_explain_3b61e4, R.string.ui_explain_tone_c56540, R.string.ui_needs_action_348b68, R.string.ui_worth_it_acaf9c, R.string.ui_compare_e88815, R.string.ui_key_specs_2659b8, R.string.ui_key_points_c925a0, R.string.ui_recommend_beef09, R.string.ui_what_matters_145182, R.string.ui_which_option_cf0b32, R.string.ui_route_summary_4b9b75, R.string.ui_what_next_5c8fb4),ACTION_VALUES,current.action2);
+        action3 = addSelector(actions,OrbitText.get(R.string.ui_action_3_debb50, "Action 3"),OrbitText.labels(ACTION_LABELS, R.string.ui_automatic_d461a4, R.string.ui_draft_reply_020639, R.string.ui_summarize_e26837, R.string.ui_explain_3b61e4, R.string.ui_explain_tone_c56540, R.string.ui_needs_action_348b68, R.string.ui_worth_it_acaf9c, R.string.ui_compare_e88815, R.string.ui_key_specs_2659b8, R.string.ui_key_points_c925a0, R.string.ui_recommend_beef09, R.string.ui_what_matters_145182, R.string.ui_which_option_cf0b32, R.string.ui_route_summary_4b9b75, R.string.ui_what_next_5c8fb4),ACTION_VALUES,current.action3);
         root.addView(actions,cardLp());
 
-        Button save = primaryButton("Save app behavior");
+        Button save = primaryButton(OrbitText.get(R.string.ui_save_app_behavior_00a155, "Save app behavior"));
         save.setOnClickListener(v -> {
             AppProfileStore.save(this,new AppProfileStore.Profile(pkg,label,
                     selectedValue(category),selectedValue(privacy),
@@ -212,16 +212,16 @@ public class AppProfileActivity extends Activity {
                     current.intelligenceMode,selectedValue(action1),
                     selectedValue(action2),selectedValue(action3),
                     System.currentTimeMillis()));
-            Toast.makeText(this,"App behavior saved",Toast.LENGTH_SHORT).show();
+            Toast.makeText(this,OrbitText.get(R.string.ui_app_behavior_saved_fc06a0, "App behavior saved"),Toast.LENGTH_SHORT).show();
             finish();
         });
         root.addView(save,new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,UiKit.dp(this,50)));
 
-        Button reset = secondaryButton("Reset to Automatic");
+        Button reset = secondaryButton(OrbitText.get(R.string.ui_reset_to_automatic_1f50a5, "Reset to Automatic"));
         reset.setOnClickListener(v -> {
             AppProfileStore.reset(this,pkg);
-            Toast.makeText(this,"App behavior reset",Toast.LENGTH_SHORT).show();
+            Toast.makeText(this,OrbitText.get(R.string.ui_app_behavior_reset_28e58b, "App behavior reset"),Toast.LENGTH_SHORT).show();
             finish();
         });
         LinearLayout.LayoutParams rlp = new LinearLayout.LayoutParams(

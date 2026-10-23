@@ -50,7 +50,7 @@ public final class OrbitLocalService extends Service {
     private static final String ORBIT_PACKAGE = "com.orbit.assistant";
     /** Orbit's permanent release certificate. The same pin the main app carries. */
     private static final String ORBIT_CERTIFICATE_SHA256 =
-            "7DAD619385DFF11EC731AA555F2B448A943C7391813D1A94DF1CB4232ECD41E3";
+            BuildConfig.ORBIT_LOCAL_CERTIFICATE_SHA256;
 
     // ---- status Bundle keys, mirrored by Orbit's OrbitLocalStatus ------------------------------
 

@@ -30,6 +30,8 @@ final class OrbitLocalStatusPoller {
     static final long IDLE_MS = 2500L;
     /** The short delay after a button press, so its effect shows almost at once. */
     static final long NUDGE_MS = 250L;
+    /** Includes binding and a slow Binder status call. */
+    static final long READ_TIMEOUT_MS = 12000L;
 
     /** Reads the status asynchronously. The answer may arrive on any thread; null is "unreachable". */
     interface Source {
@@ -52,6 +54,8 @@ final class OrbitLocalStatusPoller {
     private boolean hasReading;
     private OrbitLocalStatus last;
     private int reads;
+    private int generation;
+    private Runnable timeout;
 
     private final Runnable tick = this::readNow;
 
@@ -74,6 +78,9 @@ final class OrbitLocalStatusPoller {
     void stop() {
         running = false;
         main.removeCallbacks(tick);
+        if (timeout != null) main.removeCallbacks(timeout);
+        generation++;
+        inFlight = false;
     }
 
     /** Reads again shortly, e.g. right after the user started, paused or removed something. */
@@ -101,10 +108,20 @@ final class OrbitLocalStatusPoller {
         if (!running || inFlight) return;
         inFlight = true;
         reads++;
-        source.read(fresh -> main.post(() -> deliver(fresh)));
+        int request = ++generation;
+        timeout = () -> deliver(request, null);
+        main.postDelayed(timeout, READ_TIMEOUT_MS);
+        try {
+            source.read(fresh -> main.post(() -> deliver(request, fresh)));
+        } catch (Exception failure) {
+            deliver(request, null);
+        }
     }
 
-    private void deliver(OrbitLocalStatus fresh) {
+    private void deliver(int request, OrbitLocalStatus fresh) {
+        if (!running || !inFlight || request != generation) return;
+        if (timeout != null) main.removeCallbacks(timeout);
+        generation++;
         inFlight = false;
         if (!running) return;
         boolean changed = !hasReading || !fingerprint(last).equals(fingerprint(fresh));

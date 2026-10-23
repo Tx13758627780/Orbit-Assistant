@@ -43,7 +43,7 @@ public final class OrbitWidgetConfigureActivity extends Activity {
                 : getIntent().getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID,
                 AppWidgetManager.INVALID_APPWIDGET_ID);
         if (!OrbitWidgets.isOwnedConfiguration(this, widgetId)) {
-            Toast.makeText(this, "This Orbit widget is no longer available.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, OrbitText.get(R.string.ui_this_orbit_widget_is_no_longer_available_70e8e3, "This Orbit widget is no longer available."), Toast.LENGTH_SHORT).show();
             finish();
             return;
         }
@@ -93,21 +93,21 @@ public final class OrbitWidgetConfigureActivity extends Activity {
 
         LinearLayout header = new LinearLayout(this);
         header.setGravity(Gravity.CENTER_VERTICAL);
-        ImageButton close = iconButton(R.drawable.ic_close, "Cancel widget setup");
+        ImageButton close = iconButton(R.drawable.ic_close, OrbitText.get(R.string.ui_cancel_widget_setup_f567b3, "Cancel widget setup"));
         close.setOnClickListener(v -> finish());
         header.addView(close, new LinearLayout.LayoutParams(UiKit.dp(this, 46), UiKit.dp(this, 46)));
         LinearLayout titles = new LinearLayout(this);
         titles.setOrientation(LinearLayout.VERTICAL);
         titles.setPadding(UiKit.dp(this, 13), 0, 0, 0);
-        titles.addView(UiKit.text(this, runRoutineWidget ? "Run Routine widget" : "Quick Actions widget",
+        titles.addView(UiKit.text(this, runRoutineWidget ? OrbitText.get(R.string.ui_run_routine_widget_10678b, "Run Routine widget") : OrbitText.get(R.string.ui_quick_actions_widget_570e8b, "Quick Actions widget"),
                 23, UiKit.TEXT, true));
-        titles.addView(UiKit.text(this, "Home-screen setup", 12, UiKit.MUTED, false));
+        titles.addView(UiKit.text(this, OrbitText.get(R.string.ui_home_screen_setup_7e3030, "Home-screen setup"), 12, UiKit.MUTED, false));
         header.addView(titles, new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1));
         page.addView(header);
 
         TextView intro = UiKit.text(this, runRoutineWidget
-                        ? "Choose the saved Routine this widget will open and run through Orbit's normal Action Engine."
-                        : "Choose up to four concise actions. Compact widget sizes show the first two slots.",
+                        ? OrbitText.get(R.string.ui_choose_the_saved_routine_this_widget_will_71de5d, "Choose the saved Routine this widget will open and run through Orbit's normal Action Engine.")
+                        : OrbitText.get(R.string.ui_choose_up_to_four_concise_actions_compact_039b75, "Choose up to four concise actions. Compact widget sizes show the first two slots."),
                 13, UiKit.MUTED, false);
         intro.setLineSpacing(0, 1.14f);
         LinearLayout.LayoutParams introLp = new LinearLayout.LayoutParams(
@@ -118,14 +118,14 @@ public final class OrbitWidgetConfigureActivity extends Activity {
         if (runRoutineWidget) buildRoutineConfiguration(page);
         else buildQuickConfiguration(page);
 
-        Button save = primaryButton("Save widget");
+        Button save = primaryButton(OrbitText.get(R.string.ui_save_widget_880eb5, "Save widget"));
         save.setOnClickListener(v -> save());
         LinearLayout.LayoutParams saveLp = new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, UiKit.dp(this, 50));
         saveLp.setMargins(0, UiKit.dp(this, 18), 0, 0);
         page.addView(save, saveLp);
 
-        Button cancel = secondaryButton("Cancel");
+        Button cancel = secondaryButton(OrbitText.get(R.string.ui_cancel_19766e, "Cancel"));
         cancel.setOnClickListener(v -> finish());
         LinearLayout.LayoutParams cancelLp = new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, UiKit.dp(this, 46));
@@ -137,7 +137,7 @@ public final class OrbitWidgetConfigureActivity extends Activity {
 
     private void buildRoutineConfiguration(LinearLayout page) {
         LinearLayout card = card();
-        card.addView(UiKit.text(this, "ROUTINE", 12, UiKit.MUTED, true));
+        card.addView(UiKit.text(this, OrbitText.get(R.string.ui_routine_a88e1b, "ROUTINE"), 12, UiKit.MUTED, true));
         Button chooser = secondaryButton(routineLabel(runRoutineId));
         chooser.setOnClickListener(v -> showRoutineChooser(selected -> {
             runRoutineId = selected;
@@ -155,7 +155,7 @@ public final class OrbitWidgetConfigureActivity extends Activity {
         for (int slot = 0; slot < 4; slot++) {
             final int index = slot;
             LinearLayout card = card();
-            TextView title = UiKit.text(this, "SLOT " + (slot + 1), 12, UiKit.MUTED, true);
+            TextView title = UiKit.text(this, OrbitText.get(R.string.ui_slot_26aab9, "SLOT ") + (slot + 1), 12, UiKit.MUTED, true);
             card.addView(title);
 
             Button action = secondaryButton(actionLabel(quickTypes[slot]));
@@ -172,10 +172,10 @@ public final class OrbitWidgetConfigureActivity extends Activity {
             routine.setVisibility(OrbitWidgets.TYPE_ROUTINE.equals(quickTypes[slot])
                     ? View.VISIBLE : View.GONE);
 
-            action.setOnClickListener(v -> UiKit.showOrbitMenu(this, action, ACTION_LABELS,
+            action.setOnClickListener(v -> UiKit.showOrbitMenu(this, action, OrbitText.labels(ACTION_LABELS, R.string.ui_ask_orbit_18ea29, R.string.ui_run_a_routine_6c76b6, R.string.ui_flashlight_e2ed3c, R.string.ui_create_reminder_919e27, R.string.ui_empty_c6c094),
                     actionIndex(quickTypes[index]), (position, label) -> {
                         quickTypes[index] = ACTION_TYPES[position];
-                        action.setText(ACTION_LABELS[position]);
+                        action.setText(OrbitText.labels(ACTION_LABELS, R.string.ui_ask_orbit_18ea29, R.string.ui_run_a_routine_6c76b6, R.string.ui_flashlight_e2ed3c, R.string.ui_create_reminder_919e27, R.string.ui_empty_c6c094)[position]);
                         routine.setVisibility(OrbitWidgets.TYPE_ROUTINE.equals(quickTypes[index])
                                 ? View.VISIBLE : View.GONE);
                     }));
@@ -193,16 +193,16 @@ public final class OrbitWidgetConfigureActivity extends Activity {
     private void showRoutineChooser(RoutineChoice callback) {
         List<RoutineStore.Routine> routines = RoutineStore.list(this);
         if (routines.isEmpty()) {
-            Toast.makeText(this, "Create a saved Routine first.", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, OrbitText.get(R.string.ui_create_a_saved_routine_first_529b3e, "Create a saved Routine first."), Toast.LENGTH_LONG).show();
             return;
         }
         String[] labels = new String[routines.size()];
         for (int i = 0; i < routines.size(); i++) labels[i] = routines.get(i).name;
         AlertDialog dialog = new AlertDialog.Builder(this)
-                .setTitle("Choose Routine")
+                .setTitle(OrbitText.get(R.string.ui_choose_routine_f1bdd6, "Choose Routine"))
                 .setItems(labels, (shown, position) ->
                         callback.onChoice(routines.get(position).id))
-                .setNegativeButton("Cancel", null)
+                .setNegativeButton(OrbitText.get(R.string.ui_cancel_19766e, "Cancel"), null)
                 .create();
         UiKit.styleOrbitDialog(dialog, this, false);
         dialog.show();
@@ -211,11 +211,11 @@ public final class OrbitWidgetConfigureActivity extends Activity {
     private void addNoRoutinesHelp(LinearLayout card) {
         if (!RoutineStore.list(this).isEmpty()) return;
         TextView help = UiKit.text(this,
-                "No saved Routines are available yet. Create one, then return here to choose it.",
+                OrbitText.get(R.string.ui_no_saved_routines_are_available_yet_create_bd0d11, "No saved Routines are available yet. Create one, then return here to choose it."),
                 12, UiKit.MUTED, false);
         help.setPadding(0, UiKit.dp(this, 10), 0, UiKit.dp(this, 8));
         card.addView(help);
-        Button open = secondaryButton("Open Routines");
+        Button open = secondaryButton(OrbitText.get(R.string.ui_open_routines_a7a6e2, "Open Routines"));
         open.setOnClickListener(v -> startActivity(new Intent(this, RoutinesActivity.class)));
         card.addView(open, new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, UiKit.dp(this, 44)));
@@ -224,31 +224,31 @@ public final class OrbitWidgetConfigureActivity extends Activity {
     private void save() {
         if (runRoutineWidget) {
             if (RoutineStore.findById(this, runRoutineId) == null) {
-                Toast.makeText(this, "Choose an available Routine.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, OrbitText.get(R.string.ui_choose_an_available_routine_f06e4d, "Choose an available Routine."), Toast.LENGTH_SHORT).show();
                 return;
             }
             if (!OrbitWidgets.saveRunRoutine(this, widgetId, runRoutineId)) {
-                Toast.makeText(this, "Orbit could not save this widget.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, OrbitText.get(R.string.ui_orbit_could_not_save_this_widget_5ff89e, "Orbit could not save this widget."), Toast.LENGTH_SHORT).show();
                 return;
             }
             OrbitWidgets.updateRunRoutine(this, AppWidgetManager.getInstance(this), widgetId);
         } else {
             if (OrbitWidgets.TYPE_NONE.equals(quickTypes[0]) ||
                     OrbitWidgets.TYPE_NONE.equals(quickTypes[1])) {
-                Toast.makeText(this, "Choose actions for the first two slots.",
+                Toast.makeText(this, OrbitText.get(R.string.ui_choose_actions_for_the_first_two_slots_1437eb, "Choose actions for the first two slots."),
                         Toast.LENGTH_SHORT).show();
                 return;
             }
             for (int slot = 0; slot < 4; slot++) {
                 if (OrbitWidgets.TYPE_ROUTINE.equals(quickTypes[slot]) &&
                         RoutineStore.findById(this, quickRoutineIds[slot]) == null) {
-                    Toast.makeText(this, "Choose a Routine for slot " + (slot + 1) + ".",
+                    Toast.makeText(this, OrbitText.get(R.string.ui_choose_a_routine_for_slot_937514, "Choose a Routine for slot ") + (slot + 1) + ".",
                             Toast.LENGTH_SHORT).show();
                     return;
                 }
             }
             if (!OrbitWidgets.saveQuickSlots(this, widgetId, quickTypes, quickRoutineIds)) {
-                Toast.makeText(this, "Orbit could not save this widget.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, OrbitText.get(R.string.ui_orbit_could_not_save_this_widget_5ff89e, "Orbit could not save this widget."), Toast.LENGTH_SHORT).show();
                 return;
             }
             OrbitWidgets.updateQuickActions(this, AppWidgetManager.getInstance(this), widgetId);
@@ -260,7 +260,7 @@ public final class OrbitWidgetConfigureActivity extends Activity {
 
     private String routineLabel(String id) {
         RoutineStore.Routine routine = RoutineStore.findById(this, id);
-        return routine == null ? "Choose Routine" : "Routine · " + routine.name;
+        return routine == null ? OrbitText.get(R.string.ui_choose_routine_f1bdd6, "Choose Routine") : OrbitText.get(R.string.ui_routine_89e8e5, "Routine · ") + routine.name;
     }
 
     private static int actionIndex(String type) {
@@ -269,7 +269,7 @@ public final class OrbitWidgetConfigureActivity extends Activity {
     }
 
     private static String actionLabel(String type) {
-        return ACTION_LABELS[actionIndex(type)] + "  ▾";
+        return OrbitText.labels(ACTION_LABELS, R.string.ui_ask_orbit_18ea29, R.string.ui_run_a_routine_6c76b6, R.string.ui_flashlight_e2ed3c, R.string.ui_create_reminder_919e27, R.string.ui_empty_c6c094)[actionIndex(type)] + "  ▾";
     }
 
     private LinearLayout card() {

@@ -340,7 +340,7 @@ public final class OrbitRichResponseRenderer {
         view.setMovementMethod(LinkMovementMethod.getInstance());
         view.setLinksClickable(true);
         view.setLinkTextColor(UiKit.linkColorOn(c, surface));
-        view.setContentDescription((task.checked ? "Checked, " : "Unchecked, ") + body);
+        view.setContentDescription((task.checked ? OrbitText.get(R.string.ui_checked_260be1, "Checked, ") : OrbitText.get(R.string.ui_unchecked_ce6952, "Unchecked, ")) + body);
         UiKit.applyBubbleTextMetrics(view);
         return view;
     }
@@ -403,23 +403,23 @@ public final class OrbitRichResponseRenderer {
 
         LinearLayout header = new LinearLayout(c);
         header.setGravity(Gravity.CENTER_VERTICAL);
-        TextView label = UiKit.text(c, language.isEmpty() ? "Code" : language,
+        TextView label = UiKit.text(c, language.isEmpty() ? OrbitText.get(R.string.ui_code_340f46, "Code") : language,
                 10.5f, UiKit.MUTED, true);
         header.addView(label, new LinearLayout.LayoutParams(0,
                 ViewGroup.LayoutParams.WRAP_CONTENT, 1));
         Button copy = new Button(c);
-        copy.setText("Copy");
+        copy.setText(OrbitText.get(R.string.ui_copy_e21f93, "Copy"));
         copy.setAllCaps(false);
         copy.setTextSize(10.5f);
         copy.setTextColor(UiKit.accent(c));
         copy.setMinHeight(0); copy.setMinimumHeight(0); copy.setMinWidth(0); copy.setMinimumWidth(0);
         copy.setPadding(UiKit.dp(c, 9), 0, UiKit.dp(c, 9), 0);
         copy.setBackground(UiKit.ripple(Color.TRANSPARENT, UiKit.accent(c), 10, c));
-        copy.setContentDescription("Copy code block");
+        copy.setContentDescription(OrbitText.get(R.string.ui_copy_code_block_1a721e, "Copy code block"));
         copy.setOnClickListener(v -> {
             ClipboardManager manager = (ClipboardManager) c.getSystemService(Context.CLIPBOARD_SERVICE);
-            if (manager != null) manager.setPrimaryClip(ClipData.newPlainText("Orbit code", code));
-            Toast.makeText(c, "Code copied", Toast.LENGTH_SHORT).show();
+            if (manager != null) manager.setPrimaryClip(ClipData.newPlainText(OrbitText.get(R.string.ui_orbit_code_b68713, "Orbit code"), code));
+            Toast.makeText(c, OrbitText.get(R.string.ui_code_copied_39868c, "Code copied"), Toast.LENGTH_SHORT).show();
         });
         // Held back rather than hidden, so the header does not change shape when the block closes
         // and the code below it does not shift up and down as the answer finishes.
@@ -493,7 +493,7 @@ public final class OrbitRichResponseRenderer {
         }
         scroll.addView(table, new HorizontalScrollView.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-        scroll.setContentDescription("Markdown table");
+        scroll.setContentDescription(OrbitText.get(R.string.ui_markdown_table_3f2b07, "Markdown table"));
         return scroll;
     }
 
@@ -508,7 +508,7 @@ public final class OrbitRichResponseRenderer {
         FrameLayout.LayoutParams progressLp = new FrameLayout.LayoutParams(
                 UiKit.dp(c, 28), UiKit.dp(c, 28), Gravity.CENTER);
         frame.addView(progress, progressLp);
-        TextView loading = UiKit.text(c, "Loading image…", chatSize(c, 12), UiKit.MUTED, false);
+        TextView loading = UiKit.text(c, OrbitText.get(R.string.ui_loading_image_1a0c32, "Loading image…"), chatSize(c, 12), UiKit.MUTED, false);
         FrameLayout.LayoutParams loadingLp = new FrameLayout.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT,
                 Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM);
@@ -522,13 +522,13 @@ public final class OrbitRichResponseRenderer {
             TextView caption = UiKit.text(c, description, chatSize(c, 11),
                     UiKit.withAlpha(foreground, 205), false);
             caption.setPadding(UiKit.dp(c, 10), UiKit.dp(c, 7), UiKit.dp(c, 10), UiKit.dp(c, 8));
-            caption.setContentDescription("Image caption: " + description);
+            caption.setContentDescription(OrbitText.get(R.string.ui_image_caption_33f207, "Image caption: ") + description);
             card.addView(caption);
         }
 
         if (!RemoteImageLoader.hasSafeHttpsSyntax(url)) {
             showImageFailure(c, frame, description, url,
-                    "Orbit blocked this private or unsafe image address", foreground);
+                    OrbitText.get(R.string.ui_orbit_blocked_this_private_or_unsafe_image_15f3c8, "Orbit blocked this private or unsafe image address"), foreground);
             return card;
         }
         RemoteImageLoader.load(c, url, (bitmap, error) -> {
@@ -544,7 +544,7 @@ public final class OrbitRichResponseRenderer {
             view.setScaleType(ImageView.ScaleType.FIT_CENTER);
             view.setBackground(UiKit.rounded(UiKit.SURFACE_2, 13, c));
             view.setClipToOutline(true);
-            view.setContentDescription(description.isEmpty() ? "Assistant response image" : description);
+            view.setContentDescription(description.isEmpty() ? OrbitText.get(R.string.ui_assistant_response_image_58ac4c, "Assistant response image") : description);
             view.setOnClickListener(v -> openUrl(c, url));
             frame.addView(view, new FrameLayout.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
@@ -587,16 +587,16 @@ public final class OrbitRichResponseRenderer {
         failure.setOrientation(LinearLayout.HORIZONTAL);
         failure.setGravity(Gravity.CENTER_VERTICAL);
         failure.setPadding(UiKit.dp(c, 10), UiKit.dp(c, 7), UiKit.dp(c, 10), UiKit.dp(c, 7));
-        TextView label = UiKit.text(c, "Image unavailable", chatSize(c, 11.5f), UiKit.MUTED, false);
+        TextView label = UiKit.text(c, OrbitText.get(R.string.ui_image_unavailable_7817cd, "Image unavailable"), chatSize(c, 11.5f), UiKit.MUTED, false);
         label.setContentDescription(alt == null || alt.trim().isEmpty()
-                ? "Image unavailable" : "Image unavailable: " + alt.trim());
+                ? OrbitText.get(R.string.ui_image_unavailable_7817cd, "Image unavailable") : OrbitText.get(R.string.ui_image_unavailable_78caa6, "Image unavailable: ") + alt.trim());
         failure.addView(label);
 
         boolean openable = RemoteImageLoader.hasSafeHttpsSyntax(url)
                 && (error == null || !error.startsWith("Orbit blocked"));
         if (openable) {
-            TextView open = UiKit.text(c, "Open image", chatSize(c, 11.5f), UiKit.accent(c), false);
-            open.setContentDescription("Open original image in browser");
+            TextView open = UiKit.text(c, OrbitText.get(R.string.ui_open_image_1b5fe5, "Open image"), chatSize(c, 11.5f), UiKit.accent(c), false);
+            open.setContentDescription(OrbitText.get(R.string.ui_open_original_image_in_browser_5cf83c, "Open original image in browser"));
             open.setOnClickListener(v -> openUrl(c, url));
             LinearLayout.LayoutParams openLp = new LinearLayout.LayoutParams(
                     ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -609,15 +609,15 @@ public final class OrbitRichResponseRenderer {
 
     private static View linkedFallback(Context c, String alt, String url, int foreground,
                                        int surface) {
-        TextView view = richText(c, "[" + (alt == null || alt.isEmpty() ? "Image" : alt) +
+        TextView view = richText(c, "[" + (alt == null || alt.isEmpty() ? OrbitText.get(R.string.ui_image_1aa4cb, "Image") : alt) +
                 "](" + url + ")", chatSize(c, 13), foreground, false, surface);
-        view.setContentDescription("Additional response image link");
+        view.setContentDescription(OrbitText.get(R.string.ui_additional_response_image_link_5d5154, "Additional response image link"));
         return view;
     }
 
     private static void openUrl(Context c, String url) {
         try { c.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url))); }
-        catch (Exception ignored) { Toast.makeText(c, "Could not open link", Toast.LENGTH_SHORT).show(); }
+        catch (Exception ignored) { Toast.makeText(c, OrbitText.get(R.string.ui_could_not_open_link_dfa30a, "Could not open link"), Toast.LENGTH_SHORT).show(); }
     }
 
     private static void addBlock(LinearLayout out, View child, Context c, int bottomDp) {

@@ -97,6 +97,7 @@
     -->
     <application
         android:name=".OrbitApplication"
+        android:localeConfig="@xml/locales_config"
         android:allowBackup="false"
         android:enableOnBackInvokedCallback="false"
         android:icon="@drawable/ic_orbit"

@@ -70,15 +70,15 @@ public final class BackgroundStylePreview extends FrameLayout {
         // Text directly on the page, which is the pairing a background effect could damage and the
         // reason Orbit keeps deriving page ink from the theme's Background colour rather than from
         // whatever the effect happens to be doing at that point on the screen.
-        pageText = UiKit.text(c, "Text on the page", 12.5f, UiKit.TEXT, false);
+        pageText = UiKit.text(c, OrbitText.get(R.string.ui_text_on_the_page_4da6cf, "Text on the page"), 12.5f, UiKit.TEXT, false);
         content.addView(pageText);
 
         card = new LinearLayout(c);
         card.setOrientation(LinearLayout.VERTICAL);
         card.setPadding(UiKit.dp(c, 11), UiKit.dp(c, 9), UiKit.dp(c, 11), UiKit.dp(c, 10));
-        cardTitle = UiKit.text(c, "A card", 13, UiKit.TEXT, true);
+        cardTitle = UiKit.text(c, OrbitText.get(R.string.ui_a_card_50945a, "A card"), 13, UiKit.TEXT, true);
         card.addView(cardTitle);
-        cardBody = UiKit.text(c, "Cards keep their own color, so the effect stays behind them.",
+        cardBody = UiKit.text(c, OrbitText.get(R.string.ui_cards_keep_their_own_color_so_the_effect_s_9db1ce, "Cards keep their own color, so the effect stays behind them."),
                 11.5f, UiKit.MUTED, false);
         cardBody.setLineSpacing(0, 1.1f);
         card.addView(cardBody);
@@ -130,19 +130,19 @@ public final class BackgroundStylePreview extends FrameLayout {
 
     private String describe(OrbitProStyle style, boolean hidden) {
         if (hidden) {
-            return "Background sample. " + style.backgroundModeLabel()
+            return OrbitText.get(R.string.ui_background_sample_a8f4fc, "Background sample. ") + style.backgroundModeLabel()
                     + " is configured but hidden while AMOLED is on.";
         }
         if (style.backgroundMode == OrbitProStyle.BACKGROUND_LINEAR) {
-            return "Background sample. Linear gradient, from the "
+            return OrbitText.get(R.string.ui_background_sample_linear_gradient_from_the_0b8a3b, "Background sample. Linear gradient, from the ")
                     + style.directionLabel().toLowerCase(java.util.Locale.US) + ".";
         }
         if (style.backgroundMode == OrbitProStyle.BACKGROUND_GLOW) {
-            return "Background sample. Radial glow, "
+            return OrbitText.get(R.string.ui_background_sample_radial_glow_f46c17, "Background sample. Radial glow, ")
                     + style.glowStrengthLabel().toLowerCase(java.util.Locale.US) + ", "
                     + style.glowSizeLabel().toLowerCase(java.util.Locale.US) + ", at the "
                     + style.glowPositionLabel().toLowerCase(java.util.Locale.US) + ".";
         }
-        return "Background sample. Solid, the theme's own background color.";
+        return OrbitText.get(R.string.ui_background_sample_solid_the_theme_s_own_ba_e43397, "Background sample. Solid, the theme's own background color.");
     }
 }

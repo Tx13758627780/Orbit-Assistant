@@ -188,7 +188,7 @@ public final class AttachmentViewerActivity extends Activity {
         container.addView(image, new FrameLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
 
-        TextView unavailable = UiKit.text(this, "This image is no longer available", 13,
+        TextView unavailable = UiKit.text(this, OrbitText.get(R.string.ui_this_image_is_no_longer_available_378912, "This image is no longer available"), 13,
                 UiKit.MUTED, false);
         unavailable.setGravity(Gravity.CENTER);
         unavailable.setVisibility(View.GONE);
@@ -250,7 +250,7 @@ public final class AttachmentViewerActivity extends Activity {
         top.setOrientation(LinearLayout.HORIZONTAL);
         top.setGravity(Gravity.CENTER_VERTICAL);
 
-        ImageButton close = iconButton(com.orbit.assistant.R.drawable.ic_back, "Close image viewer");
+        ImageButton close = iconButton(com.orbit.assistant.R.drawable.ic_back, OrbitText.get(R.string.ui_close_image_viewer_c6e23b, "Close image viewer"));
         close.setOnClickListener(v -> {
             UiKit.haptic(v, HapticFeedbackConstants.CLOCK_TICK);
             finish();
@@ -265,7 +265,7 @@ public final class AttachmentViewerActivity extends Activity {
         top.addView(counter, new LinearLayout.LayoutParams(
                 0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f));
 
-        remove = iconButton(com.orbit.assistant.R.drawable.ic_delete, "Remove image");
+        remove = iconButton(com.orbit.assistant.R.drawable.ic_delete, OrbitText.get(R.string.ui_remove_image_da7aca, "Remove image"));
         remove.setColorFilter(UiKit.DANGER);
         remove.setOnClickListener(v -> removeCurrent());
         // Only an unsent message has a Remove. A sent turn is a record of what happened, and this
@@ -281,14 +281,14 @@ public final class AttachmentViewerActivity extends Activity {
         // Explicit previous/next controls, not decoration. A screen reader cannot reliably perform
         // a horizontal swipe on a custom pager, so without these the only way to reach the second
         // photo would be a gesture some users cannot make.
-        previous = iconButton(com.orbit.assistant.R.drawable.ic_back, "Previous image");
+        previous = iconButton(com.orbit.assistant.R.drawable.ic_back, OrbitText.get(R.string.ui_previous_image_f0a859, "Previous image"));
         previous.setOnClickListener(v -> step(-1));
         FrameLayout.LayoutParams previousLp = new FrameLayout.LayoutParams(
                 UiKit.dp(this, 44), UiKit.dp(this, 44));
         previousLp.gravity = Gravity.START | Gravity.CENTER_VERTICAL;
         host.addView(previous, previousLp);
 
-        next = iconButton(com.orbit.assistant.R.drawable.ic_back, "Next image");
+        next = iconButton(com.orbit.assistant.R.drawable.ic_back, OrbitText.get(R.string.ui_next_image_a4903f, "Next image"));
         next.setRotation(180f);
         next.setOnClickListener(v -> step(1));
         FrameLayout.LayoutParams nextLp = new FrameLayout.LayoutParams(
@@ -338,12 +338,12 @@ public final class AttachmentViewerActivity extends Activity {
         actionsLp.topMargin = UiKit.dp(this, 8);
         bar.addView(actions, actionsLp);
 
-        openSource = textAction("Open source", "Open the page this image came from");
+        openSource = textAction(OrbitText.get(R.string.ui_open_source_67a0d2, "Open source"), OrbitText.get(R.string.ui_open_the_page_this_image_came_from_ad9ad5, "Open the page this image came from"));
         openSource.setOnClickListener(v -> openCurrentSource());
         actions.addView(openSource, new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT, UiKit.dp(this, 40)));
 
-        saveToVault = textAction("Save to Vault", "Save this image to Orbit Vault");
+        saveToVault = textAction(OrbitText.get(R.string.ui_save_to_vault_c1d04e, "Save to Vault"), OrbitText.get(R.string.ui_save_this_image_to_orbit_vault_c2fdf3, "Save this image to Orbit Vault"));
         saveToVault.setOnClickListener(v -> saveCurrentToVault());
         LinearLayout.LayoutParams saveLp = new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT, UiKit.dp(this, 40));
@@ -386,7 +386,7 @@ public final class AttachmentViewerActivity extends Activity {
             startActivity(new Intent(Intent.ACTION_VIEW, android.net.Uri.parse(image.sourceUrl))
                     .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
         } catch (Exception ignored) {
-            android.widget.Toast.makeText(this, "Could not open this source",
+            android.widget.Toast.makeText(this, OrbitText.get(R.string.ui_could_not_open_this_source_b933a1, "Could not open this source"),
                     android.widget.Toast.LENGTH_SHORT).show();
         }
     }
@@ -405,14 +405,14 @@ public final class AttachmentViewerActivity extends Activity {
         if (image == null) return;
         Bitmap bitmap = session.imageAt(model.index());
         if (bitmap == null) {
-            android.widget.Toast.makeText(this, "This image is no longer available",
+            android.widget.Toast.makeText(this, OrbitText.get(R.string.ui_this_image_is_no_longer_available_378912, "This image is no longer available"),
                     android.widget.Toast.LENGTH_SHORT).show();
             return;
         }
         UiKit.haptic(saveToVault, HapticFeedbackConstants.CLOCK_TICK);
         OrbitVaultItem saved = OrbitVaultStore.saveRichAnswerImage(this, bitmap, image);
         android.widget.Toast.makeText(this,
-                saved == null ? OrbitVaultStore.saveFailureMessage(this, "Orbit could not save this image") : OrbitVaultStore.savedMessage(this),
+                saved == null ? OrbitVaultStore.saveFailureMessage(this, OrbitText.get(R.string.ui_orbit_could_not_save_this_image_d541ac, "Orbit could not save this image")) : OrbitVaultStore.savedMessage(this),
                 android.widget.Toast.LENGTH_SHORT).show();
     }
 

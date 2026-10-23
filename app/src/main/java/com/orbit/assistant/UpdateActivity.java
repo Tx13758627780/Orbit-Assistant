@@ -107,14 +107,14 @@ public final class UpdateActivity extends Activity {
         LinearLayout titles = new LinearLayout(this);
         titles.setOrientation(LinearLayout.VERTICAL);
         titles.setPadding(UiKit.dp(this, 13), 0, 0, 0);
-        titles.addView(UiKit.text(this, "About & updates", 24, UiKit.TEXT, true));
+        titles.addView(UiKit.text(this, OrbitText.get(R.string.ui_about_updates_1b0c20, "About & updates"), 24, UiKit.TEXT, true));
         titles.addView(UiKit.text(this, OrbitDistribution.isPlay()
-                ? "Orbit from Google Play" : "Official Orbit releases", 13, UiKit.MUTED, false));
+                ? OrbitText.get(R.string.ui_orbit_from_google_play_b63b08, "Orbit from Google Play") : OrbitText.get(R.string.ui_official_orbit_releases_cf4b18, "Official Orbit releases"), 13, UiKit.MUTED, false));
         header.addView(titles, new LinearLayout.LayoutParams(
                 0, ViewGroup.LayoutParams.WRAP_CONTENT, 1));
         page.addView(header);
 
-        TextView section = UiKit.text(this, "ORBIT ASSISTANT", 12, UiKit.MUTED, true);
+        TextView section = UiKit.text(this, OrbitText.get(R.string.ui_orbit_assistant_7a6a45, "ORBIT ASSISTANT"), 12, UiKit.MUTED, true);
         section.setLetterSpacing(0.13f);
         LinearLayout.LayoutParams sectionLp = new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -135,9 +135,9 @@ public final class UpdateActivity extends Activity {
         LinearLayout nameRow = new LinearLayout(this);
         nameRow.setOrientation(LinearLayout.HORIZONTAL);
         nameRow.setGravity(Gravity.CENTER_VERTICAL);
-        nameRow.addView(UiKit.text(this, "Orbit Assistant", 18, UiKit.TEXT, true));
+        nameRow.addView(UiKit.text(this, OrbitText.get(R.string.ui_orbit_assistant_81abac, "Orbit Assistant"), 18, UiKit.TEXT, true));
         if (OrbitVersion.installedIsBeta()) {
-            TextView pill = betaPill("BETA BUILD");
+            TextView pill = betaPill(OrbitText.get(R.string.ui_beta_build_c82890, "BETA BUILD"));
             LinearLayout.LayoutParams pillLp = new LinearLayout.LayoutParams(
                     ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             pillLp.setMargins(UiKit.dp(this, 9), UiKit.dp(this, 2), 0, 0);
@@ -146,7 +146,7 @@ public final class UpdateActivity extends Activity {
         card.addView(nameRow);
 
         TextView current = UiKit.text(this,
-                "Current version: " + OrbitVersion.installedDisplayName()
+                OrbitText.get(R.string.ui_current_version_70ebe0, "Current version: ") + OrbitVersion.installedDisplayName()
                         + " (" + BuildConfig.VERSION_CODE + ")",
                 13, UiKit.MUTED, false);
         current.setPadding(0, UiKit.dp(this, 5), 0, UiKit.dp(this, 11));
@@ -172,11 +172,11 @@ public final class UpdateActivity extends Activity {
         progressLp.setMargins(0, 0, 0, UiKit.dp(this, 14));
         card.addView(downloadProgress, progressLp);
 
-        action = primaryButton("Check for updates");
+        action = primaryButton(OrbitText.get(R.string.ui_check_for_updates_f26f32, "Check for updates"));
         card.addView(action, new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, UiKit.dp(this, 48)));
 
-        Button whatsNew = secondaryButton("What's New");
+        Button whatsNew = secondaryButton(OrbitText.get(R.string.ui_what_s_new_561b17, "What's New"));
         whatsNew.setOnClickListener(v -> startActivity(new Intent(this, WhatsNewActivity.class)));
         LinearLayout.LayoutParams whatsNewLp = new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, UiKit.dp(this, 44));
@@ -189,7 +189,7 @@ public final class UpdateActivity extends Activity {
         if (!OrbitDistribution.isPlay()) addGitHubUpdateControls(card);
         page.addView(card);
 
-        TextView roadmapSection = UiKit.text(this, "ROADMAP", 12, UiKit.MUTED, true);
+        TextView roadmapSection = UiKit.text(this, OrbitText.get(R.string.ui_roadmap_020784, "ROADMAP"), 12, UiKit.MUTED, true);
         roadmapSection.setLetterSpacing(0.13f);
         LinearLayout.LayoutParams roadmapSectionLp = new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -208,9 +208,9 @@ public final class UpdateActivity extends Activity {
         roadmap.setFocusable(true);
         LinearLayout roadmapCopy = new LinearLayout(this);
         roadmapCopy.setOrientation(LinearLayout.VERTICAL);
-        roadmapCopy.addView(UiKit.text(this, "Roadmap", 17, UiKit.TEXT, true));
+        roadmapCopy.addView(UiKit.text(this, OrbitText.get(R.string.ui_roadmap_92375f, "Roadmap"), 17, UiKit.TEXT, true));
         TextView roadmapDescription = UiKit.text(this,
-                "See what's next for Orbit", 12, UiKit.MUTED, false);
+                OrbitText.get(R.string.ui_see_what_s_next_for_orbit_65fb38, "See what's next for Orbit"), 12, UiKit.MUTED, false);
         roadmapDescription.setPadding(0, UiKit.dp(this, 3), 0, 0);
         roadmapCopy.addView(roadmapDescription);
         roadmap.addView(roadmapCopy, new LinearLayout.LayoutParams(
@@ -224,8 +224,8 @@ public final class UpdateActivity extends Activity {
         page.addView(linksCard());
 
         TextView privacy = UiKit.text(this, OrbitDistribution.isPlay()
-                ? "This copy of Orbit was installed from Google Play, which delivers and verifies its updates. Orbit itself never downloads or installs app updates."
-                : "Orbit checks only the public lpnovi/Orbit-Assistant releases — stable releases, plus official Beta prereleases when you have joined the Beta channel. It sends no account credentials, never downloads without your approval, verifies the APK checksum, package, version and permanent signing certificate, then uses Android's normal installer. Every build is verified the same way, whichever channel it came from.",
+                ? OrbitText.get(R.string.ui_this_copy_of_orbit_was_installed_from_goog_07669b, "This copy of Orbit was installed from Google Play, which delivers and verifies its updates. Orbit itself never downloads or installs app updates.")
+                : OrbitText.get(R.string.ui_orbit_checks_only_the_public_lpnovi_orbit_a4b24a, "Orbit checks only the public lpnovi/Orbit-Assistant releases — stable releases, plus official Beta prereleases when you have joined the Beta channel. It sends no account credentials, never downloads without your approval, verifies the APK checksum, package, version and permanent signing certificate, then uses Android's normal installer. Every build is verified the same way, whichever channel it came from."),
                 12, UiKit.MUTED, false);
         privacy.setLineSpacing(0, 1.12f);
         LinearLayout.LayoutParams privacyLp = new LinearLayout.LayoutParams(
@@ -256,7 +256,7 @@ public final class UpdateActivity extends Activity {
     };
 
     private TextView linksSection() {
-        TextView label = UiKit.text(this, "LINKS", 12, UiKit.MUTED, true);
+        TextView label = UiKit.text(this, OrbitText.get(R.string.ui_links_55da65, "LINKS"), 12, UiKit.MUTED, true);
         label.setLetterSpacing(0.13f);
         return label;
     }
@@ -288,7 +288,7 @@ public final class UpdateActivity extends Activity {
         row.setBackground(UiKit.ripple(UiKit.SURFACE, UiKit.accent(this), 16, this));
         row.setClickable(true);
         row.setFocusable(true);
-        row.setContentDescription(link.title + ", " + link.subtitle + ". Opens in your browser.");
+        row.setContentDescription(link.title + ", " + link.subtitle + OrbitText.get(R.string.ui_opens_in_your_browser_b23909, ". Opens in your browser."));
         LinearLayout copy = new LinearLayout(this);
         copy.setOrientation(LinearLayout.VERTICAL);
         copy.addView(UiKit.text(this, link.title, 16, UiKit.TEXT, true));
@@ -315,7 +315,7 @@ public final class UpdateActivity extends Activity {
                     .addCategory(Intent.CATEGORY_BROWSABLE));
             return true;
         } catch (android.content.ActivityNotFoundException | SecurityException e) {
-            Toast.makeText(c, "No app on this phone can open that link", Toast.LENGTH_SHORT).show();
+            Toast.makeText(c, OrbitText.get(R.string.ui_no_app_on_this_phone_can_open_that_link_edd61d, "No app on this phone can open that link"), Toast.LENGTH_SHORT).show();
             return false;
         }
     }
@@ -330,8 +330,8 @@ public final class UpdateActivity extends Activity {
             Prefs.get(this).edit().putBoolean(Prefs.UPDATE_NOTIFICATIONS, checked).apply();
             if (!checked) OrbitUpdateNotifier.cancel(this);
         });
-        card.addView(UiKit.switchRow(this, "Update notifications",
-                "Notify me when a new Orbit version is available", updateNotifications));
+        card.addView(UiKit.switchRow(this, OrbitText.get(R.string.ui_update_notifications_175ba3, "Update notifications"),
+                OrbitText.get(R.string.ui_notify_me_when_a_new_orbit_version_is_avai_25d9a2, "Notify me when a new Orbit version is available"), updateNotifications));
     }
 
     /**
@@ -344,9 +344,9 @@ public final class UpdateActivity extends Activity {
         hideDownloadProgress();
         status.setText(OrbitDistribution.PLAY_UPDATES_MESSAGE);
         status.setTextColor(UiKit.TEXT);
-        setAction("Open in Google Play", () -> {
+        setAction(OrbitText.get(R.string.ui_open_in_google_play_0a61ad, "Open in Google Play"), () -> {
             if (!OrbitDistribution.openPlayListing(this)) {
-                status.setText("Google Play could not be opened on this device.");
+                status.setText(OrbitText.get(R.string.ui_google_play_could_not_be_opened_on_this_de_ba1931, "Google Play could not be opened on this device."));
                 status.setTextColor(UiKit.DANGER);
             }
         }, true);
@@ -356,13 +356,13 @@ public final class UpdateActivity extends Activity {
         hideDownloadProgress();
         status.setText(idleMessage());
         status.setTextColor(UiKit.TEXT);
-        setAction("Check for updates", this::checkForUpdates, true);
+        setAction(OrbitText.get(R.string.ui_check_for_updates_f26f32, "Check for updates"), this::checkForUpdates, true);
     }
 
     private String idleMessage() {
         return Prefs.betaChannel(this)
-                ? "Ready to check for the newest Orbit release, including Betas."
-                : "Ready to check for a stable Orbit release.";
+                ? OrbitText.get(R.string.ui_ready_to_check_for_the_newest_orbit_releas_5e9274, "Ready to check for the newest Orbit release, including Betas.")
+                : OrbitText.get(R.string.ui_ready_to_check_for_a_stable_orbit_release_867b0e, "Ready to check for a stable Orbit release.");
     }
 
     /**
@@ -374,12 +374,12 @@ public final class UpdateActivity extends Activity {
      * will not downgrade it, so it says exactly that instead of pretending to be up to date.
      */
     private String upToDateMessage() {
-        if (Prefs.betaChannel(this)) return "You're on the newest available Orbit build.";
+        if (Prefs.betaChannel(this)) return OrbitText.get(R.string.ui_you_re_on_the_newest_available_orbit_build_d4ec60, "You're on the newest available Orbit build.");
         if (OrbitVersion.installedIsBeta()) {
-            return "You're running a newer Beta build. Orbit will return to Stable updates when a "
-                    + "newer Stable release becomes available.";
+            return OrbitText.get(R.string.ui_you_re_running_a_newer_beta_build_orbit_wi_1049b0, "You're running a newer Beta build. Orbit will return to Stable updates when a ")
+                    + OrbitText.get(R.string.ui_newer_stable_release_becomes_available_d83856, "newer Stable release becomes available.");
         }
-        return "Orbit is up to date.";
+        return OrbitText.get(R.string.ui_orbit_is_up_to_date_9820fe, "Orbit is up to date.");
     }
 
     // ---- update channel -------------------------------------------------------------------------
@@ -397,7 +397,7 @@ public final class UpdateActivity extends Activity {
 
         LinearLayout copy = new LinearLayout(this);
         copy.setOrientation(LinearLayout.VERTICAL);
-        copy.addView(UiKit.text(this, "Update channel", 15, UiKit.TEXT, true));
+        copy.addView(UiKit.text(this, OrbitText.get(R.string.ui_update_channel_d4fc42, "Update channel"), 15, UiKit.TEXT, true));
         channelValue = UiKit.text(this, channelLabel(), 12, UiKit.accent(this), false);
         channelValue.setPadding(0, UiKit.dp(this, 3), 0, 0);
         copy.addView(channelValue);
@@ -415,7 +415,7 @@ public final class UpdateActivity extends Activity {
     }
 
     private String channelLabel() {
-        return Prefs.betaChannel(this) ? "Beta" : "Stable";
+        return Prefs.betaChannel(this) ? OrbitText.get(R.string.ui_beta_703390, "Beta") : OrbitText.get(R.string.ui_stable_90ee30, "Stable");
     }
 
     /**
@@ -431,17 +431,17 @@ public final class UpdateActivity extends Activity {
         content.setOrientation(LinearLayout.VERTICAL);
         content.setPadding(UiKit.dp(this, 22), UiKit.dp(this, 20),
                 UiKit.dp(this, 22), UiKit.dp(this, 6));
-        TextView title = UiKit.text(this, "Update channel", 20, UiKit.TEXT, true);
+        TextView title = UiKit.text(this, OrbitText.get(R.string.ui_update_channel_d4fc42, "Update channel"), 20, UiKit.TEXT, true);
         title.setAccessibilityHeading(true);
         content.addView(title);
 
         AlertDialog[] holder = new AlertDialog[1];
-        content.addView(channelOption("Stable", "Recommended · tested releases", !beta,
+        content.addView(channelOption(OrbitText.get(R.string.ui_stable_90ee30, "Stable"), OrbitText.get(R.string.ui_recommended_tested_releases_a2145e, "Recommended · tested releases"), !beta,
                 () -> {
                     if (holder[0] != null) holder[0].dismiss();
                     applyChannel(Prefs.CHANNEL_STABLE);
                 }), optionLp(14));
-        content.addView(channelOption("Beta", "Early access · may contain bugs", beta,
+        content.addView(channelOption(OrbitText.get(R.string.ui_beta_703390, "Beta"), OrbitText.get(R.string.ui_early_access_may_contain_bugs_ee71ae, "Early access · may contain bugs"), beta,
                 () -> {
                     if (holder[0] != null) holder[0].dismiss();
                     // Already enrolled: choosing Beta again changes nothing and must not
@@ -459,7 +459,7 @@ public final class UpdateActivity extends Activity {
 
         AlertDialog dialog = new AlertDialog.Builder(this)
                 .setView(scroll)
-                .setNegativeButton("Cancel", null)
+                .setNegativeButton(OrbitText.get(R.string.ui_cancel_19766e, "Cancel"), null)
                 .create();
         holder[0] = dialog;
         styleOrbitDialog(dialog);
@@ -516,15 +516,15 @@ public final class UpdateActivity extends Activity {
         content.setOrientation(LinearLayout.VERTICAL);
         content.setPadding(UiKit.dp(this, 24), UiKit.dp(this, 20),
                 UiKit.dp(this, 24), UiKit.dp(this, 6));
-        TextView title = UiKit.text(this, "Join the Beta channel?", 20, UiKit.TEXT, true);
+        TextView title = UiKit.text(this, OrbitText.get(R.string.ui_join_the_beta_channel_a583dc, "Join the Beta channel?"), 20, UiKit.TEXT, true);
         title.setAccessibilityHeading(true);
         content.addView(title);
         TextView body = UiKit.text(this,
-                "Beta builds give you new Orbit features earlier, but they may contain bugs, "
-                        + "crashes, regressions, increased battery use, or unfinished behavior.\n\n"
-                        + "Beta updates are still officially signed and verified by Orbit.\n\n"
-                        + "You can return to Stable at any time. Orbit will never automatically "
-                        + "downgrade your installed version.",
+                OrbitText.get(R.string.ui_beta_builds_give_you_new_orbit_features_ea_3aabec, "Beta builds give you new Orbit features earlier, but they may contain bugs, ")
+                        + OrbitText.get(R.string.ui_crashes_regressions_increased_battery_use_199fc6, "crashes, regressions, increased battery use, or unfinished behavior.\n\n")
+                        + OrbitText.get(R.string.ui_beta_updates_are_still_officially_signed_a_1a68df, "Beta updates are still officially signed and verified by Orbit.\n\n")
+                        + OrbitText.get(R.string.ui_you_can_return_to_stable_at_any_time_orbit_4f5bb1, "You can return to Stable at any time. Orbit will never automatically ")
+                        + OrbitText.get(R.string.ui_downgrade_your_installed_version_079617, "downgrade your installed version."),
                 14, UiKit.TEXT, false);
         body.setLineSpacing(0, 1.14f);
         body.setPadding(0, UiKit.dp(this, 12), 0, 0);
@@ -539,8 +539,8 @@ public final class UpdateActivity extends Activity {
 
         AlertDialog dialog = new AlertDialog.Builder(this)
                 .setView(scroll)
-                .setNegativeButton("Cancel", null)
-                .setPositiveButton("Join Beta", (d, which) -> applyChannel(Prefs.CHANNEL_BETA))
+                .setNegativeButton(OrbitText.get(R.string.ui_cancel_19766e, "Cancel"), null)
+                .setPositiveButton(OrbitText.get(R.string.ui_join_beta_9bf033, "Join Beta"), (d, which) -> applyChannel(Prefs.CHANNEL_BETA))
                 .create();
         styleOrbitDialog(dialog);
         dialog.show();
@@ -576,9 +576,9 @@ public final class UpdateActivity extends Activity {
 
     private void checkForUpdates() {
         hideDownloadProgress();
-        status.setText("Checking…");
+        status.setText(OrbitText.get(R.string.ui_checking_ec963f, "Checking…"));
         status.setTextColor(UiKit.TEXT);
-        setAction("Checking…", null, false);
+        setAction(OrbitText.get(R.string.ui_checking_ec963f, "Checking…"), null, false);
         OrbitUpdater.checkAsync(this, new OrbitUpdater.CheckCallback() {
             @Override public void onResult(OrbitUpdater.CheckResult result) {
                 runOnUiThread(() -> {
@@ -590,7 +590,7 @@ public final class UpdateActivity extends Activity {
                         availableRelease = null;
                         status.setText(upToDateMessage());
                         status.setTextColor(UiKit.SUCCESS);
-                        setAction("Check again", UpdateActivity.this::checkForUpdates, true);
+                        setAction(OrbitText.get(R.string.ui_check_again_fb7099, "Check again"), UpdateActivity.this::checkForUpdates, true);
                     }
                 });
             }
@@ -598,9 +598,9 @@ public final class UpdateActivity extends Activity {
             @Override public void onError(String message) {
                 runOnUiThread(() -> {
                     if (!alive()) return;
-                    status.setText("Network/update service error\n" + message);
+                    status.setText(OrbitText.get(R.string.ui_network_update_service_error_383fe8, "Network/update service error\n") + message);
                     status.setTextColor(Color.rgb(239, 105, 105));
-                    setAction("Try again", UpdateActivity.this::checkForUpdates, true);
+                    setAction(OrbitText.get(R.string.ui_try_again_d8b839, "Try again"), UpdateActivity.this::checkForUpdates, true);
                 });
             }
         });
@@ -608,15 +608,15 @@ public final class UpdateActivity extends Activity {
 
     private void showAvailableState(OrbitUpdater.Release release, boolean showDialog) {
         hideDownloadProgress();
-        status.setText("Update available: Orbit Assistant v" + release.displayName());
+        status.setText(OrbitText.get(R.string.ui_update_available_orbit_assistant_v_ebeb97, "Update available: Orbit Assistant v") + release.displayName());
         status.setTextColor(UiKit.accent(this));
-        setAction("View update", () -> showUpdateDialog(release), true);
+        setAction(OrbitText.get(R.string.ui_view_update_97850a, "View update"), () -> showUpdateDialog(release), true);
         if (showDialog) showUpdateDialog(release);
     }
 
     private void showUpdateDialog(OrbitUpdater.Release release) {
         String notes = release.releaseNotes.isEmpty()
-                ? "See the official GitHub Release for details."
+                ? OrbitText.get(R.string.ui_see_the_official_github_release_for_detail_ec98b4, "See the official GitHub Release for details.")
                 : release.releaseNotes;
 
         LinearLayout content = new LinearLayout(this);
@@ -627,7 +627,7 @@ public final class UpdateActivity extends Activity {
         titleRow.setOrientation(LinearLayout.HORIZONTAL);
         titleRow.setGravity(Gravity.CENTER_VERTICAL);
         TextView title = UiKit.text(this,
-                "Orbit Assistant v" + release.displayName(), 20, UiKit.TEXT, true);
+                OrbitText.get(R.string.ui_orbit_assistant_v_8b1325, "Orbit Assistant v") + release.displayName(), 20, UiKit.TEXT, true);
         title.setAccessibilityHeading(true);
         titleRow.addView(title, new LinearLayout.LayoutParams(
                 0, ViewGroup.LayoutParams.WRAP_CONTENT, 1));
@@ -635,14 +635,14 @@ public final class UpdateActivity extends Activity {
             LinearLayout.LayoutParams pillLp = new LinearLayout.LayoutParams(
                     ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             pillLp.setMargins(UiKit.dp(this, 10), UiKit.dp(this, 2), 0, 0);
-            titleRow.addView(betaPill("BETA"), pillLp);
+            titleRow.addView(betaPill(OrbitText.get(R.string.ui_beta_639181, "BETA")), pillLp);
         }
         content.addView(titleRow);
         if (release.isBeta()) {
             // One short line, once, at the moment of installing. The user opted into Beta
             // already; the full warning is not repeated for every update.
             TextView betaNote = UiKit.text(this,
-                    "Beta build · may be less stable than a normal Orbit release.",
+                    OrbitText.get(R.string.ui_beta_build_may_be_less_stable_than_a_norma_7101ad, "Beta build · may be less stable than a normal Orbit release."),
                     12, UiKit.MUTED, false);
             betaNote.setLineSpacing(0, 1.1f);
             betaNote.setPadding(0, UiKit.dp(this, 7), 0, 0);
@@ -657,7 +657,7 @@ public final class UpdateActivity extends Activity {
         body.setPadding(0, UiKit.dp(this, 12), 0, 0);
         content.addView(body);
         TextView size = UiKit.text(this,
-                "Download size: " + formatSize(release.apkSize), 12, UiKit.MUTED, false);
+                OrbitText.get(R.string.ui_download_size_fcfd9e, "Download size: ") + formatSize(release.apkSize), 12, UiKit.MUTED, false);
         size.setPadding(0, UiKit.dp(this, 13), 0, 0);
         content.addView(size);
         UiKit.applyTypography(content);
@@ -669,8 +669,8 @@ public final class UpdateActivity extends Activity {
 
         AlertDialog dialog = new AlertDialog.Builder(this)
                 .setView(dialogScroll)
-                .setNegativeButton("Later", null)
-                .setPositiveButton("Download & install", (d, which) -> startDownload(release))
+                .setNegativeButton(OrbitText.get(R.string.ui_later_73b6e4, "Later"), null)
+                .setPositiveButton(OrbitText.get(R.string.ui_download_install_4c9a6b, "Download & install"), (d, which) -> startDownload(release))
                 .create();
         styleOrbitDialog(dialog);
         dialog.show();
@@ -678,10 +678,10 @@ public final class UpdateActivity extends Activity {
 
     private void startDownload(OrbitUpdater.Release release) {
         availableRelease = release;
-        status.setText("Downloading update");
+        status.setText(OrbitText.get(R.string.ui_downloading_update_014368, "Downloading update"));
         status.setTextColor(UiKit.TEXT);
         showDownloadProgress(-1);
-        setAction("Cancel download", () -> {
+        setAction(OrbitText.get(R.string.ui_cancel_download_de5b23, "Cancel download"), () -> {
             if (download != null) download.cancel();
         }, true);
         download = OrbitUpdater.downloadAsync(this, release, new OrbitUpdater.DownloadCallback() {
@@ -696,8 +696,8 @@ public final class UpdateActivity extends Activity {
                 runOnUiThread(() -> {
                     if (!alive()) return;
                     hideDownloadProgress();
-                    status.setText("Verifying…");
-                    setAction("Verifying…", null, false);
+                    status.setText(OrbitText.get(R.string.ui_verifying_63bbd0, "Verifying…"));
+                    setAction(OrbitText.get(R.string.ui_verifying_63bbd0, "Verifying…"), null, false);
                 });
             }
 
@@ -708,9 +708,9 @@ public final class UpdateActivity extends Activity {
                     download = null;
                     readyApk = apk;
                     readyRelease = release;
-                    status.setText("Ready to install");
+                    status.setText(OrbitText.get(R.string.ui_ready_to_install_bda18b, "Ready to install"));
                     status.setTextColor(UiKit.SUCCESS);
-                    setAction("Install update", UpdateActivity.this::attemptInstall, true);
+                    setAction(OrbitText.get(R.string.ui_install_update_cada42, "Install update"), UpdateActivity.this::attemptInstall, true);
                     attemptInstall();
                 });
             }
@@ -720,10 +720,10 @@ public final class UpdateActivity extends Activity {
                     if (!alive()) return;
                     hideDownloadProgress();
                     download = null;
-                    status.setText((verificationFailure ? "Verification failed\n" :
-                            "Network/update service error\n") + message);
+                    status.setText((verificationFailure ? OrbitText.get(R.string.ui_verification_failed_b1f933, "Verification failed\n") :
+                            OrbitText.get(R.string.ui_network_update_service_error_383fe8, "Network/update service error\n")) + message);
                     status.setTextColor(Color.rgb(239, 105, 105));
-                    setAction("Try again", () -> startDownload(release), true);
+                    setAction(OrbitText.get(R.string.ui_try_again_d8b839, "Try again"), () -> startDownload(release), true);
                 });
             }
 
@@ -732,9 +732,9 @@ public final class UpdateActivity extends Activity {
                     if (!alive()) return;
                     hideDownloadProgress();
                     download = null;
-                    status.setText("Download cancelled.");
+                    status.setText(OrbitText.get(R.string.ui_download_cancelled_79310f, "Download cancelled."));
                     status.setTextColor(UiKit.TEXT);
-                    setAction("Download & install", () -> startDownload(release), true);
+                    setAction(OrbitText.get(R.string.ui_download_install_4c9a6b, "Download & install"), () -> startDownload(release), true);
                 });
             }
         });
@@ -745,9 +745,9 @@ public final class UpdateActivity extends Activity {
         if (readyApk == null || readyRelease == null) return;
         if (!OrbitUpdater.canRequestPackageInstalls(this)) {
             waitingForInstallPermission = true;
-            status.setText("Android needs permission to install updates from Orbit. Allow this source, then return to Orbit.");
+            status.setText(OrbitText.get(R.string.ui_android_needs_permission_to_install_update_f18a92, "Android needs permission to install updates from Orbit. Allow this source, then return to Orbit."));
             status.setTextColor(UiKit.TEXT);
-            setAction("Allow installation", () -> OrbitUpdater.openUnknownSourcesSettings(this), true);
+            setAction(OrbitText.get(R.string.ui_allow_installation_c0605f, "Allow installation"), () -> OrbitUpdater.openUnknownSourcesSettings(this), true);
             OrbitUpdater.openUnknownSourcesSettings(this);
             return;
         }
@@ -757,8 +757,8 @@ public final class UpdateActivity extends Activity {
     private void verifyAndInstall() {
         if (readyApk == null || readyRelease == null) return;
         hideDownloadProgress();
-        status.setText("Verifying…");
-        setAction("Verifying…", null, false);
+        status.setText(OrbitText.get(R.string.ui_verifying_63bbd0, "Verifying…"));
+        setAction(OrbitText.get(R.string.ui_verifying_63bbd0, "Verifying…"), null, false);
         File apk = readyApk;
         OrbitUpdater.Release release = readyRelease;
         OrbitUpdater.verifyAsync(this, apk, release, new OrbitUpdater.VerifyCallback() {
@@ -766,12 +766,12 @@ public final class UpdateActivity extends Activity {
                 runOnUiThread(() -> {
                     if (!alive()) return;
                     try {
-                        status.setText("Ready to install");
+                        status.setText(OrbitText.get(R.string.ui_ready_to_install_bda18b, "Ready to install"));
                         status.setTextColor(UiKit.SUCCESS);
-                        setAction("Install update", UpdateActivity.this::attemptInstall, true);
+                        setAction(OrbitText.get(R.string.ui_install_update_cada42, "Install update"), UpdateActivity.this::attemptInstall, true);
                         OrbitUpdater.launchPackageInstaller(UpdateActivity.this, apk, release);
                     } catch (Exception e) {
-                        status.setText("Android could not open the package installer.");
+                        status.setText(OrbitText.get(R.string.ui_android_could_not_open_the_package_install_2f977b, "Android could not open the package installer."));
                         status.setTextColor(Color.rgb(239, 105, 105));
                     }
                 });
@@ -782,9 +782,9 @@ public final class UpdateActivity extends Activity {
                     if (!alive()) return;
                     readyApk = null;
                     readyRelease = null;
-                    status.setText("Verification failed\n" + message);
+                    status.setText(OrbitText.get(R.string.ui_verification_failed_b1f933, "Verification failed\n") + message);
                     status.setTextColor(Color.rgb(239, 105, 105));
-                    setAction("Check again", UpdateActivity.this::checkForUpdates, true);
+                    setAction(OrbitText.get(R.string.ui_check_again_fb7099, "Check again"), UpdateActivity.this::checkForUpdates, true);
                 });
             }
         });
@@ -840,7 +840,7 @@ public final class UpdateActivity extends Activity {
             downloadPercent.setText(safePercent + "%");
         } else {
             downloadProgressBar.setProgress(0, false);
-            downloadPercent.setText("Preparing download…");
+            downloadPercent.setText(OrbitText.get(R.string.ui_preparing_download_f40b15, "Preparing download…"));
         }
     }
 
@@ -853,7 +853,7 @@ public final class UpdateActivity extends Activity {
     }
 
     private static String formatSize(long bytes) {
-        if (bytes <= 0L) return "Unknown";
+        if (bytes <= 0L) return OrbitText.get(R.string.ui_unknown_b764cd, "Unknown");
         return String.format(Locale.US, "%.1f MB", bytes / (1024d * 1024d));
     }
 }

@@ -48,7 +48,7 @@ final class ContextMeterView extends View {
         float stroke = UiKit.dp(context, 2);
         track.setStrokeWidth(stroke);
         arc.setStrokeWidth(stroke);
-        setContentDescription("Context window. Tap for details.");
+        setContentDescription(OrbitText.get(R.string.ui_context_window_tap_for_details_31b46a, "Context window. Tap for details."));
         setAlpha(0.7f);
     }
 
@@ -94,16 +94,16 @@ final class ContextMeterView extends View {
     }
 
     static String describe(ContextEstimate value) {
-        if (value == null) return "Context window. Tap for details.";
+        if (value == null) return OrbitText.get(R.string.ui_context_window_tap_for_details_31b46a, "Context window. Tap for details.");
         if (value.auto) {
-            return "Context: about " + ContextEstimate.approx(value.tokens).substring(1)
-                    + " tokens. Auto chooses the model per request. Tap for details.";
+            return OrbitText.get(R.string.ui_context_about_762948, "Context: about ") + ContextEstimate.approx(value.tokens).substring(1)
+                    + OrbitText.get(R.string.ui_tokens_auto_chooses_the_model_per_request_55a676, " tokens. Auto chooses the model per request. Tap for details.");
         }
         if (!value.knowsLimit()) {
-            return "Context window: about " + ContextEstimate.approx(value.tokens).substring(1)
-                    + " tokens, limit unknown. Tap for details.";
+            return OrbitText.get(R.string.ui_context_window_about_61a626, "Context window: about ") + ContextEstimate.approx(value.tokens).substring(1)
+                    + OrbitText.get(R.string.ui_tokens_limit_unknown_tap_for_details_b00b0d, " tokens, limit unknown. Tap for details.");
         }
-        return "Context window: about " + value.percent() + " percent used. Tap for details.";
+        return OrbitText.get(R.string.ui_context_window_about_61a626, "Context window: about ") + value.percent() + OrbitText.get(R.string.ui_percent_used_tap_for_details_dbf7cd, " percent used. Tap for details.");
     }
 
     @Override protected void onDetachedFromWindow() {

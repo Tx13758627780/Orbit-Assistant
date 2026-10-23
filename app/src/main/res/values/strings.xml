@@ -9,4 +9,5 @@
     <string name="widget_ask_description">Open a ready-to-type Orbit chat</string>
     <string name="widget_routine_description">Run one selected saved Orbit Routine</string>
     <string name="widget_quick_description">Use selected Orbit quick actions</string>
+    <string name="widget_routine_label">Routine</string>
 </resources>

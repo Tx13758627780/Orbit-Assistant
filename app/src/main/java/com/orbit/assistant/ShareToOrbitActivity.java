@@ -86,7 +86,7 @@ public final class ShareToOrbitActivity extends Activity {
         } catch (Exception failure) {
             // A malformed share is a rejected share, never a crash and never a partial import.
             DiagnosticStore.recordShareToOrbit(this, "none", "rejected", 0);
-            Toast.makeText(this, "Orbit could not read what was shared", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, OrbitText.get(R.string.ui_orbit_could_not_read_what_was_shared_c894ce, "Orbit could not read what was shared"), Toast.LENGTH_SHORT).show();
         }
         if (!awaitingChoice) finish();
     }
@@ -178,14 +178,14 @@ public final class ShareToOrbitActivity extends Activity {
     private void askDestination(String text, List<Uri> uris, String token, Intent chat) {
         awaitingChoice = true;
         AlertDialog dialog = new AlertDialog.Builder(this)
-                .setTitle("Share to Orbit")
-                .setMessage("Ask Orbit about this, or keep it in your Vault. "
-                        + "Nothing is sent to Orbit's AI until you send it.")
-                .setNegativeButton(SAVE_TO_VAULT, (d, which) -> {
+                .setTitle(OrbitText.get(R.string.ui_share_to_orbit_a0fdbc, "Share to Orbit"))
+                .setMessage(OrbitText.get(R.string.ui_ask_orbit_about_this_or_keep_it_in_your_va_a8e9bf, "Ask Orbit about this, or keep it in your Vault. ")
+                        + OrbitText.get(R.string.ui_nothing_is_sent_to_orbit_s_ai_until_you_se_2949ce, "Nothing is sent to Orbit's AI until you send it."))
+                .setNegativeButton(OrbitText.get(R.string.ui_save_to_vault_c1d04e, SAVE_TO_VAULT), (d, which) -> {
                     saveSharedToVault(text, uris, token);
                     finish();
                 })
-                .setPositiveButton(ASK_ORBIT, (d, which) -> {
+                .setPositiveButton(OrbitText.get(R.string.ui_ask_orbit_18ea29, ASK_ORBIT), (d, which) -> {
                     openConversation(chat);
                     finish();
                 })
@@ -227,7 +227,7 @@ public final class ShareToOrbitActivity extends Activity {
         } else {
             saved = OrbitVaultStore.saveText(this, "", text, SOURCE_LABEL) != null;
         }
-        Toast.makeText(this, saved ? OrbitVaultStore.savedMessage(this) : OrbitVaultStore.saveFailureMessage(this, "Orbit could not save what was shared"),
+        Toast.makeText(this, saved ? OrbitVaultStore.savedMessage(this) : OrbitVaultStore.saveFailureMessage(this, OrbitText.get(R.string.ui_orbit_could_not_save_what_was_shared_52ac3f, "Orbit could not save what was shared")),
                 Toast.LENGTH_SHORT).show();
     }
 
@@ -268,7 +268,7 @@ public final class ShareToOrbitActivity extends Activity {
 
     private void reject() {
         DiagnosticStore.recordShareToOrbit(this, "none", "rejected", 0);
-        Toast.makeText(this, "Orbit can accept shared text, images, PDFs and text files",
+        Toast.makeText(this, OrbitText.get(R.string.ui_orbit_can_accept_shared_text_images_pdfs_a_d9cdea, "Orbit can accept shared text, images, PDFs and text files"),
                 Toast.LENGTH_SHORT).show();
     }
 }

@@ -63,13 +63,13 @@ public class MemoryActivity extends Activity {
         LinearLayout top = new LinearLayout(this);
         top.setGravity(Gravity.CENTER_VERTICAL);
 
-        ImageButton back = iconButton(R.drawable.ic_back, "Back");
+        ImageButton back = iconButton(R.drawable.ic_back, OrbitText.get(R.string.ui_back_76900f, "Back"));
         back.setOnClickListener(v -> navigation.performBack());
         top.addView(back, new LinearLayout.LayoutParams(UiKit.dp(this,48), UiKit.dp(this,48)));
 
         LinearLayout titles = new LinearLayout(this);
         titles.setOrientation(LinearLayout.VERTICAL);
-        titles.addView(UiKit.text(this, "Memory", 24, UiKit.TEXT, true));
+        titles.addView(UiKit.text(this, OrbitText.get(R.string.ui_memory_c3963a, "Memory"), 24, UiKit.TEXT, true));
         count = UiKit.text(this, "", 12, UiKit.MUTED, false);
         titles.addView(count);
         LinearLayout.LayoutParams titleLp = new LinearLayout.LayoutParams(
@@ -77,14 +77,14 @@ public class MemoryActivity extends Activity {
         titleLp.setMargins(UiKit.dp(this,14), 0, 0, 0);
         top.addView(titles, titleLp);
 
-        Button add = smallButton("+ Add");
+        Button add = smallButton(OrbitText.get(R.string.ui_add_c00725, "+ Add"));
         add.setOnClickListener(v -> editMemory(null));
         top.addView(add, new LinearLayout.LayoutParams(UiKit.dp(this,96), UiKit.dp(this,44)));
         root.addView(top);
 
         TextView explainer = UiKit.text(this,
-                "Orbit Memory stores user-approved facts and preferences locally. " +
-                        "0.5.9 now selects only memories that look relevant to each request.",
+                OrbitText.get(R.string.ui_orbit_memory_stores_user_approved_facts_an_0a05df, "Orbit Memory stores user-approved facts and preferences locally. ") +
+                        OrbitText.get(R.string.ui_0_5_9_now_selects_only_memories_that_look_46482e, "0.5.9 now selects only memories that look relevant to each request."),
                 13, UiKit.MUTED, false);
         explainer.setPadding(UiKit.dp(this,4), UiKit.dp(this,14),
                 UiKit.dp(this,4), UiKit.dp(this,10));
@@ -92,15 +92,15 @@ public class MemoryActivity extends Activity {
 
         LinearLayout toggleCard = card();
 
-        toggleCard.addView(memorySettingRow("Use Orbit Memory in AI responses",
+        toggleCard.addView(memorySettingRow(OrbitText.get(R.string.ui_use_orbit_memory_in_ai_responses_a4c5de, "Use Orbit Memory in AI responses"),
                 Prefs.MEMORY_ENABLED, Prefs.memoryEnabled(this)));
-        toggleCard.addView(memorySettingRow("Suggest useful memories",
+        toggleCard.addView(memorySettingRow(OrbitText.get(R.string.ui_suggest_useful_memories_4a65a8, "Suggest useful memories"),
                 Prefs.MEMORY_SUGGESTIONS, Prefs.memorySuggestions(this)));
-        toggleCard.addView(memorySettingRow("Show used-memory indicator in chats",
+        toggleCard.addView(memorySettingRow(OrbitText.get(R.string.ui_show_used_memory_indicator_in_chats_2ab03f, "Show used-memory indicator in chats"),
                 Prefs.MEMORY_USAGE_INDICATOR, Prefs.memoryUsageIndicator(this)));
 
         TextView note = UiKit.text(this,
-                "Suggested memories are never saved automatically. Disabled memories stay on this device but are not supplied to the AI.",
+                OrbitText.get(R.string.ui_suggested_memories_are_never_saved_automat_678ebc, "Suggested memories are never saved automatically. Disabled memories stay on this device but are not supplied to the AI."),
                 12, UiKit.MUTED, false);
         note.setPadding(0, UiKit.dp(this,6), 0, 0);
         toggleCard.addView(note);
@@ -108,7 +108,7 @@ public class MemoryActivity extends Activity {
 
         searchInput = new EditText(this);
         searchInput.setSingleLine(true);
-        searchInput.setHint("Search memories");
+        searchInput.setHint(OrbitText.get(R.string.ui_search_memories_65b0f8, "Search memories"));
         searchInput.setTextColor(UiKit.TEXT);
         searchInput.setHintTextColor(UiKit.MUTED);
         searchInput.setTextSize(14);
@@ -159,16 +159,16 @@ public class MemoryActivity extends Activity {
 
         StringBuilder countText = new StringBuilder();
         countText.append(allMemories.size())
-                .append(allMemories.size() == 1 ? " saved memory" : " saved memories");
-        if (pinned > 0) countText.append(" · ").append(pinned).append(" pinned");
-        if (disabled > 0) countText.append(" · ").append(disabled).append(" off");
+                .append(allMemories.size() == 1 ? OrbitText.get(R.string.ui_saved_memory_d3af70, " saved memory") : OrbitText.get(R.string.ui_saved_memories_d8d7e0, " saved memories"));
+        if (pinned > 0) countText.append(" · ").append(pinned).append(OrbitText.get(R.string.ui_pinned_1ebfe6, " pinned"));
+        if (disabled > 0) countText.append(" · ").append(disabled).append(OrbitText.get(R.string.ui_off_07f34d, " off"));
         count.setText(countText.toString());
 
         if (allMemories.isEmpty()) {
             LinearLayout empty = card();
-            empty.addView(UiKit.text(this, "Nothing saved yet", 16, UiKit.TEXT, true));
+            empty.addView(UiKit.text(this, OrbitText.get(R.string.ui_nothing_saved_yet_96e97d, "Nothing saved yet"), 16, UiKit.TEXT, true));
             TextView t = UiKit.text(this,
-                    "Try saying “Remember that I prefer Google Maps” or tap Add.",
+                    OrbitText.get(R.string.ui_try_saying_remember_that_i_prefer_google_m_e2006a, "Try saying “Remember that I prefer Google Maps” or tap Add."),
                     13, UiKit.MUTED, false);
             t.setPadding(0, UiKit.dp(this,6), 0, 0);
             empty.addView(t);
@@ -178,9 +178,9 @@ public class MemoryActivity extends Activity {
 
         if (!query.isEmpty() && shown.isEmpty()) {
             LinearLayout empty = card();
-            empty.addView(UiKit.text(this, "No matching memories", 15, UiKit.TEXT, true));
+            empty.addView(UiKit.text(this, OrbitText.get(R.string.ui_no_matching_memories_d80cc4, "No matching memories"), 15, UiKit.TEXT, true));
             TextView t = UiKit.text(this,
-                    "Try a name, app, device, preference, or another keyword.",
+                    OrbitText.get(R.string.ui_try_a_name_app_device_preference_or_anothe_855b87, "Try a name, app, device, preference, or another keyword."),
                     12, UiKit.MUTED, false);
             t.setPadding(0, UiKit.dp(this,5), 0, 0);
             empty.addView(t);
@@ -201,8 +201,8 @@ public class MemoryActivity extends Activity {
             text.addView(body);
 
             StringBuilder status = new StringBuilder(m.category);
-            if (m.pinned) status.append(" · Pinned");
-            if (!m.enabled) status.append(" · Off");
+            if (m.pinned) status.append(OrbitText.get(R.string.ui_pinned_9cd70b, " · Pinned"));
+            if (!m.enabled) status.append(OrbitText.get(R.string.ui_off_8565d5, " · Off"));
             TextView meta = UiKit.text(this, status.toString(), 11,
                     m.pinned ? UiKit.accent(this) : UiKit.MUTED, false);
             meta.setPadding(0, UiKit.dp(this,5), 0, 0);
@@ -211,9 +211,9 @@ public class MemoryActivity extends Activity {
             row.addView(text, new LinearLayout.LayoutParams(
                     0, ViewGroup.LayoutParams.WRAP_CONTENT, 1));
 
-            Button onOff = smallButton(m.enabled ? "On" : "Off");
+            Button onOff = smallButton(m.enabled ? OrbitText.get(R.string.ui_on_130011, "On") : OrbitText.get(R.string.ui_off_ca7981, "Off"));
             onOff.setTextColor(m.enabled ? UiKit.SUCCESS : UiKit.MUTED);
-            onOff.setContentDescription((m.enabled ? "Disable " : "Enable ") + m.text);
+            onOff.setContentDescription((m.enabled ? OrbitText.get(R.string.ui_disable_91c787, "Disable ") : OrbitText.get(R.string.ui_enable_3820d5, "Enable ")) + m.text);
             onOff.setOnClickListener(v -> {
                 MemoryStore.setEnabled(this, m.id, !m.enabled);
                 refresh();
@@ -223,7 +223,7 @@ public class MemoryActivity extends Activity {
             toggleLp.setMargins(UiKit.dp(this,6), 0, UiKit.dp(this,5), 0);
             row.addView(onOff, toggleLp);
 
-            Button edit = smallButton("Edit");
+            Button edit = smallButton(OrbitText.get(R.string.ui_edit_464c4f, "Edit"));
             edit.setOnClickListener(v -> editMemory(m));
             row.addView(edit, new LinearLayout.LayoutParams(
                     UiKit.dp(this,68), UiKit.dp(this,40)));
@@ -237,7 +237,7 @@ public class MemoryActivity extends Activity {
         }
 
         if (query.isEmpty()) {
-            Button clear = secondaryButton("Clear all Orbit memories");
+            Button clear = secondaryButton(OrbitText.get(R.string.ui_clear_all_orbit_memories_8f4189, "Clear all Orbit memories"));
             clear.setOnClickListener(v -> confirmClearAll());
             LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT, UiKit.dp(this,48));
@@ -254,7 +254,7 @@ public class MemoryActivity extends Activity {
         form.setBackgroundColor(UiKit.SURFACE);
 
         EditText text = new EditText(this);
-        text.setHint("What should Orbit remember?");
+        text.setHint(OrbitText.get(R.string.ui_what_should_orbit_remember_2deb88, "What should Orbit remember?"));
         text.setText(existing == null ? "" : existing.text);
         text.setTextColor(UiKit.TEXT);
         text.setHintTextColor(UiKit.MUTED);
@@ -264,7 +264,7 @@ public class MemoryActivity extends Activity {
         form.addView(text, new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
-        TextView categoryLabel = UiKit.text(this, "Category", 12, UiKit.MUTED, true);
+        TextView categoryLabel = UiKit.text(this, OrbitText.get(R.string.ui_category_292c06, "Category"), 12, UiKit.MUTED, true);
         categoryLabel.setPadding(0, UiKit.dp(this,12), 0, UiKit.dp(this,4));
         form.addView(categoryLabel);
 
@@ -280,16 +280,16 @@ public class MemoryActivity extends Activity {
         form.addView(category, new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, UiKit.dp(this,52)));
 
-        CheckBox enabled = orbitCheckBox("Use this memory in AI responses");
+        CheckBox enabled = orbitCheckBox(OrbitText.get(R.string.ui_use_this_memory_in_ai_responses_390efa, "Use this memory in AI responses"));
         enabled.setChecked(existing == null || existing.enabled);
         form.addView(enabled);
 
-        CheckBox pinned = orbitCheckBox("Pin as important");
+        CheckBox pinned = orbitCheckBox(OrbitText.get(R.string.ui_pin_as_important_dcf8ee, "Pin as important"));
         pinned.setChecked(existing != null && existing.pinned);
         form.addView(pinned);
 
         TextView customTitle = UiKit.text(this,
-                existing == null ? "Add memory" : "Edit memory",
+                existing == null ? OrbitText.get(R.string.ui_add_memory_a1d1a4, "Add memory") : OrbitText.get(R.string.ui_edit_memory_b38b78, "Edit memory"),
                 20, UiKit.TEXT, true);
         customTitle.setPadding(UiKit.dp(this,20), UiKit.dp(this,18),
                 UiKit.dp(this,20), UiKit.dp(this,8));
@@ -298,16 +298,16 @@ public class MemoryActivity extends Activity {
         AlertDialog.Builder b = new AlertDialog.Builder(this)
                 .setCustomTitle(customTitle)
                 .setView(form)
-                .setNegativeButton("Cancel", null);
+                .setNegativeButton(OrbitText.get(R.string.ui_cancel_19766e, "Cancel"), null);
 
         if (existing != null) {
-            b.setNeutralButton("Delete", (d,w) -> {
+            b.setNeutralButton(OrbitText.get(R.string.ui_delete_e2d0a5, "Delete"), (d,w) -> {
                 MemoryStore.delete(this, existing.id);
                 refresh();
             });
         }
 
-        b.setPositiveButton("Save", null);
+        b.setPositiveButton(OrbitText.get(R.string.ui_save_1509f5, "Save"), null);
         AlertDialog dialog = b.create();
         UiKit.styleOrbitDialog(dialog, this, false, () -> {
             Button save = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
@@ -318,7 +318,7 @@ public class MemoryActivity extends Activity {
                 save.setOnClickListener(v -> {
                     String value = text.getText().toString().trim();
                     if (value.isEmpty()) {
-                        Toast.makeText(this, "Memory cannot be empty",
+                        Toast.makeText(this, OrbitText.get(R.string.ui_memory_cannot_be_empty_b20e68, "Memory cannot be empty"),
                                 Toast.LENGTH_SHORT).show();
                         return;
                     }
@@ -327,7 +327,7 @@ public class MemoryActivity extends Activity {
                             this, value, existing == null ? null : existing.id);
                     if (duplicate != null) {
                         Toast.makeText(this,
-                                "A very similar memory is already saved",
+                                OrbitText.get(R.string.ui_a_very_similar_memory_is_already_saved_7de58e, "A very similar memory is already saved"),
                                 Toast.LENGTH_SHORT).show();
                         return;
                     }
@@ -389,10 +389,10 @@ public class MemoryActivity extends Activity {
 
     private void confirmDelete(MemoryStore.Memory m) {
         AlertDialog dialog = new AlertDialog.Builder(this)
-                .setTitle("Delete this memory?")
+                .setTitle(OrbitText.get(R.string.ui_delete_this_memory_cb4c95, "Delete this memory?"))
                 .setMessage(m.text)
-                .setNegativeButton("Cancel", null)
-                .setPositiveButton("Delete", (d,w) -> {
+                .setNegativeButton(OrbitText.get(R.string.ui_cancel_19766e, "Cancel"), null)
+                .setPositiveButton(OrbitText.get(R.string.ui_delete_e2d0a5, "Delete"), (d,w) -> {
                     MemoryStore.delete(this, m.id);
                     refresh();
                 }).create();
@@ -402,10 +402,10 @@ public class MemoryActivity extends Activity {
 
     private void confirmClearAll() {
         AlertDialog dialog = new AlertDialog.Builder(this)
-                .setTitle("Clear all memories?")
-                .setMessage("This removes every local Orbit memory from this device.")
-                .setNegativeButton("Cancel", null)
-                .setPositiveButton("Clear", (d,w) -> {
+                .setTitle(OrbitText.get(R.string.ui_clear_all_memories_58e966, "Clear all memories?"))
+                .setMessage(OrbitText.get(R.string.ui_this_removes_every_local_orbit_memory_from_8564fb, "This removes every local Orbit memory from this device."))
+                .setNegativeButton(OrbitText.get(R.string.ui_cancel_19766e, "Cancel"), null)
+                .setPositiveButton(OrbitText.get(R.string.ui_clear_83b12c, "Clear"), (d,w) -> {
                     MemoryStore.clear(this);
                     refresh();
                 }).create();

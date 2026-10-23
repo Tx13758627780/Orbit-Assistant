@@ -70,7 +70,7 @@ public final class ProcessTextToOrbitActivity extends Activity {
             // Malformed input costs the selection, never the process and never a partial import.
             DiagnosticStore.recordExternalText(this, SharedContentStore.SOURCE_PROCESS_TEXT,
                     0, "rejected");
-            Toast.makeText(this, "Orbit could not read that selection", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, OrbitText.get(R.string.ui_orbit_could_not_read_that_selection_e5d38e, "Orbit could not read that selection"), Toast.LENGTH_SHORT).show();
         }
         // Finished without a result, so the source app replaces nothing. This is the whole
         // read-only contract, and it is the default rather than a branch on purpose: there is no
@@ -126,14 +126,14 @@ public final class ProcessTextToOrbitActivity extends Activity {
     private void askDestination(String text, String token, Intent chat) {
         awaitingChoice = true;
         AlertDialog dialog = new AlertDialog.Builder(this)
-                .setTitle("Selected text")
-                .setMessage("Ask Orbit about this, or keep it in your Vault. "
-                        + "Nothing is sent to Orbit's AI until you send it.")
-                .setNegativeButton(SAVE_TO_VAULT, (d, which) -> {
+                .setTitle(OrbitText.get(R.string.ui_selected_text_5f9f3a, "Selected text"))
+                .setMessage(OrbitText.get(R.string.ui_ask_orbit_about_this_or_keep_it_in_your_va_a8e9bf, "Ask Orbit about this, or keep it in your Vault. ")
+                        + OrbitText.get(R.string.ui_nothing_is_sent_to_orbit_s_ai_until_you_se_2949ce, "Nothing is sent to Orbit's AI until you send it."))
+                .setNegativeButton(OrbitText.get(R.string.ui_save_to_vault_c1d04e, SAVE_TO_VAULT), (d, which) -> {
                     saveSelectionToVault(text, token);
                     finish();
                 })
-                .setPositiveButton(ASK_ORBIT, (d, which) -> {
+                .setPositiveButton(OrbitText.get(R.string.ui_ask_orbit_18ea29, ASK_ORBIT), (d, which) -> {
                     openConversation(chat);
                     finish();
                 })
@@ -167,7 +167,7 @@ public final class ProcessTextToOrbitActivity extends Activity {
                 OrbitVaultSource.SELECTED_TEXT) != null;
         DiagnosticStore.recordExternalText(this, SharedContentStore.SOURCE_PROCESS_TEXT,
                 text.length(), saved ? "saved-to-vault" : "vault-save-failed");
-        Toast.makeText(this, saved ? OrbitVaultStore.savedMessage(this) : OrbitVaultStore.saveFailureMessage(this, "Orbit could not save that selection"),
+        Toast.makeText(this, saved ? OrbitVaultStore.savedMessage(this) : OrbitVaultStore.saveFailureMessage(this, OrbitText.get(R.string.ui_orbit_could_not_save_that_selection_af85d8, "Orbit could not save that selection")),
                 Toast.LENGTH_SHORT).show();
     }
 
@@ -225,6 +225,6 @@ public final class ProcessTextToOrbitActivity extends Activity {
     private void reject() {
         DiagnosticStore.recordExternalText(this, SharedContentStore.SOURCE_PROCESS_TEXT,
                 0, "rejected");
-        Toast.makeText(this, "Select some text to ask Orbit about", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, OrbitText.get(R.string.ui_select_some_text_to_ask_orbit_about_dcc638, "Select some text to ask Orbit about"), Toast.LENGTH_SHORT).show();
     }
 }

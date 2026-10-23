@@ -55,7 +55,7 @@ final class ModelLibraryDialog {
         int pad = UiKit.dp(context, 18);
         page.setPadding(pad, UiKit.dp(context, 4), pad, UiKit.dp(context, 8));
 
-        search.setHint("Search models, makers or IDs");
+        search.setHint(OrbitText.get(R.string.ui_search_models_makers_or_ids_e431de, "Search models, makers or IDs"));
         search.setSingleLine(true);
         search.setTextColor(UiKit.TEXT);
         search.setHintTextColor(UiKit.MUTED);
@@ -64,7 +64,7 @@ final class ModelLibraryDialog {
 
         LinearLayout filters = new LinearLayout(context);
         filters.setOrientation(LinearLayout.HORIZONTAL);
-        Button all = filter("All");
+        Button all = filter(OrbitText.get(R.string.ui_all_a52ace, "All"));
         all.setOnClickListener(v -> {
             providerFilter = "";
             favoritesOnly = false;
@@ -73,14 +73,14 @@ final class ModelLibraryDialog {
             rebuild();
         });
         filters.addView(all);
-        Button favorites = filter("Favorites");
+        Button favorites = filter(OrbitText.get(R.string.ui_favorites_7a1f2a, "Favorites"));
         favorites.setOnClickListener(v -> { favoritesOnly = true; rebuild(); });
         filters.addView(favorites);
         // Two capability filters, each a toggle; they combine with the provider filter.
-        Button vision = filter("Vision");
+        Button vision = filter(OrbitText.get(R.string.ui_vision_c587c2, "Vision"));
         vision.setOnClickListener(v -> { visionOnly = !visionOnly; rebuild(); });
         filters.addView(vision);
-        Button reasoning = filter("Reasoning");
+        Button reasoning = filter(OrbitText.get(R.string.ui_reasoning_d8211e, "Reasoning"));
         reasoning.setOnClickListener(v -> { reasoningOnly = !reasoningOnly; rebuild(); });
         filters.addView(reasoning);
         for (AiProvider provider : AiSelections.pickableProviders(context)) {
@@ -112,8 +112,8 @@ final class ModelLibraryDialog {
         // Opened from Auto, which belongs to no provider, the library shows every provider.
         if (initial != null && !initial.isAuto()) providerFilter = initial.provider;
         rebuild();
-        AlertDialog.Builder builder = new AlertDialog.Builder(context).setTitle("Browse Models")
-                .setView(page).setNegativeButton("Close", null);
+        AlertDialog.Builder builder = new AlertDialog.Builder(context).setTitle(OrbitText.get(R.string.ui_browse_models_b556fa, "Browse Models"))
+                .setView(page).setNegativeButton(OrbitText.get(R.string.ui_close_7d9eb7, "Close"), null);
         AlertDialog builtDialog = builder.create();
         dialog = builtDialog;
         UiKit.styleOrbitDialog(builtDialog, context, false);
@@ -145,7 +145,7 @@ final class ModelLibraryDialog {
         }
         if (count == 0) {
             TextView empty = UiKit.text(context, favoritesOnly
-                    ? "No favorite models match." : "No models match.", 14, UiKit.MUTED, false);
+                    ? OrbitText.get(R.string.ui_no_favorite_models_match_4ef582, "No favorite models match.") : OrbitText.get(R.string.ui_no_models_match_9fa9b7, "No models match."), 14, UiKit.MUTED, false);
             empty.setPadding(0, UiKit.dp(context, 24), 0, UiKit.dp(context, 24));
             empty.setGravity(Gravity.CENTER);
             results.addView(empty);
@@ -160,7 +160,7 @@ final class ModelLibraryDialog {
 
     /** "Showing 60 of 412 models. Search to find more." */
     static String moreLabel(int shown, int total) {
-        return "Showing " + shown + " of " + total + " models. Search to find more.";
+        return OrbitText.get(R.string.ui_showing_7282e1, "Showing ") + shown + OrbitText.get(R.string.ui_of_a4282e, " of ") + total + OrbitText.get(R.string.ui_models_search_to_find_more_600616, " models. Search to find more.");
     }
 
     /** The Vision and Reasoning filters: only what the catalog states, never a guess. */
@@ -207,28 +207,28 @@ final class ModelLibraryDialog {
         words.setOrientation(LinearLayout.VERTICAL);
         words.addView(UiKit.text(context, spec.displayName, 15, UiKit.TEXT, true));
         boolean openRouterAuto = OrbitModelCatalog.OPENROUTER_AUTO.equals(spec.id);
-        String contextLabel = openRouterAuto ? "Context varies by model"
-                : spec.contextWindowTokens <= 0 ? "Context unknown"
-                : "Context " + compact(spec.contextWindowTokens);
+        String contextLabel = openRouterAuto ? OrbitText.get(R.string.ui_context_varies_by_model_2bf98d, "Context varies by model")
+                : spec.contextWindowTokens <= 0 ? OrbitText.get(R.string.ui_context_unknown_fe40ff, "Context unknown")
+                : OrbitText.get(R.string.ui_context_a61adb, "Context ") + compact(spec.contextWindowTokens);
         // The route comes first, so the same model direct and through OpenRouter never look alike.
         String route = Prefs.PROVIDER_OPENROUTER.equals(provider.id()) && !openRouterAuto
                 && !spec.familyLabel.isEmpty()
                 ? provider.displayName() + " · " + spec.familyLabel : provider.displayName();
         String detail = route + " · " + contextLabel
-                + " · Vision " + (spec.vision ? "Yes" : "Not listed")
-                + (spec.nativeFiles ? " · Provider file input" : "")
-                + (spec.extractedDocuments ? " · Orbit text extraction" : "")
-                + (spec.tools ? " · Tools" : "")
-                + (spec.webSearch ? " · Web search" : "")
-                + (spec.hasStrengths() ? " · Reasoning " + strengthRange(spec) : " · No strength control")
-                + (spec.selectable() ? "" : " · Unavailable");
+                + OrbitText.get(R.string.ui_vision_ca871a, " · Vision ") + (spec.vision ? OrbitText.get(R.string.ui_yes_85a39a, "Yes") : OrbitText.get(R.string.ui_not_listed_e2dcbd, "Not listed"))
+                + (spec.nativeFiles ? OrbitText.get(R.string.ui_provider_file_input_3fd850, " · Provider file input") : "")
+                + (spec.extractedDocuments ? OrbitText.get(R.string.ui_orbit_text_extraction_189be1, " · Orbit text extraction") : "")
+                + (spec.tools ? OrbitText.get(R.string.ui_tools_472e22, " · Tools") : "")
+                + (spec.webSearch ? OrbitText.get(R.string.ui_web_search_05177a, " · Web search") : "")
+                + (spec.hasStrengths() ? OrbitText.get(R.string.ui_reasoning_26812a, " · Reasoning ") + strengthRange(spec) : OrbitText.get(R.string.ui_no_strength_control_e1f0d3, " · No strength control"))
+                + (spec.selectable() ? "" : OrbitText.get(R.string.ui_unavailable_77649d, " · Unavailable"));
         words.addView(UiKit.text(context, detail, 11.5f,
                 spec.selectable() ? UiKit.MUTED : UiKit.DANGER, false));
         row.addView(words, new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1));
 
         Button star = filter(ModelLibraryStore.isFavorite(context, provider.id(), spec.id) ? "★" : "☆");
         star.setContentDescription((ModelLibraryStore.isFavorite(context, provider.id(), spec.id)
-                ? "Remove from Favorites: " : "Add to Favorites: ") + spec.displayName);
+                ? OrbitText.get(R.string.ui_remove_from_favorites_35e07e, "Remove from Favorites: ") : OrbitText.get(R.string.ui_add_to_favorites_4f50ca, "Add to Favorites: ")) + spec.displayName);
         star.setOnClickListener(v -> {
             boolean next = !ModelLibraryStore.isFavorite(context, provider.id(), spec.id);
             ModelLibraryStore.setFavorite(context, provider.id(), spec.id, next);
@@ -277,8 +277,8 @@ final class ModelLibraryDialog {
     }
 
     private static String strengthRange(AiModelSpec spec) {
-        if (spec.strengths.isEmpty()) return "None";
-        if (spec.strengths.size() == 1) return spec.strengths.get(0).label;
-        return spec.strengths.get(0).label + "-" + spec.strengths.get(spec.strengths.size() - 1).label;
+        if (spec.strengths.isEmpty()) return OrbitText.get(R.string.ui_none_dc937b, "None");
+        if (spec.strengths.size() == 1) return spec.strengths.get(0).displayLabel();
+        return spec.strengths.get(0).displayLabel() + "-" + spec.strengths.get(spec.strengths.size() - 1).displayLabel();
     }
 }

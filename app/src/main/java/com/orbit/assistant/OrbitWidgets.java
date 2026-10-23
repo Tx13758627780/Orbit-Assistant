@@ -95,7 +95,7 @@ public final class OrbitWidgets {
                 .putExtra(ChatActivity.EXTRA_FOCUS_COMPOSER, true);
         views.setOnClickPendingIntent(R.id.widget_ask_card,
                 activityPendingIntent(context, intent, widgetId, 0, TYPE_ASK));
-        views.setContentDescription(R.id.widget_ask_card, "Ask Orbit. Opens a new Orbit chat.");
+        views.setContentDescription(R.id.widget_ask_card, OrbitText.get(R.string.ui_ask_orbit_opens_a_new_orbit_chat_89b1cd, "Ask Orbit. Opens a new Orbit chat."));
         manager.updateAppWidget(widgetId, views);
     }
 
@@ -110,15 +110,15 @@ public final class OrbitWidgets {
         RoutineStore.Routine routine = RoutineStore.findById(context, routineId);
         PendingIntent pending;
         if (routine == null) {
-            views.setTextViewText(R.id.widget_routine_name, "Routine unavailable");
-            views.setTextViewText(R.id.widget_routine_hint, "Tap to choose another");
+            views.setTextViewText(R.id.widget_routine_name, OrbitText.get(R.string.ui_routine_unavailable_0e6930, "Routine unavailable"));
+            views.setTextViewText(R.id.widget_routine_hint, OrbitText.get(R.string.ui_tap_to_choose_another_d5feaa, "Tap to choose another"));
             views.setContentDescription(R.id.widget_routine_card,
-                    "Routine unavailable. Tap to reconfigure this Orbit widget.");
+                    OrbitText.get(R.string.ui_routine_unavailable_tap_to_reconfigure_thi_b96046, "Routine unavailable. Tap to reconfigure this Orbit widget."));
             pending = configurationPendingIntent(context, widgetId, 0);
         } else {
             views.setTextViewText(R.id.widget_routine_name, routine.name);
-            views.setTextViewText(R.id.widget_routine_hint, "Tap to run");
-            views.setContentDescription(R.id.widget_routine_card, "Run " + routine.name);
+            views.setTextViewText(R.id.widget_routine_hint, OrbitText.get(R.string.ui_tap_to_run_bf9461, "Tap to run"));
+            views.setContentDescription(R.id.widget_routine_card, OrbitText.get(R.string.ui_run_195094, "Run ") + routine.name);
             pending = actionPendingIntent(context,
                     OrbitWidgetActionReceiver.ACTION_RUN_ROUTINE, widgetId, -1);
         }
@@ -154,7 +154,7 @@ public final class OrbitWidgets {
             views.setContentDescription(containers[slot], presentation.description);
             views.setOnClickPendingIntent(containers[slot], presentation.pendingIntent);
         }
-        views.setContentDescription(R.id.widget_quick_card, "Orbit Quick Actions");
+        views.setContentDescription(R.id.widget_quick_card, OrbitText.get(R.string.ui_orbit_quick_actions_86bde9, "Orbit Quick Actions"));
         manager.updateAppWidget(widgetId, views);
     }
 
@@ -163,29 +163,29 @@ public final class OrbitWidgets {
             String routineId = quickRoutineId(context, widgetId, slot);
             RoutineStore.Routine routine = RoutineStore.findById(context, routineId);
             if (routine == null) {
-                return new Slot("Unavailable", R.drawable.ic_routine_tile,
-                        "Routine unavailable. Tap to configure Quick Actions.",
+                return new Slot(OrbitText.get(R.string.ui_unavailable_ca1844, "Unavailable"), R.drawable.ic_routine_tile,
+                        OrbitText.get(R.string.ui_routine_unavailable_tap_to_configure_quick_ba8b03, "Routine unavailable. Tap to configure Quick Actions."),
                         configurationPendingIntent(context, widgetId, slot + 1));
             }
-            return new Slot(routine.name, R.drawable.ic_routine_tile, "Run " + routine.name,
+            return new Slot(routine.name, R.drawable.ic_routine_tile, OrbitText.get(R.string.ui_run_195094, "Run ") + routine.name,
                     actionPendingIntent(context, OrbitWidgetActionReceiver.ACTION_RUN_ROUTINE,
                             widgetId, slot));
         }
         if (TYPE_FLASHLIGHT.equals(type)) {
-            return new Slot("Flashlight", R.drawable.ic_widget_flashlight,
-                    "Toggle flashlight", actionPendingIntent(context,
+            return new Slot(OrbitText.get(R.string.ui_flashlight_e2ed3c, "Flashlight"), R.drawable.ic_widget_flashlight,
+                    OrbitText.get(R.string.ui_toggle_flashlight_103875, "Toggle flashlight"), actionPendingIntent(context,
                     OrbitWidgetActionReceiver.ACTION_TOGGLE_FLASHLIGHT, widgetId, slot));
         }
         if (TYPE_REMINDER.equals(type)) {
             Intent intent = new Intent(context, ChatActivity.class)
                     .putExtra(ChatActivity.EXTRA_FOCUS_COMPOSER, true)
                     .putExtra(ChatActivity.EXTRA_INITIAL_DRAFT, "Remind me ");
-            return new Slot("Reminder", R.drawable.ic_widget_reminder,
-                    "Create an Orbit reminder", activityPendingIntent(context, intent, widgetId, slot, type));
+            return new Slot(OrbitText.get(R.string.ui_reminder_31757b, "Reminder"), R.drawable.ic_widget_reminder,
+                    OrbitText.get(R.string.ui_create_an_orbit_reminder_4e1e8a, "Create an Orbit reminder"), activityPendingIntent(context, intent, widgetId, slot, type));
         }
         Intent intent = new Intent(context, ChatActivity.class)
                 .putExtra(ChatActivity.EXTRA_FOCUS_COMPOSER, true);
-        return new Slot("Ask Orbit", R.drawable.ic_orbit_tile, "Ask Orbit",
+        return new Slot(OrbitText.get(R.string.ui_ask_orbit_18ea29, "Ask Orbit"), R.drawable.ic_orbit_tile, OrbitText.get(R.string.ui_ask_orbit_18ea29, "Ask Orbit"),
                 activityPendingIntent(context, intent, widgetId, slot, TYPE_ASK));
     }
 
@@ -194,16 +194,16 @@ public final class OrbitWidgets {
         AppWidgetManager manager = AppWidgetManager.getInstance(activity);
         if (Build.VERSION.SDK_INT < 26 || !manager.isRequestPinAppWidgetSupported()) {
             Toast.makeText(activity,
-                    "Open your launcher's widget picker, then choose Orbit.", Toast.LENGTH_LONG).show();
+                    OrbitText.get(R.string.ui_open_your_launcher_s_widget_picker_then_ch_29d5e2, "Open your launcher's widget picker, then choose Orbit."), Toast.LENGTH_LONG).show();
             return;
         }
         boolean requested = manager.requestPinAppWidget(
                 new ComponentName(activity, providerClass), null, null);
         if (!requested) {
             Toast.makeText(activity,
-                    "Open your launcher's widget picker, then choose Orbit.", Toast.LENGTH_LONG).show();
+                    OrbitText.get(R.string.ui_open_your_launcher_s_widget_picker_then_ch_29d5e2, "Open your launcher's widget picker, then choose Orbit."), Toast.LENGTH_LONG).show();
         } else {
-            Toast.makeText(activity, "Choose where to place the " + label + " widget.",
+            Toast.makeText(activity, OrbitText.get(R.string.ui_choose_where_to_place_the_38ec2a, "Choose where to place the ") + label + OrbitText.get(R.string.ui_widget_1fc85a, " widget."),
                     Toast.LENGTH_SHORT).show();
         }
     }

@@ -33,7 +33,7 @@
             android:fontFamily="sans"
             android:includeFontPadding="false"
             android:maxLines="1"
-            android:text="Choose Routine"
+            android:text="@string/ui_choose_routine_f1bdd6"
             android:textColor="#FFF4F4F8"
             android:textSize="15sp"
             android:textStyle="bold" />

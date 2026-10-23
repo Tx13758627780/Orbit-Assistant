@@ -32,9 +32,9 @@ final class AutoSheets {
     static AlertDialog showSettings(Context c, Runnable onChanged) {
         View content = settingsContent(c, onChanged);
         AlertDialog dialog = new AlertDialog.Builder(c)
-                .setTitle("Auto can use")
+                .setTitle(OrbitText.get(R.string.ui_auto_can_use_a728a9, "Auto can use"))
                 .setView(content)
-                .setPositiveButton("Done", null)
+                .setPositiveButton(OrbitText.get(R.string.ui_done_11a676, "Done"), null)
                 .create();
         UiKit.styleOrbitDialog(dialog, c, false);
         dialog.show();
@@ -50,7 +50,7 @@ final class AutoSheets {
         body.setPadding(pad, UiKit.dp(c, 4), pad, UiKit.dp(c, 8));
         scroll.addView(body);
 
-        TextView intro = UiKit.text(c, AiSelection.AUTO_DESCRIPTION, 13, UiKit.MUTED, false);
+        TextView intro = UiKit.text(c, AiSelection.autoDescription(), 13, UiKit.MUTED, false);
         intro.setLineSpacing(0, 1.12f);
         intro.setPadding(0, 0, 0, UiKit.dp(c, 10));
         body.addView(intro);
@@ -63,7 +63,7 @@ final class AutoSheets {
         }
 
         TextView note = UiKit.text(c,
-                "Auto only uses a provider that is switched on here and ready. Choosing a model "
+                OrbitText.get(R.string.ui_auto_only_uses_a_provider_that_is_switched_a805ab, "Auto only uses a provider that is switched on here and ready. Choosing a model ")
                         + "yourself always uses exactly that model.",
                 12, UiKit.MUTED, false);
         note.setLineSpacing(0, 1.12f);
@@ -133,7 +133,7 @@ final class AutoSheets {
         }
         String status = ready ? "" : p.statusDetail(c);
         if (AutoPermissions.metered(provider) && !allowed) {
-            return status.isEmpty() ? METERED_NOTE : METERED_NOTE + " · " + status;
+            return status.isEmpty() ? OrbitText.get(R.string.ui_may_use_api_credits_1a4182, METERED_NOTE) : OrbitText.get(R.string.ui_may_use_api_credits_1a4182, METERED_NOTE) + " · " + status;
         }
         return status;
     }
@@ -171,20 +171,20 @@ final class AutoSheets {
             proceed.run();
             return;
         }
-        TextView body = UiKit.text(c, INTRO_BODY, 14, UiKit.TEXT, false);
+        TextView body = UiKit.text(c, OrbitText.get(R.string.ui_meta_auto_intro, INTRO_BODY), 14, UiKit.TEXT, false);
         body.setLineSpacing(0, 1.15f);
         int pad = UiKit.dp(c, 22);
         body.setPadding(pad, UiKit.dp(c, 4), pad, UiKit.dp(c, 6));
         AlertDialog dialog = new AlertDialog.Builder(c)
-                .setTitle(INTRO_TITLE)
+                .setTitle(OrbitText.get(R.string.ui_auto_028624, INTRO_TITLE))
                 .setView(body)
-                .setNegativeButton("Cancel", null)
-                .setNeutralButton("Providers", (d, w) -> {
+                .setNegativeButton(OrbitText.get(R.string.ui_cancel_19766e, "Cancel"), null)
+                .setNeutralButton(OrbitText.get(R.string.ui_providers_996c32, "Providers"), (d, w) -> {
                     markIntroSeen(c);
                     showSettings(c, null);
                     proceed.run();
                 })
-                .setPositiveButton("Use Auto", (d, w) -> {
+                .setPositiveButton(OrbitText.get(R.string.ui_use_auto_5c6170, "Use Auto"), (d, w) -> {
                     markIntroSeen(c);
                     proceed.run();
                 })

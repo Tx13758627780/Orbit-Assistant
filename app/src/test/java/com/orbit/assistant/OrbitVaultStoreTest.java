@@ -393,9 +393,13 @@ public final class OrbitVaultStoreTest {
         assertEquals(OrbitVaultStore.MAX_ITEMS, OrbitVaultStore.count(context));
         assertTrue(OrbitVaultStore.isFull(context));
         List<OrbitVaultItem> all = OrbitVaultStore.list(context, OrbitVaultStore.Sort.OLDEST);
-        assertEquals("the oldest item is still there", "note 0", all.get(0).body);
-        assertEquals("the last accepted item is newest",
-                "note " + (OrbitVaultStore.MAX_ITEMS - 1), all.get(all.size() - 1).body);
+        // Saves can share a millisecond; the store intentionally breaks those ties by id.
+        // The bound's contract is to keep every accepted item, irrespective of that order.
+        Set<String> expected = new HashSet<>();
+        for (int i = 0; i < OrbitVaultStore.MAX_ITEMS; i++) expected.add("note " + i);
+        Set<String> actual = new HashSet<>();
+        for (OrbitVaultItem item : all) actual.add(item.body);
+        assertEquals("every accepted item is still there", expected, actual);
         assertEquals(OrbitVaultStore.FULL_MESSAGE,
                 OrbitVaultStore.saveFailureMessage(context, "generic"));
     }

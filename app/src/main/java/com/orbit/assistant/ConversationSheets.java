@@ -39,17 +39,17 @@ final class ConversationSheets {
     static AlertDialog showContext(Activity a, ContextEstimate estimate, Runnable onContinue) {
         LinearLayout body = column(a);
         if (estimate == null) {
-            body.addView(note(a, "Orbit is still measuring this chat."));
+            body.addView(note(a, OrbitText.get(R.string.ui_orbit_is_still_measuring_this_chat_22e29f, "Orbit is still measuring this chat.")));
         } else {
             TextView headline = UiKit.text(a, estimate.knowsLimit()
-                    ? ContextEstimate.approx(estimate.tokens) + " of "
+                    ? ContextEstimate.approx(estimate.tokens) + OrbitText.get(R.string.ui_of_a4282e, " of ")
                             + ContextEstimate.exact(estimate.limit) + " tokens"
                     : ContextEstimate.approx(estimate.tokens) + " tokens", 18, UiKit.TEXT, true);
             body.addView(headline);
-            String sub = estimate.auto ? AUTO_CONTEXT_LINE
+            String sub = estimate.auto ? OrbitText.get(R.string.ui_auto_chooses_per_request_a18bad, AUTO_CONTEXT_LINE)
                     : estimate.knowsLimit()
                     ? estimate.percent() + "% used" + (estimate.modelName.isEmpty() ? "" : " · " + estimate.modelName)
-                    : (estimate.modelName.isEmpty() ? "Window size unknown" : estimate.modelName + " · window size unknown");
+                    : (estimate.modelName.isEmpty() ? OrbitText.get(R.string.ui_window_size_unknown_632b87, "Window size unknown") : estimate.modelName + " · window size unknown");
             TextView subline = UiKit.text(a, sub, 13, UiKit.MUTED, false);
             subline.setPadding(0, UiKit.dp(a, 2), 0, UiKit.dp(a, 10));
             body.addView(subline);
@@ -72,7 +72,7 @@ final class ConversationSheets {
                     body.addView(row(a, row.getKey().label, ContextEstimate.approx(row.getValue())));
                 }
             }
-            StringBuilder notes = new StringBuilder("Estimated. Orbit counts about four characters "
+            StringBuilder notes = new StringBuilder(OrbitText.get(R.string.ui_estimated_orbit_counts_about_four_characte_71f452, "Estimated. Orbit counts about four characters ")
                     + "of text per token and a fixed amount per image; the AI's own count can differ.");
             if (estimate.olderMessagesNotSent > 0) {
                 notes.append(" Only your most recent messages are sent; the ")
@@ -82,7 +82,7 @@ final class ConversationSheets {
             }
             if (estimate.auto) {
                 notes.append(" Auto picks the model when you send, so no limit is shown here. "
-                        + "Each request only goes to a model whose context window fits it.");
+                        + OrbitText.get(R.string.ui_each_request_only_goes_to_a_model_whose_co_c85418, "Each request only goes to a model whose context window fits it."));
             } else if (estimate.fittedByProvider) {
                 notes.append(" Orbit Local fits each request into its own small on-device window, "
                         + "keeping your newest messages and the most relevant parts of attachments.");
@@ -95,10 +95,10 @@ final class ConversationSheets {
             body.addView(footnote);
         }
         AlertDialog.Builder builder = new AlertDialog.Builder(a)
-                .setTitle("Context window")
+                .setTitle(OrbitText.get(R.string.ui_context_window_7696d0, "Context window"))
                 .setView(scroll(a, body))
-                .setPositiveButton("Done", null);
-        if (onContinue != null) builder.setNeutralButton("Continue in new chat", (d, w) -> onContinue.run());
+                .setPositiveButton(OrbitText.get(R.string.ui_done_11a676, "Done"), null);
+        if (onContinue != null) builder.setNeutralButton(OrbitText.get(R.string.ui_continue_in_new_chat_9babb2, "Continue in new chat"), (d, w) -> onContinue.run());
         AlertDialog dialog = builder.create();
         UiKit.styleOrbitDialog(dialog, a, false);
         dialog.show();
@@ -115,9 +115,9 @@ final class ConversationSheets {
     static AlertDialog showKept(Activity a, List<KeptContext> items, KeptActions actions) {
         LinearLayout body = column(a);
         AlertDialog dialog = new AlertDialog.Builder(a)
-                .setTitle("Kept in this chat")
+                .setTitle(OrbitText.get(R.string.ui_kept_in_this_chat_9998a3, "Kept in this chat"))
                 .setView(scroll(a, body))
-                .setPositiveButton("Done", null)
+                .setPositiveButton(OrbitText.get(R.string.ui_done_11a676, "Done"), null)
                 .create();
         fillKept(a, body, new java.util.ArrayList<>(items), actions, dialog);
         UiKit.styleOrbitDialog(dialog, a, false);
@@ -129,11 +129,11 @@ final class ConversationSheets {
                                  KeptActions actions, AlertDialog dialog) {
         body.removeAllViews();
         if (items.isEmpty()) {
-            body.addView(note(a, "Nothing is kept in this chat. Hold an attached document, text "
+            body.addView(note(a, OrbitText.get(R.string.ui_nothing_is_kept_in_this_chat_hold_an_attac_49cb70, "Nothing is kept in this chat. Hold an attached document, text ")
                     + "file or Vault item to keep it for every message."));
             return;
         }
-        body.addView(note(a, "Orbit sends these with every new message in this chat until you "
+        body.addView(note(a, OrbitText.get(R.string.ui_orbit_sends_these_with_every_new_message_i_30776a, "Orbit sends these with every new message in this chat until you ")
                 + "remove them. They are shown once, where you added them."));
         for (KeptContext item : items) {
             LinearLayout line = new LinearLayout(a);
@@ -157,7 +157,7 @@ final class ConversationSheets {
             remove.setBackground(UiKit.ripple(Color.TRANSPARENT, UiKit.accent(a), 14, a));
             int pad = UiKit.dp(a, 13);
             remove.setPadding(pad, pad, pad, pad);
-            remove.setContentDescription("Stop keeping " + item.label);
+            remove.setContentDescription(OrbitText.get(R.string.ui_stop_keeping_a9fd9a, "Stop keeping ") + item.label);
             remove.setOnClickListener(v -> {
                 actions.remove(item);
                 items.remove(item);
@@ -176,7 +176,7 @@ final class ConversationSheets {
         AlertDialog dialog = new AlertDialog.Builder(a)
                 .setTitle(item.label)
                 .setMessage(item.typeLabel() + "\n\n" + preview)
-                .setPositiveButton("Done", null)
+                .setPositiveButton(OrbitText.get(R.string.ui_done_11a676, "Done"), null)
                 .create();
         UiKit.styleOrbitDialog(dialog, a, false);
         dialog.show();
@@ -187,11 +187,11 @@ final class ConversationSheets {
     /** Says plainly what Continue in new chat does before it does it. */
     static void confirmContinue(Activity a, Runnable onConfirm) {
         AlertDialog dialog = new AlertDialog.Builder(a)
-                .setTitle("Continue in a new chat?")
-                .setMessage("Orbit will write a short summary of this chat and start a new chat "
+                .setTitle(OrbitText.get(R.string.ui_continue_in_a_new_chat_2cbc86, "Continue in a new chat?"))
+                .setMessage(OrbitText.get(R.string.ui_orbit_will_write_a_short_summary_of_this_c_216e9d, "Orbit will write a short summary of this chat and start a new chat ")
                         + "with it, along with anything you kept. This chat stays exactly as it is.")
-                .setNegativeButton("Cancel", null)
-                .setPositiveButton("Continue", (d, w) -> onConfirm.run())
+                .setNegativeButton(OrbitText.get(R.string.ui_cancel_19766e, "Cancel"), null)
+                .setPositiveButton(OrbitText.get(R.string.ui_continue_31fbef, "Continue"), (d, w) -> onConfirm.run())
                 .create();
         UiKit.styleOrbitDialog(dialog, a, false);
         dialog.show();

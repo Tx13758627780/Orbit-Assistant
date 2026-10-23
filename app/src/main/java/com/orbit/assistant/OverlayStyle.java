@@ -99,6 +99,15 @@ final class OverlayStyle {
         this.cute = cute;
     }
 
+    String displayLabel() {
+        int resource;
+        if (Prefs.OVERLAY_STYLE_CLASSIC.equals(id)) resource = R.string.ui_meta_overlay_classic;
+        else if (Prefs.OVERLAY_STYLE_MODERN.equals(id)) resource = R.string.ui_meta_overlay_modern;
+        else if (Prefs.OVERLAY_STYLE_FLOAT.equals(id)) resource = R.string.ui_meta_overlay_float;
+        else resource = R.string.ui_meta_overlay_cutie;
+        return OrbitText.get(resource, label);
+    }
+
     /** True when the conversation grows with its content instead of holding one fixed height. */
     boolean fitsContent() {
         return conversationMinDp < conversationDp;
@@ -106,8 +115,8 @@ final class OverlayStyle {
 
     /** The composer's resting hint. Float's doubles as the greeting it does not draw. */
     String hint() {
-        if (cute) return "what's up, cutie? (˶ᵔ ᵕ ᵔ˶)";
-        return compact ? "What can I help with?" : "Ask anything…";
+        if (cute) return OrbitText.get(R.string.ui_meta_overlay_cute_hint, "what's up, cutie? (˶ᵔ ᵕ ᵔ˶)");
+        return compact ? OrbitText.get(R.string.ui_what_can_i_help_with_e43f5a, "What can I help with?") : OrbitText.get(R.string.ui_meta_overlay_hint, "Ask anything…");
     }
 
     /** Float's minimised capsule: only the compact styles can fold into one. */

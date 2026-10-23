@@ -136,12 +136,12 @@ public final class ThemePreviewView extends LinearLayout {
         // other than what a real message would get.
         userBubble.setTextColor(tokens.userBubbleInk);
         userBubble.setBackground(UiKit.bubbleSurface(c, tokens.userBubble, tokens.accent, style));
-        userBubble.setContentDescription("Your message bubble, "
+        userBubble.setContentDescription(OrbitText.get(R.string.ui_your_message_bubble_bdb6d4, "Your message bubble, ")
                 + OrbitColorName.of(tokens.userBubble) + shapeDescription());
 
         assistantBubble.setBackground(
                 UiKit.bubbleSurface(c, tokens.assistantBubble, tokens.accent, style));
-        assistantBubble.setContentDescription("Orbit's reply bubble, "
+        assistantBubble.setContentDescription(OrbitText.get(R.string.ui_orbit_s_reply_bubble_74b394, "Orbit's reply bubble, ")
                 + OrbitColorName.of(tokens.assistantBubble) + shapeDescription());
         assistantHeading.setTextColor(tokens.assistantBubbleInk);
         assistantBody.setTextColor(tokens.assistantBubbleInk);
@@ -158,7 +158,7 @@ public final class ThemePreviewView extends LinearLayout {
 
         card.setBackground(UiKit.outlined(tokens.surface,
                 UiKit.withAlpha(tokens.accent, 44), UiKit.RADIUS_CARD, c));
-        card.setContentDescription("Card, " + OrbitColorName.of(tokens.surface));
+        card.setContentDescription(OrbitText.get(R.string.ui_card_b13984, "Card, ") + OrbitColorName.of(tokens.surface));
         cardTitle.setTextColor(tokens.text);
         cardSubtitle.setTextColor(tokens.muted);
 
@@ -169,7 +169,7 @@ public final class ThemePreviewView extends LinearLayout {
         // glass tuning moves this tile only where it would move the real ones.
         tile.setBackground(OrbitFloatingSurface.surfaceDrawable(c,
                 OrbitGlass.Palette.of(tokens, style), UiKit.RADIUS_CARD));
-        tile.setContentDescription("Deck tile, " + OrbitTheme.materialLabel(material()) + ", "
+        tile.setContentDescription(OrbitText.get(R.string.ui_deck_tile_c7e3d5, "Deck tile, ") + OrbitTheme.materialLabel(material()) + ", "
                 + OrbitColorName.of(tokens.surface2));
         tileMark.setImageTintList(ColorStateList.valueOf(tokens.accent));
         tileLabel.setTextColor(tokens.text);
@@ -187,22 +187,22 @@ public final class ThemePreviewView extends LinearLayout {
     }
 
     private String describe() {
-        if (tokens == null) return "Theme preview";
-        return "Theme preview. Background " + OrbitColorName.of(tokens.background)
-                + ", cards " + OrbitColorName.of(tokens.surface)
-                + ", accent " + OrbitColorName.of(tokens.accent)
-                + ", your messages " + OrbitColorName.of(tokens.userBubble)
-                + ", Orbit's replies " + OrbitColorName.of(tokens.assistantBubble) + ".";
+        if (tokens == null) return OrbitText.get(R.string.ui_theme_preview_d04517, "Theme preview");
+        return OrbitText.get(R.string.ui_theme_preview_background_b74ad1, "Theme preview. Background ") + OrbitColorName.of(tokens.background)
+                + OrbitText.get(R.string.ui_cards_c0b865, ", cards ") + OrbitColorName.of(tokens.surface)
+                + OrbitText.get(R.string.ui_accent_8e6967, ", accent ") + OrbitColorName.of(tokens.accent)
+                + OrbitText.get(R.string.ui_your_messages_db8e65, ", your messages ") + OrbitColorName.of(tokens.userBubble)
+                + OrbitText.get(R.string.ui_orbit_s_replies_7fd890, ", Orbit's replies ") + OrbitColorName.of(tokens.assistantBubble) + ".";
     }
 
     /** How the premium message shape reads aloud, or nothing when it is Orbit's own. */
     private String shapeDescription() {
         if (style.isDefault()) return "";
         String outline = style.bubbleOutline == OrbitProStyle.OUTLINE_OFF
-                ? "no outline" : style.bubbleOutlineLabel().toLowerCase(java.util.Locale.US)
-                + " outline";
+                ? OrbitText.get(R.string.ui_no_outline_96571e, "no outline") : style.bubbleOutlineLabel().toLowerCase(java.util.Locale.US)
+                + OrbitText.get(R.string.ui_outline_027161, " outline");
         return ", " + style.bubbleRadiusLabel().toLowerCase(java.util.Locale.US)
-                + " corners, " + outline;
+                + OrbitText.get(R.string.ui_corners_c55db3, " corners, ") + outline;
     }
 
     // ---- construction ---------------------------------------------------------------------------
@@ -256,7 +256,7 @@ public final class ThemePreviewView extends LinearLayout {
     }
 
     private View buildUserBubble(Context c) {
-        userBubble = UiKit.text(c, "How does this look?", 13, UiKit.TEXT, false);
+        userBubble = UiKit.text(c, OrbitText.get(R.string.ui_how_does_this_look_f9688b, "How does this look?"), 13, UiKit.TEXT, false);
         userBubble.setPadding(UiKit.dp(c, 13), UiKit.dp(c, 9), UiKit.dp(c, 13), UiKit.dp(c, 9));
         return userBubble;
     }
@@ -267,10 +267,10 @@ public final class ThemePreviewView extends LinearLayout {
         assistantBubble.setPadding(UiKit.dp(c, 13), UiKit.dp(c, 10),
                 UiKit.dp(c, 13), UiKit.dp(c, 11));
 
-        assistantHeading = UiKit.text(c, "Looking good", 13, UiKit.TEXT, true);
+        assistantHeading = UiKit.text(c, OrbitText.get(R.string.ui_looking_good_9651d2, "Looking good"), 13, UiKit.TEXT, true);
         assistantBubble.addView(assistantHeading);
 
-        assistantBody = UiKit.text(c, "Headings, links and code all follow the theme.",
+        assistantBody = UiKit.text(c, OrbitText.get(R.string.ui_headings_links_and_code_all_follow_the_the_e5db9f, "Headings, links and code all follow the theme."),
                 12.5f, UiKit.TEXT, false);
         assistantBody.setPadding(0, UiKit.dp(c, 3), 0, 0);
         assistantBubble.addView(assistantBody);
@@ -285,7 +285,7 @@ public final class ThemePreviewView extends LinearLayout {
         inlineCode.setPadding(UiKit.dp(c, 7), UiKit.dp(c, 2), UiKit.dp(c, 7), UiKit.dp(c, 3));
         inline.addView(inlineCode);
 
-        inlineLink = UiKit.text(c, "a link", 12, UiKit.TEXT, false);
+        inlineLink = UiKit.text(c, OrbitText.get(R.string.ui_a_link_5a3464, "a link"), 12, UiKit.TEXT, false);
         inlineLink.setPaintFlags(inlineLink.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
         LinearLayout.LayoutParams linkLp = new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -304,9 +304,9 @@ public final class ThemePreviewView extends LinearLayout {
         card = new LinearLayout(c);
         card.setOrientation(VERTICAL);
         card.setPadding(UiKit.dp(c, 11), UiKit.dp(c, 9), UiKit.dp(c, 11), UiKit.dp(c, 10));
-        cardTitle = UiKit.text(c, "Reminders", 12.5f, UiKit.TEXT, true);
+        cardTitle = UiKit.text(c, OrbitText.get(R.string.ui_reminders_7971dd, "Reminders"), 12.5f, UiKit.TEXT, true);
         card.addView(cardTitle);
-        cardSubtitle = UiKit.text(c, "Two today", 11, UiKit.MUTED, false);
+        cardSubtitle = UiKit.text(c, OrbitText.get(R.string.ui_two_today_332d3b, "Two today"), 11, UiKit.MUTED, false);
         card.addView(cardSubtitle);
         row.addView(card, new LinearLayout.LayoutParams(0,
                 ViewGroup.LayoutParams.MATCH_PARENT, 1.35f));
@@ -329,7 +329,7 @@ public final class ThemePreviewView extends LinearLayout {
                 new LinearLayout.LayoutParams(UiKit.dp(c, 16), UiKit.dp(c, 16));
         tileMarkLp.bottomMargin = UiKit.dp(c, 5);
         tile.addView(tileMark, tileMarkLp);
-        tileLabel = UiKit.text(c, "Deck", 10.5f, UiKit.TEXT, false);
+        tileLabel = UiKit.text(c, OrbitText.get(R.string.ui_deck_889eac, "Deck"), 10.5f, UiKit.TEXT, false);
         tile.addView(tileLabel);
 
         LinearLayout.LayoutParams tileLp = new LinearLayout.LayoutParams(0,

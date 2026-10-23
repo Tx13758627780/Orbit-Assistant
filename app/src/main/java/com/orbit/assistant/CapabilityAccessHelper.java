@@ -126,10 +126,10 @@ public final class CapabilityAccessHelper {
             } else {
                 String option = RoutineLocationTriggerScheduler.backgroundPermissionLabel(activity);
                 AlertDialog dialog = new AlertDialog.Builder(activity)
-                        .setTitle("Allow background location")
-                        .setMessage("For arrive/leave Routines to work while Orbit is closed, open Orbit's app permissions, choose Location, then select \"" + option + "\".")
-                        .setNegativeButton("Not now", null)
-                        .setPositiveButton("Open settings", (d, w) ->
+                        .setTitle(OrbitText.get(R.string.ui_allow_background_location_0c9108, "Allow background location"))
+                        .setMessage(OrbitText.get(R.string.ui_for_arrive_leave_routines_to_work_while_or_79a9ba, "For arrive/leave Routines to work while Orbit is closed, open Orbit's app permissions, choose Location, then select \"") + option + "\".")
+                        .setNegativeButton(OrbitText.get(R.string.ui_not_now_a0e63d, "Not now"), null)
+                        .setPositiveButton(OrbitText.get(R.string.ui_open_settings_ca381c, "Open settings"), (d, w) ->
                                 RoutineLocationTriggerScheduler.openAppLocationSettings(activity))
                         .create();
                 UiKit.styleOrbitDialog(dialog, activity, false);
@@ -145,11 +145,11 @@ public final class CapabilityAccessHelper {
     }
 
     public static String locationAutomationStatus(Activity activity) {
-        if (!OrbitDistribution.supportsLocationTriggers()) return "Not available";
-        if (RoutineLocationTriggerScheduler.ready(activity)) return "Ready";
-        if (!RoutineLocationTriggerScheduler.hasFineLocation(activity)) return "Needs precise";
-        if (!RoutineLocationTriggerScheduler.hasBackgroundLocation(activity)) return "Needs background";
-        return "Location off";
+        if (!OrbitDistribution.supportsLocationTriggers()) return OrbitText.get(R.string.ui_not_available_67a926, "Not available");
+        if (RoutineLocationTriggerScheduler.ready(activity)) return OrbitText.get(R.string.ui_ready_5fa7aa, "Ready");
+        if (!RoutineLocationTriggerScheduler.hasFineLocation(activity)) return OrbitText.get(R.string.ui_needs_precise_0e8ffc, "Needs precise");
+        if (!RoutineLocationTriggerScheduler.hasBackgroundLocation(activity)) return OrbitText.get(R.string.ui_needs_background_819711, "Needs background");
+        return OrbitText.get(R.string.ui_location_off_437751, "Location off");
     }
 
     private static void openWithFallback(Activity activity, Intent preferred, Intent fallback) {

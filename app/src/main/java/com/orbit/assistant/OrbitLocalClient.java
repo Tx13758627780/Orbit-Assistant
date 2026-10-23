@@ -201,9 +201,27 @@ public final class OrbitLocalClient {
             });
 
     /** {@link #status} off the main thread, for UI that must not block. */
+    private static final java.util.concurrent.atomic.AtomicBoolean STATUS_PENDING =
+            new java.util.concurrent.atomic.AtomicBoolean();
+
     public static void statusAsync(Context context, StatusCallback callback) {
         Context app = context.getApplicationContext();
-        STATUS_EXECUTOR.execute(() -> callback.onStatus(status(app)));
+        // A wedged Binder must not grow an unbounded queue as the screen retries.
+        if (!STATUS_PENDING.compareAndSet(false, true)) {
+            callback.onStatus(null);
+            return;
+        }
+        STATUS_EXECUTOR.execute(() -> {
+            OrbitLocalStatus fresh = null;
+            try {
+                fresh = status(app);
+            } catch (Exception failure) {
+                Log.w(TAG, "status failed: " + failure.getClass().getSimpleName());
+            } finally {
+                STATUS_PENDING.set(false);
+            }
+            callback.onStatus(fresh);
+        });
     }
 
     // ---- model lifecycle -------------------------------------------------------------------------

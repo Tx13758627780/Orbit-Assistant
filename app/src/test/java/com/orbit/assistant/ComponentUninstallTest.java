@@ -250,7 +250,9 @@ public final class ComponentUninstallTest {
         Path file = root.resolve(relativePath);
         assertTrue("expected file is missing: " + relativePath, Files.isRegularFile(file));
         try {
-            return new String(Files.readAllBytes(file), StandardCharsets.UTF_8);
+            String source = new String(Files.readAllBytes(file), StandardCharsets.UTF_8);
+            return relativePath.endsWith(".java")
+                    ? LocalizationSource.withoutResourceCalls(source) : source;
         } catch (IOException e) {
             throw new AssertionError("could not read " + relativePath, e);
         }

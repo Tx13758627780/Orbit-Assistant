@@ -58,7 +58,7 @@ public class RoutineRunHistoryActivity extends Activity {
 
         LinearLayout header = new LinearLayout(this);
         header.setGravity(Gravity.CENTER_VERTICAL);
-        ImageButton back = iconButton(R.drawable.ic_back, "Back");
+        ImageButton back = iconButton(R.drawable.ic_back, OrbitText.get(R.string.ui_back_76900f, "Back"));
         back.setOnClickListener(v -> navigation.performBack());
         LinearLayout.LayoutParams backLp = new LinearLayout.LayoutParams(UiKit.dp(this, 48), UiKit.dp(this, 48));
         backLp.rightMargin = UiKit.dp(this, 12);
@@ -66,15 +66,15 @@ public class RoutineRunHistoryActivity extends Activity {
 
         LinearLayout titles = new LinearLayout(this);
         titles.setOrientation(LinearLayout.VERTICAL);
-        titles.addView(UiKit.text(this, "Run history", 25, UiKit.TEXT, true));
-        titles.addView(UiKit.text(this, "Routines", 12, UiKit.MUTED, false));
+        titles.addView(UiKit.text(this, OrbitText.get(R.string.ui_run_history_addf32, "Run history"), 25, UiKit.TEXT, true));
+        titles.addView(UiKit.text(this, OrbitText.get(R.string.ui_routines_61b7bb, "Routines"), 12, UiKit.MUTED, false));
         header.addView(titles, new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1));
         page.addView(header);
 
         TextView intro = UiKit.text(this,
-                "The most recent routine runs, whether they finished, and where a run stopped. "
-                        + "Orbit keeps the last " + RoutineRunHistoryStore.MAX_ENTRIES
-                        + " runs on this phone and records nothing from a routine's settings or extension credentials.",
+                OrbitText.get(R.string.ui_the_most_recent_routine_runs_whether_they_460cfa, "The most recent routine runs, whether they finished, and where a run stopped. ")
+                        + OrbitText.get(R.string.ui_orbit_keeps_the_last_3230c0, "Orbit keeps the last ") + RoutineRunHistoryStore.MAX_ENTRIES
+                        + OrbitText.get(R.string.ui_runs_on_this_phone_and_records_nothing_fro_58fc16, " runs on this phone and records nothing from a routine's settings or extension credentials."),
                 14, UiKit.MUTED, false);
         intro.setLineSpacing(0, 1.13f);
         LinearLayout.LayoutParams introLp = new LinearLayout.LayoutParams(
@@ -82,13 +82,13 @@ public class RoutineRunHistoryActivity extends Activity {
         introLp.setMargins(UiKit.dp(this, 2), UiKit.dp(this, 16), UiKit.dp(this, 2), UiKit.dp(this, 4));
         page.addView(intro, introLp);
 
-        page.addView(sectionTitle("RECENT RUNS"));
+        page.addView(sectionTitle(OrbitText.get(R.string.ui_recent_runs_777bec, "RECENT RUNS")));
 
         historyList = new LinearLayout(this);
         historyList.setOrientation(LinearLayout.VERTICAL);
         page.addView(historyList);
 
-        clearButton = secondaryButton("Clear run history");
+        clearButton = secondaryButton(OrbitText.get(R.string.ui_clear_run_history_d86c66, "Clear run history"));
         clearButton.setTextColor(UiKit.DANGER);
         clearButton.setOnClickListener(v -> confirmClear());
         LinearLayout.LayoutParams clearLp = new LinearLayout.LayoutParams(
@@ -105,10 +105,10 @@ public class RoutineRunHistoryActivity extends Activity {
         List<RoutineRunHistoryStore.Entry> entries = RoutineRunHistoryStore.list(this);
         if (entries.isEmpty()) {
             LinearLayout empty = card();
-            empty.addView(UiKit.text(this, "No runs yet", 16, UiKit.TEXT, true));
+            empty.addView(UiKit.text(this, OrbitText.get(R.string.ui_no_runs_yet_306b45, "No runs yet"), 16, UiKit.TEXT, true));
             TextView note = UiKit.text(this,
-                    "Run a routine from the Routines screen, a widget, a Quick Settings tile, or an "
-                            + "automatic trigger and it will appear here.",
+                    OrbitText.get(R.string.ui_run_a_routine_from_the_routines_screen_a_w_5a312c, "Run a routine from the Routines screen, a widget, a Quick Settings tile, or an ")
+                            + OrbitText.get(R.string.ui_automatic_trigger_and_it_will_appear_here_0730e2, "automatic trigger and it will appear here."),
                     13, UiKit.MUTED, false);
             note.setPadding(0, UiKit.dp(this, 6), 0, 0);
             empty.addView(note);
@@ -131,10 +131,10 @@ public class RoutineRunHistoryActivity extends Activity {
         name.setMaxLines(1);
         top.addView(name, new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1));
 
-        TextView badge = UiKit.text(this, entry.success ? "Succeeded" : "Failed", 11, tone, true);
+        TextView badge = UiKit.text(this, entry.success ? OrbitText.get(R.string.ui_succeeded_6d9a6f, "Succeeded") : OrbitText.get(R.string.ui_failed_031a8f, "Failed"), 11, tone, true);
         badge.setPadding(UiKit.dp(this, 9), UiKit.dp(this, 4), UiKit.dp(this, 9), UiKit.dp(this, 4));
         badge.setBackground(UiKit.outlined(UiKit.SURFACE_2, UiKit.withAlpha(tone, 110), 11, this));
-        badge.setContentDescription(entry.success ? "Run succeeded" : "Run failed");
+        badge.setContentDescription(entry.success ? OrbitText.get(R.string.ui_run_succeeded_a5acd1, "Run succeeded") : OrbitText.get(R.string.ui_run_failed_97fddf, "Run failed"));
         top.addView(badge);
         card.addView(top);
 
@@ -159,16 +159,16 @@ public class RoutineRunHistoryActivity extends Activity {
 
     private void confirmClear() {
         AlertDialog dialog = new AlertDialog.Builder(this)
-                .setTitle("Clear run history?")
-                .setMessage("This removes the recorded run history only. Your routines, pinned routines, "
-                        + "automatic triggers, and routine actions are not changed.")
-                .setNegativeButton("Cancel", null)
-                .setPositiveButton("Clear", (d, w) -> {
+                .setTitle(OrbitText.get(R.string.ui_clear_run_history_a223e4, "Clear run history?"))
+                .setMessage(OrbitText.get(R.string.ui_this_removes_the_recorded_run_history_only_cd9b1e, "This removes the recorded run history only. Your routines, pinned routines, ")
+                        + OrbitText.get(R.string.ui_automatic_triggers_and_routine_actions_are_d44768, "automatic triggers, and routine actions are not changed."))
+                .setNegativeButton(OrbitText.get(R.string.ui_cancel_19766e, "Cancel"), null)
+                .setPositiveButton(OrbitText.get(R.string.ui_clear_83b12c, "Clear"), (d, w) -> {
                     if (RoutineRunHistoryStore.clear(this)) {
                         refresh();
-                        Toast.makeText(this, "Run history cleared", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, OrbitText.get(R.string.ui_run_history_cleared_721389, "Run history cleared"), Toast.LENGTH_SHORT).show();
                     } else {
-                        Toast.makeText(this, "Could not clear run history.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, OrbitText.get(R.string.ui_could_not_clear_run_history_793ef6, "Could not clear run history."), Toast.LENGTH_SHORT).show();
                     }
                 }).create();
         UiKit.styleOrbitDialog(dialog, this, true);

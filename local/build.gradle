@@ -5,6 +5,8 @@ plugins {
 // The component is signed by exactly the same permanent Orbit release certificate as the main
 // app. That shared identity is what makes the signature-level bind permission meaningful, and
 // what lets each side verify the other before trusting it.
+apply from: rootProject.file('gradle/localized-signing.gradle')
+
 def orbitSigningPropertiesFile = rootProject.file('orbit-signing.properties')
 def orbitSigningProperties = new Properties()
 if (orbitSigningPropertiesFile.exists()) {
@@ -33,6 +35,8 @@ android {
 
     defaultConfig {
         applicationId 'com.orbit.assistant.local'
+        buildConfigField 'String', 'ORBIT_LOCAL_CERTIFICATE_SHA256', '"' + orbitLocalCertificate + '"'
+        buildConfigField 'boolean', 'BUNDLED_ORBIT_LOCAL', orbitBundledLocal.toString()
         minSdk 29
         targetSdk 36
         // Kept in lockstep with the main app for this release: Orbit installs the component built
@@ -94,6 +98,14 @@ afterEvaluate {
         doFirst {
             if (!orbitReleaseSigningReady) {
                 throw new GradleException('Release signing is not configured. Set all four ORBIT_RELEASE_* values in the ignored orbit-signing.properties file or environment variables.')
+            }
+            if (orbitBundledLocal) {
+                def store = java.security.KeyStore.getInstance(file(orbitReleaseStoreFile), orbitReleaseStorePassword.toCharArray())
+                def certificate = store.getCertificate(orbitReleaseKeyAlias)
+                def actualPin = java.security.MessageDigest.getInstance('SHA-256').digest(certificate.encoded).encodeHex().toString()
+                if (!actualPin.equalsIgnoreCase(orbitLocalCertificate)) {
+                    throw new GradleException('The localization certificate pin does not match the configured release signing key.')
+                }
             }
         }
     }

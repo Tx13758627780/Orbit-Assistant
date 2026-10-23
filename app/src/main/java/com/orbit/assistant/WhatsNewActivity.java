@@ -77,13 +77,13 @@ public final class WhatsNewActivity extends Activity {
         LinearLayout titles = new LinearLayout(this);
         titles.setOrientation(LinearLayout.VERTICAL);
         titles.setPadding(UiKit.dp(this, 13), 0, 0, 0);
-        titles.addView(UiKit.text(this, "What's New", 24, UiKit.TEXT, true));
+        titles.addView(UiKit.text(this, OrbitText.get(R.string.ui_what_s_new_561b17, "What's New"), 24, UiKit.TEXT, true));
         titles.addView(UiKit.text(this, "Recent stable Orbit releases", 13, UiKit.MUTED, false));
         header.addView(titles, new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1));
         page.addView(header);
 
         TextView current = UiKit.text(this,
-                "Current version: " + BuildConfig.VERSION_NAME + " (" + BuildConfig.VERSION_CODE + ")",
+                OrbitText.get(R.string.ui_current_version_70ebe0, "Current version: ") + BuildConfig.VERSION_NAME + " (" + BuildConfig.VERSION_CODE + ")",
                 13, UiKit.MUTED, false);
         LinearLayout.LayoutParams currentLp = new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -94,7 +94,7 @@ public final class WhatsNewActivity extends Activity {
         status.setLineSpacing(0, 1.1f);
         page.addView(status);
 
-        retry = secondaryButton("Retry");
+        retry = secondaryButton(OrbitText.get(R.string.ui_retry_942087, "Retry"));
         retry.setVisibility(View.GONE);
         retry.setOnClickListener(v -> loadNotes());
         LinearLayout.LayoutParams retryLp = new LinearLayout.LayoutParams(
@@ -298,7 +298,7 @@ public final class WhatsNewActivity extends Activity {
         button.setImageResource(R.drawable.ic_back);
         button.setImageTintList(ColorStateList.valueOf(UiKit.accent(this)));
         button.setBackground(UiKit.ripple(UiKit.SURFACE_2, UiKit.accent(this), 18, this));
-        button.setContentDescription("Back");
+        button.setContentDescription(OrbitText.get(R.string.ui_back_76900f, "Back"));
         button.setPadding(UiKit.dp(this, 10), UiKit.dp(this, 10), UiKit.dp(this, 10), UiKit.dp(this, 10));
         UiKit.pressScale(button);
         return button;

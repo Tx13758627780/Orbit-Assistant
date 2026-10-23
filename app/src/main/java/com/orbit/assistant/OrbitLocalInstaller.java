@@ -60,6 +60,50 @@ public final class OrbitLocalInstaller {
         void onError(String message);
     }
 
+    /** The bundled APK passes the same checksum, package, version and signer checks. */
+    private static void prepareBundled(Context context, Callback callback) throws Exception {
+        File output = null;
+        try {
+            JSONObject manifest;
+            try (InputStream input = context.getAssets().open("orbit-local/orbit-update.json")) {
+                ByteArrayOutputStream metadata = new ByteArrayOutputStream();
+                byte[] buffer = new byte[4096];
+                int count;
+                while ((count = input.read(buffer)) != -1) {
+                    if (metadata.size() + count > MAX_JSON_BYTES) {
+                        throw new InstallException("Component metadata is too large.");
+                    }
+                    metadata.write(buffer, 0, count);
+                }
+                manifest = new JSONObject(new String(metadata.toByteArray(), StandardCharsets.UTF_8));
+            }
+            Expected expected = Expected.from(manifest);
+            cleanup(context);
+            output = new File(componentDirectory(context), expected.assetName);
+            callback.onProgress(0);
+            try (InputStream input = context.getAssets().open("orbit-local/" + expected.assetName);
+                 FileOutputStream out = new FileOutputStream(output)) {
+                byte[] buffer = new byte[32768];
+                long total = 0;
+                int read;
+                while ((read = input.read(buffer)) != -1) {
+                    total += read;
+                    if (total > MAX_APK_BYTES) throw new InstallException("Component exceeds its size limit.");
+                    out.write(buffer, 0, read);
+                }
+                if (total != expected.sizeBytes) throw new InstallException("Component size does not match.");
+                out.getFD().sync();
+            }
+            callback.onVerifying();
+            verify(context, output, expected);
+            rememberComponentBytes(context, output.length());
+            callback.onReady(output);
+        } catch (Exception failure) {
+            if (output != null) safeDelete(output);
+            throw failure;
+        }
+    }
+
     /**
      * The component asset that belongs to this Orbit build.
      *
@@ -102,6 +146,10 @@ public final class OrbitLocalInstaller {
             File part = null;
             HttpURLConnection connection = null;
             try {
+                if (BuildConfig.BUNDLED_ORBIT_LOCAL) {
+                    prepareBundled(app, callback);
+                    return;
+                }
                 JSONObject manifest = readJson(
                         downloadUrl(releaseTag(), "orbit-update.json"), MAX_JSON_BYTES);
                 Expected expected = Expected.from(manifest);

@@ -147,10 +147,10 @@ public class MainActivity extends Activity {
         OrbitUpdater.clearPostUpdateVersion(this);
 
         AlertDialog dialog = new AlertDialog.Builder(this)
-                .setTitle("Orbit updated")
-                .setMessage("You're now on Orbit v" + version + ".")
-                .setNegativeButton("Done", null)
-                .setPositiveButton("What's New", (d, w) ->
+                .setTitle(OrbitText.get(R.string.ui_orbit_updated_07ab46, "Orbit updated"))
+                .setMessage(OrbitText.get(R.string.ui_you_re_now_on_orbit_v_e72462, "You're now on Orbit v") + version + ".")
+                .setNegativeButton(OrbitText.get(R.string.ui_done_11a676, "Done"), null)
+                .setPositiveButton(OrbitText.get(R.string.ui_what_s_new_561b17, "What's New"), (d, w) ->
                         startActivity(new Intent(this, WhatsNewActivity.class)))
                 .create();
         UiKit.styleOrbitDialog(dialog, this, false);
@@ -199,11 +199,11 @@ public class MainActivity extends Activity {
                 OrbitUpdater.wasNotified(this, release.versionCode)) return;
 
         AlertDialog dialog = new AlertDialog.Builder(this)
-                .setTitle("Orbit update available")
-                .setMessage("Orbit Assistant v" + release.versionName +
-                        " is ready to view. Orbit will not download it without your approval.")
-                .setNegativeButton("Later", null)
-                .setPositiveButton("View update", (ignored, which) ->
+                .setTitle(OrbitText.get(R.string.ui_orbit_update_available_007f25, "Orbit update available"))
+                .setMessage(OrbitText.get(R.string.ui_orbit_assistant_v_8b1325, "Orbit Assistant v") + release.versionName +
+                        OrbitText.get(R.string.ui_is_ready_to_view_orbit_will_not_download_i_bc15dd, " is ready to view. Orbit will not download it without your approval."))
+                .setNegativeButton(OrbitText.get(R.string.ui_later_73b6e4, "Later"), null)
+                .setPositiveButton(OrbitText.get(R.string.ui_view_update_97850a, "View update"), (ignored, which) ->
                         startActivity(new Intent(this, UpdateActivity.class)))
                 .create();
         foregroundUpdateDialog = dialog;
@@ -363,7 +363,7 @@ public class MainActivity extends Activity {
         LinearLayout titles = new LinearLayout(this);
         titles.setOrientation(LinearLayout.VERTICAL);
         titles.addView(UiKit.text(this, UiKit.appTitle(this), 26, UiKit.TEXT, true));
-        titles.addView(UiKit.text(this, "Chats", 13, UiKit.MUTED, false));
+        titles.addView(UiKit.text(this, OrbitText.get(R.string.ui_chats_ef5b40, "Chats"), 13, UiKit.MUTED, false));
         // Lelo mode only. The note is added rather than added-and-hidden, so with the mode off the
         // header keeps exactly the title and subtitle it always had, at the height it always had,
         // with no reserved gap and nothing extra in the accessibility tree.
@@ -376,7 +376,7 @@ public class MainActivity extends Activity {
         // is exactly the row it was before Deck existed. Deck itself stays reachable from Settings,
         // so turning this off can never strand the feature.
         if (Prefs.deckShortcut(this)) {
-            ImageButton deck = iconButton(com.orbit.assistant.R.drawable.ic_deck, "Open Orbit Deck");
+            ImageButton deck = iconButton(com.orbit.assistant.R.drawable.ic_deck, OrbitText.get(R.string.ui_open_orbit_deck_cb7553, "Open Orbit Deck"));
             deck.setOnClickListener(v -> {
                 startActivity(new Intent(this, DeckActivity.class));
                 UiKit.applyPageTransition(this);
@@ -394,7 +394,7 @@ public class MainActivity extends Activity {
         // left behind that looks tappable and does nothing.
         if (Prefs.vaultEnabled(this)) {
             ImageButton vault = iconButton(com.orbit.assistant.R.drawable.ic_vault,
-                    "Open Orbit Vault");
+                    OrbitText.get(R.string.ui_open_orbit_vault_146873, "Open Orbit Vault"));
             vault.setOnClickListener(v -> {
                 startActivity(new Intent(this, OrbitVaultActivity.class));
                 UiKit.applyPageTransition(this);
@@ -404,13 +404,13 @@ public class MainActivity extends Activity {
             vaultLp.rightMargin = UiKit.dp(this, 2);
             top.addView(vault, vaultLp);
         }
-        ImageButton settings = iconButton(com.orbit.assistant.R.drawable.ic_settings, "Settings");
+        ImageButton settings = iconButton(com.orbit.assistant.R.drawable.ic_settings, OrbitText.get(R.string.ui_settings_74a883, "Settings"));
         settings.setOnClickListener(v -> startActivity(new Intent(this, SettingsActivity.class)));
         top.addView(settings, new LinearLayout.LayoutParams(UiKit.dp(this, 48), UiKit.dp(this, 48)));
         root.addView(top);
 
         Button newChat = new Button(this);
-        newChat.setText("+  New chat");
+        newChat.setText(OrbitText.get(R.string.ui_new_chat_10ebc1, "+  New chat"));
         newChat.setTextColor(UiKit.onAccent(this));
         newChat.setTextSize(15);
         newChat.setAllCaps(false);
@@ -436,7 +436,7 @@ public class MainActivity extends Activity {
         searchIcon.setBackgroundColor(Color.TRANSPARENT);
         searchBox.addView(searchIcon, new LinearLayout.LayoutParams(UiKit.dp(this, 34), UiKit.dp(this, 34)));
         search = new EditText(this);
-        search.setHint("Search Orbit chats");
+        search.setHint(OrbitText.get(R.string.ui_search_orbit_chats_5a0838, "Search Orbit chats"));
         // Theme-derived rather than the fixed slate grey this hint used to be, so a Theme Studio
         // surface or a light theme gets a hint that reads on it instead of one tuned for one page.
         search.setHintTextColor(UiKit.MUTED);
@@ -472,7 +472,7 @@ public class MainActivity extends Activity {
         // scrim's depth and where the first heading comes to rest under it.
         content.setPadding(0, UiKit.dp(this, 4), 0, UiKit.dp(this, 40));
 
-        pendingHeader = sectionTitle("STILL THINKING");
+        pendingHeader = sectionTitle(OrbitText.get(R.string.ui_still_thinking_17e220, "STILL THINKING"));
         pendingList = new LinearLayout(this);
         pendingList.setOrientation(LinearLayout.VERTICAL);
         content.addView(pendingHeader);
@@ -524,11 +524,11 @@ public class MainActivity extends Activity {
         // outlined background supplies the outline the shadow is cast from.
         undoBar.setElevation(UiKit.dp(this, 8));
 
-        undoLabel = UiKit.text(this, "Chat deleted", 14, UiKit.TEXT, false);
+        undoLabel = UiKit.text(this, OrbitText.get(R.string.ui_chat_deleted_150bae, "Chat deleted"), 14, UiKit.TEXT, false);
         undoBar.addView(undoLabel, new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1));
 
         Button undo = new Button(this);
-        undo.setText("Undo");
+        undo.setText(OrbitText.get(R.string.ui_undo_a8283a, "Undo"));
         undo.setAllCaps(false);
         undo.setTextSize(14);
         undo.setTextColor(UiKit.accent(this));
@@ -536,7 +536,7 @@ public class MainActivity extends Activity {
         undo.setMinimumHeight(0);
         undo.setStateListAnimator(null);
         undo.setBackground(UiKit.ripple(UiKit.SURFACE_3, UiKit.accent(this), 14, this));
-        undo.setContentDescription("Undo deleting this chat");
+        undo.setContentDescription(OrbitText.get(R.string.ui_undo_deleting_this_chat_1bdc67, "Undo deleting this chat"));
         undo.setOnClickListener(v -> undoPendingDeletion());
         UiKit.pressScale(undo);
         LinearLayout.LayoutParams undoLp = new LinearLayout.LayoutParams(
@@ -565,7 +565,7 @@ public class MainActivity extends Activity {
             TextView t = UiKit.text(this, title, 15, UiKit.TEXT, true);
             card.addView(t);
             TextView state = UiKit.text(this,
-                    PendingRequestStore.RUNNING.equals(item.status) ? "Orbit is thinking..." : "Queued...",
+                    PendingRequestStore.RUNNING.equals(item.status) ? OrbitText.get(R.string.ui_orbit_is_thinking_d4418d, "Orbit is thinking...") : OrbitText.get(R.string.ui_queued_c0c05d, "Queued..."),
                     12, UiKit.accent(this), false);
             state.setPadding(0, UiKit.dp(this, 5), 0, 0);
             card.addView(state);
@@ -585,8 +585,8 @@ public class MainActivity extends Activity {
         if (pendingDeletionId != null) chats.removeIf(item -> pendingDeletionId.equals(item.id));
         if (chats.isEmpty()) {
             LinearLayout empty = card();
-            empty.addView(UiKit.text(this, q.trim().isEmpty() ? "No chats yet" : "No matching chats", 16, UiKit.TEXT, true));
-            TextView note = UiKit.text(this, q.trim().isEmpty() ? "Start a chat here or summon Orbit with the Side button." : "Try a different search.", 13, UiKit.MUTED, false);
+            empty.addView(UiKit.text(this, q.trim().isEmpty() ? OrbitText.get(R.string.ui_no_chats_yet_269208, "No chats yet") : OrbitText.get(R.string.ui_no_matching_chats_27e771, "No matching chats"), 16, UiKit.TEXT, true));
+            TextView note = UiKit.text(this, q.trim().isEmpty() ? OrbitText.get(R.string.ui_start_a_chat_here_or_summon_orbit_with_the_30dcdb, "Start a chat here or summon Orbit with the Side button.") : OrbitText.get(R.string.ui_try_a_different_search_2e6d79, "Try a different search."), 13, UiKit.MUTED, false);
             note.setPadding(0, UiKit.dp(this, 6), 0, 0);
             empty.addView(note);
             chatList.addView(empty, cardLp());
@@ -602,11 +602,11 @@ public class MainActivity extends Activity {
             (chat.pinned ? pinned : recent).add(chat);
         }
         if (!pinned.isEmpty()) {
-            chatList.addView(sectionTitle("PINNED"));
+            chatList.addView(sectionTitle(OrbitText.get(R.string.ui_pinned_feb050, "PINNED")));
             for (ConversationStore.Conversation chat : pinned) addChatRow(chat);
         }
         if (!recent.isEmpty()) {
-            chatList.addView(sectionTitle(pinned.isEmpty() ? "RECENT CHATS" : "RECENT"));
+            chatList.addView(sectionTitle(pinned.isEmpty() ? OrbitText.get(R.string.ui_recent_chats_88464b, "RECENT CHATS") : OrbitText.get(R.string.ui_recent_d5d42c, "RECENT")));
             for (ConversationStore.Conversation chat : recent) addChatRow(chat);
         }
     }
@@ -631,13 +631,13 @@ public class MainActivity extends Activity {
         boolean unresolvedFailure = failed != null && !chat.messages.isEmpty() &&
                 chat.messages.get(chat.messages.size() - 1).content != null &&
                 chat.messages.get(chat.messages.size() - 1).content.startsWith("Orbit could not finish");
-        String suffix = active ? "  •  Thinking" : unresolvedFailure ? "  •  Needs attention" : "";
+        String suffix = active ? OrbitText.get(R.string.ui_thinking_c42e27, "  •  Thinking") : unresolvedFailure ? OrbitText.get(R.string.ui_needs_attention_06e1b3, "  •  Needs attention") : "";
         int dateColor = active ? UiKit.accent(this) : unresolvedFailure ? Color.rgb(239,145,153) : UiKit.MUTED;
         TextView date = UiKit.text(this, when + suffix, 11, dateColor, false);
         text.addView(date);
         row.addView(text, new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1));
 
-        ImageButton more = iconButton(com.orbit.assistant.R.drawable.ic_more, "Chat options");
+        ImageButton more = iconButton(com.orbit.assistant.R.drawable.ic_more, OrbitText.get(R.string.ui_chat_options_d32044, "Chat options"));
         more.setOnClickListener(v -> showChatMenu(more, chat));
         row.addView(more, new LinearLayout.LayoutParams(UiKit.dp(this, 44), UiKit.dp(this, 44)));
         row.setOnClickListener(v -> openChat(chat.id));
@@ -678,7 +678,7 @@ public class MainActivity extends Activity {
         if (chatList != null) {
             UiKit.haptic(chatList, android.view.HapticFeedbackConstants.CONTEXT_CLICK);
             // Announced as a result, not as movement. Nothing is said while the finger is moving.
-            chatList.announceForAccessibility(nowPinned ? "Chat pinned" : "Chat unpinned");
+            chatList.announceForAccessibility(nowPinned ? OrbitText.get(R.string.ui_chat_pinned_d9f522, "Chat pinned") : OrbitText.get(R.string.ui_chat_unpinned_e70a13, "Chat unpinned"));
         }
     }
 
@@ -722,8 +722,8 @@ public class MainActivity extends Activity {
         undoBar.setVisibility(View.VISIBLE);
         undoBar.setAlpha(1f);
         undoBar.setTranslationY(0f);
-        if (undoLabel != null) undoLabel.setText("Chat deleted");
-        undoBar.announceForAccessibility("Chat deleted. Undo is available.");
+        if (undoLabel != null) undoLabel.setText(OrbitText.get(R.string.ui_chat_deleted_150bae, "Chat deleted"));
+        undoBar.announceForAccessibility(OrbitText.get(R.string.ui_chat_deleted_undo_is_available_02bde1, "Chat deleted. Undo is available."));
         undoTimer.removeCallbacks(undoTimeout);
         undoTimer.postDelayed(undoTimeout, UNDO_WINDOW_MS);
         applyUndoRoom(true);
@@ -794,7 +794,7 @@ public class MainActivity extends Activity {
         refreshChats();
         if (chatList != null) {
             UiKit.haptic(chatList, android.view.HapticFeedbackConstants.CONTEXT_CLICK);
-            chatList.announceForAccessibility("Chat restored");
+            chatList.announceForAccessibility(OrbitText.get(R.string.ui_chat_restored_488c5c, "Chat restored"));
         }
     }
 
@@ -817,7 +817,7 @@ public class MainActivity extends Activity {
      */
     private void showChatMenu(View anchor, ConversationStore.Conversation chat) {
         boolean pinned = chat.pinned;
-        String[] actions = {"Rename", pinned ? "Unpin" : "Pin", "Delete"};
+        String[] actions = {OrbitText.get(R.string.ui_rename_3064d7, "Rename"), pinned ? OrbitText.get(R.string.ui_unpin_ee3c71, "Unpin") : OrbitText.get(R.string.ui_pin_ff1cee, "Pin"), OrbitText.get(R.string.ui_delete_e2d0a5, "Delete")};
         UiKit.showOrbitMenu(this, anchor, actions, -1, (index, title) -> {
             if (index == 1) {
                 togglePinned(chat.id);
@@ -830,10 +830,10 @@ public class MainActivity extends Activity {
                 });
             } else {
                 AlertDialog dialog = new AlertDialog.Builder(this)
-                        .setTitle("Delete chat?")
-                        .setMessage("This removes the local Orbit conversation.")
-                        .setNegativeButton("Cancel", null)
-                        .setPositiveButton("Delete", (d,w) -> {
+                        .setTitle(OrbitText.get(R.string.ui_delete_chat_80aaa1, "Delete chat?"))
+                        .setMessage(OrbitText.get(R.string.ui_this_removes_the_local_orbit_conversation_6bfd7a, "This removes the local Orbit conversation."))
+                        .setNegativeButton(OrbitText.get(R.string.ui_cancel_19766e, "Cancel"), null)
+                        .setPositiveButton(OrbitText.get(R.string.ui_delete_e2d0a5, "Delete"), (d,w) -> {
                             // The same undoable path the swipe uses, so one action cannot be
                             // recoverable from one entry point and final from the other.
                             deleteChatWithUndo(chat.id);
@@ -919,16 +919,16 @@ public class MainActivity extends Activity {
         if (chat.messages.isEmpty()) {
             // A chat started by Continue in new chat has no messages yet, only what it carried.
             for (KeptContext item : chat.keptItems()) {
-                if (KeptContext.KIND_SUMMARY.equals(item.kind)) return "Continues an earlier chat";
+                if (KeptContext.KIND_SUMMARY.equals(item.kind)) return OrbitText.get(R.string.ui_continues_an_earlier_chat_aea927, "Continues an earlier chat");
             }
-            return "Empty chat";
+            return OrbitText.get(R.string.ui_empty_chat_4c57b8, "Empty chat");
         }
         AssistantClient.History h = chat.messages.get(chat.messages.size()-1);
         // Display only. The stored message keeps its Markdown and still renders in full when the
         // conversation is opened; this just spends the card's characters on words, not syntax.
         String body = OrbitMarkdown.toPreviewText(h.content, 100);
         if (body.isEmpty()) body = compact(h.content, 100);
-        return body + (h.screenAttached ? "  •  Screen attached" : "");
+        return body + (h.screenAttached ? OrbitText.get(R.string.ui_screen_attached_f32d80, "  •  Screen attached") : "");
     }
 
     private String compact(String text, int max) {

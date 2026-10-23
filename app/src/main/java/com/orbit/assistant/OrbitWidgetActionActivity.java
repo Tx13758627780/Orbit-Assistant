@@ -46,7 +46,7 @@ public final class OrbitWidgetActionActivity extends Activity {
             toggleAfterPermission();
         } else {
             Toast.makeText(this,
-                    "Camera access is needed for Orbit to control the flashlight.",
+                    OrbitText.get(R.string.ui_camera_access_is_needed_for_orbit_to_contr_33903e, "Camera access is needed for Orbit to control the flashlight."),
                     Toast.LENGTH_LONG).show();
             finish();
         }
@@ -55,7 +55,7 @@ public final class OrbitWidgetActionActivity extends Activity {
     private void toggleAfterPermission() {
         OrbitWidgetExecutor.toggleFlashlight(this, result -> {
             Toast.makeText(this, result == null
-                            ? "Flashlight action did not finish." : result.message,
+                            ? OrbitText.get(R.string.ui_flashlight_action_did_not_finish_614396, "Flashlight action did not finish.") : result.message,
                     Toast.LENGTH_SHORT).show();
             finish();
         });

@@ -27,6 +27,20 @@ public enum AiStrength {
         this.label = label;
     }
 
+    /** Display-only localization; id and the legacy English label stay stable for parsing. */
+    public String displayLabel() {
+        int resource;
+        switch (this) {
+            case LOW: resource = R.string.ui_meta_ai_strength_low; break;
+            case MEDIUM: resource = R.string.ui_meta_ai_strength_medium; break;
+            case HIGH: resource = R.string.ui_meta_ai_strength_high; break;
+            case XHIGH: resource = R.string.ui_meta_ai_strength_xhigh; break;
+            case MAX: resource = R.string.ui_meta_ai_strength_max; break;
+            default: resource = R.string.ui_meta_ai_strength_none;
+        }
+        return OrbitText.get(resource, label);
+    }
+
     /** The strength with this backend id or label, or null for anything else. */
     public static AiStrength fromId(String value) {
         if (value == null) return null;

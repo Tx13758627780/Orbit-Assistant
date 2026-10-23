@@ -111,10 +111,10 @@ public final class DiagnosticsActivity extends Activity {
 
         LinearLayout header = new LinearLayout(this);
         header.setGravity(Gravity.CENTER_VERTICAL);
-        Button back = button("Back");
+        Button back = button(OrbitText.get(R.string.ui_back_76900f, "Back"));
         back.setOnClickListener(v -> navigation.performBack());
         header.addView(back, new LinearLayout.LayoutParams(UiKit.dp(this, 90), UiKit.dp(this, 44)));
-        TextView title = UiKit.text(this, "Orbit Diagnostics", 24, UiKit.TEXT, true);
+        TextView title = UiKit.text(this, OrbitText.get(R.string.ui_orbit_diagnostics_517711, "Orbit Diagnostics"), 24, UiKit.TEXT, true);
         title.setPadding(UiKit.dp(this, 12), 0, 0, 0);
         header.addView(title, new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1));
         page.addView(header);
@@ -127,13 +127,13 @@ public final class DiagnosticsActivity extends Activity {
         // Developer and Beta builds only. See addProPreview.
         addProPreview();
 
-        TextView sectionsCaption = UiKit.text(this, "DETAILS", 11, UiKit.MUTED, true);
+        TextView sectionsCaption = UiKit.text(this, OrbitText.get(R.string.ui_details_14fdc0, "DETAILS"), 11, UiKit.MUTED, true);
         sectionsCaption.setLetterSpacing(0.09f);
         sectionsCaption.setPadding(UiKit.dp(this, 4), UiKit.dp(this, 10), 0, UiKit.dp(this, 2));
         page.addView(sectionsCaption);
 
         boolean anyOpen = !expanded.isEmpty();
-        toggleAll = quietButton(anyOpen ? "Collapse all" : "Expand all");
+        toggleAll = quietButton(anyOpen ? OrbitText.get(R.string.ui_collapse_all_25f7b3, "Collapse all") : OrbitText.get(R.string.ui_expand_all_a3e586, "Expand all"));
         toggleAll.setOnClickListener(v -> {
             if (expanded.isEmpty()) for (Section s : sections()) expanded.add(s.title);
             else expanded.clear();
@@ -152,38 +152,38 @@ public final class DiagnosticsActivity extends Activity {
         View planner = rawPlannerCard();
         if (planner != null) page.addView(planner, cardLp());
 
-        Button copySummary = button("Copy summary");
+        Button copySummary = button(OrbitText.get(R.string.ui_copy_summary_aefca8, "Copy summary"));
         copySummary.setOnClickListener(v ->
-                copy("Orbit diagnostics summary", summaryReport(), "Summary copied"));
+                copy(OrbitText.get(R.string.ui_orbit_diagnostics_summary_f72c96, "Orbit diagnostics summary"), summaryReport(), OrbitText.get(R.string.ui_summary_copied_03f165, "Summary copied")));
         page.addView(copySummary, buttonLp(0));
 
-        Button copyFull = button("Copy full diagnostics");
+        Button copyFull = button(OrbitText.get(R.string.ui_copy_full_diagnostics_f77057, "Copy full diagnostics"));
         copyFull.setOnClickListener(v ->
-                copy("Orbit diagnostics", fullReport(), "Full diagnostics copied"));
+                copy(OrbitText.get(R.string.ui_orbit_diagnostics_c8a737, "Orbit diagnostics"), fullReport(), OrbitText.get(R.string.ui_full_diagnostics_copied_108294, "Full diagnostics copied")));
         page.addView(copyFull, buttonLp(10));
 
         // Composer/input-method trace for diagnosing typing failures on real hardware. Records
         // state transitions only, never message content. Reproduce the problem, then copy this.
-        Button copyTyping = button("Copy typing diagnostics");
+        Button copyTyping = button(OrbitText.get(R.string.ui_copy_typing_diagnostics_e256f8, "Copy typing diagnostics"));
         copyTyping.setOnClickListener(v ->
-                copy("Orbit typing diagnostics", ComposerTrace.report(), "Typing diagnostics copied"));
+                copy(OrbitText.get(R.string.ui_orbit_typing_diagnostics_9ff24f, "Orbit typing diagnostics"), ComposerTrace.report(), OrbitText.get(R.string.ui_typing_diagnostics_copied_75dd63, "Typing diagnostics copied")));
         page.addView(copyTyping, buttonLp(10));
 
         // Persistent Side-button launch trace. Unlike the typing trace this survives process death
         // and reboots, because the failure it exists for may end the process before anyone can get
         // here. Lifecycle milestones and state only, never conversation or screen content.
-        Button copyOverlay = button("Copy overlay launch diagnostics");
-        copyOverlay.setOnClickListener(v -> copy("Orbit overlay launch diagnostics",
-                OverlayLaunchTrace.report(this), "Overlay launch diagnostics copied"));
+        Button copyOverlay = button(OrbitText.get(R.string.ui_copy_overlay_launch_diagnostics_fc967b, "Copy overlay launch diagnostics"));
+        copyOverlay.setOnClickListener(v -> copy(OrbitText.get(R.string.ui_orbit_overlay_launch_diagnostics_e6f948, "Orbit overlay launch diagnostics"),
+                OverlayLaunchTrace.report(this), OrbitText.get(R.string.ui_overlay_launch_diagnostics_copied_4f875b, "Overlay launch diagnostics copied")));
         page.addView(copyOverlay, buttonLp(10));
 
         // The Rich Answers trace, which is far too long for the full report and is exactly what
         // somebody needs after a visual answer came back without a picture. Stage transitions,
         // hosts, statuses and sizes only - never the question that was asked or the answer given.
-        Button copyRich = button("Copy Rich Answers diagnostics");
-        copyRich.setOnClickListener(v -> copy("Orbit Rich Answers diagnostics",
+        Button copyRich = button(OrbitText.get(R.string.ui_copy_rich_answers_diagnostics_be4ad5, "Copy Rich Answers diagnostics"));
+        copyRich.setOnClickListener(v -> copy(OrbitText.get(R.string.ui_orbit_rich_answers_diagnostics_fe049c, "Orbit Rich Answers diagnostics"),
                 RichAnswerTrace.report(this) + "\n\nHosted search\n" + hostedSearch(),
-                "Rich Answers diagnostics copied"));
+                OrbitText.get(R.string.ui_rich_answers_diagnostics_copied_1e6a58, "Rich Answers diagnostics copied")));
         page.addView(copyRich, buttonLp(10));
     }
 
@@ -204,7 +204,7 @@ public final class DiagnosticsActivity extends Activity {
      */
     private LinearLayout overviewCard() {
         LinearLayout card = card();
-        Section section = new Section("Overview", overview());
+        Section section = new Section(OrbitText.get(R.string.ui_overview_d4b1ea, "Overview"), overview());
 
         LinearLayout head = new LinearLayout(this);
         head.setGravity(Gravity.CENTER_VERTICAL);
@@ -253,21 +253,21 @@ public final class DiagnosticsActivity extends Activity {
      */
     private String healthLine() {
         String error = DiagnosticStore.currentError(this);
-        if (error.isEmpty()) return "Status: OK";
+        if (error.isEmpty()) return OrbitText.get(R.string.ui_status_ok_27aac1, "Status: OK");
         long at = DiagnosticStore.prefs(this).getLong("error_updated", 0L);
-        return "Last error: " + error + (at == 0L ? "" : " (" + ageLabel(at) + ")");
+        return OrbitText.get(R.string.ui_last_error_dd8766, "Last error: ") + error + (at == 0L ? "" : " (" + ageLabel(at) + ")");
     }
 
     /** Compact "how long ago", for a line that has to stay one line. */
     private static String ageLabel(long whenMs) {
         long age = Math.max(0L, System.currentTimeMillis() - whenMs);
         long mins = age / 60000L;
-        if (mins < 1) return "just now";
-        if (mins < 60) return mins + " min ago";
+        if (mins < 1) return OrbitText.get(R.string.ui_just_now_7ddb44, "just now");
+        if (mins < 60) return mins + OrbitText.get(R.string.ui_min_ago_c5fad2, " min ago");
         long hours = mins / 60L;
-        if (hours < 24) return hours + (hours == 1 ? " hour ago" : " hours ago");
+        if (hours < 24) return hours + (hours == 1 ? OrbitText.get(R.string.ui_hour_ago_9a8a29, " hour ago") : OrbitText.get(R.string.ui_hours_ago_9a06b5, " hours ago"));
         long days = hours / 24L;
-        return days + (days == 1 ? " day ago" : " days ago");
+        return days + (days == 1 ? OrbitText.get(R.string.ui_day_ago_d7b6ad, " day ago") : OrbitText.get(R.string.ui_days_ago_afb7f2, " days ago"));
     }
 
     // ---- the Orbit Pro preview override -----------------------------------------------------------
@@ -290,7 +290,7 @@ public final class DiagnosticsActivity extends Activity {
     private void addProPreview() {
         if (!OrbitProEntitlement.previewAvailable()) return;
 
-        TextView caption = UiKit.text(this, "ORBIT PRO PREVIEW", 11, UiKit.MUTED, true);
+        TextView caption = UiKit.text(this, OrbitText.get(R.string.ui_orbit_pro_preview_07932d, "ORBIT PRO PREVIEW"), 11, UiKit.MUTED, true);
         caption.setLetterSpacing(0.09f);
         caption.setPadding(UiKit.dp(this, 4), UiKit.dp(this, 14), 0, UiKit.dp(this, 2));
         page.addView(caption);
@@ -323,11 +323,11 @@ public final class DiagnosticsActivity extends Activity {
 
         proPreviewUpdate = () -> {
             String selected = Prefs.proPreview(this);
-            state.setText("Selected: " + Prefs.proPreviewLabel(selected)
+            state.setText(OrbitText.get(R.string.ui_selected_1f153f, "Selected: ") + Prefs.proPreviewLabel(selected)
                     + "\nEffective: " + OrbitProEntitlement.status(this));
             styleChoice(free, Prefs.PRO_PREVIEW_FREE.equals(selected));
             styleChoice(pro, Prefs.PRO_PREVIEW_PRO.equals(selected));
-            if (overviewBody != null) overviewBody.setText(bodyText(new Section("Overview", overview())));
+            if (overviewBody != null) overviewBody.setText(bodyText(new Section(OrbitText.get(R.string.ui_overview_d4b1ea, "Overview"), overview())));
         };
         proPreviewUpdate.run();
 
@@ -361,7 +361,7 @@ public final class DiagnosticsActivity extends Activity {
                     UiKit.withAlpha(UiKit.accent(this), 90), UiKit.accent(this), 16, this));
             choice.setTextColor(UiKit.TEXT);
         }
-        choice.setContentDescription(choice.getText() + (selected ? ", selected" : ""));
+        choice.setContentDescription(choice.getText() + (selected ? OrbitText.get(R.string.ui_selected_bd44f3, ", selected") : ""));
         choice.setSelected(selected);
     }
 
@@ -377,20 +377,20 @@ public final class DiagnosticsActivity extends Activity {
     private List<Section> sections() {
         SharedPreferences d = DiagnosticStore.prefs(this);
         List<Section> sections = new ArrayList<>();
-        sections.add(new Section("Request flow", requestFlow(d)));
-        sections.add(new Section("Thinking updates", thinkingUpdates()));
-        sections.add(new Section("AI selection", aiSelection(d)));
-        sections.add(new Section("Screen & app context", screenContext(d)));
-        sections.add(new Section("Memory", memory()));
-        sections.add(new Section("Calendar", CalendarDiagnostics.body(this)));
-        sections.add(new Section("Rich Answers", RichAnswerTrace.body(this)));
-        sections.add(new Section("Hosted search", hostedSearch()));
-        sections.add(new Section("Orbit Local", orbitLocal(d)));
-        sections.add(new Section("Actions & utilities", actionsAndUtilities(d)));
-        sections.add(new Section("Routines", routines(d)));
-        sections.add(new Section("Orbit Deck", deck(d)));
-        sections.add(new Section("Gestures", gestures(d)));
-        sections.add(new Section("Advanced", advanced()));
+        sections.add(new Section(OrbitText.get(R.string.ui_request_flow_55dc34, "Request flow"), requestFlow(d)));
+        sections.add(new Section(OrbitText.get(R.string.ui_thinking_updates_1f86f3, "Thinking updates"), thinkingUpdates()));
+        sections.add(new Section(OrbitText.get(R.string.ui_ai_selection_49c0b7, "AI selection"), aiSelection(d)));
+        sections.add(new Section(OrbitText.get(R.string.ui_screen_app_context_3cf7aa, "Screen & app context"), screenContext(d)));
+        sections.add(new Section(OrbitText.get(R.string.ui_memory_c3963a, "Memory"), memory()));
+        sections.add(new Section(OrbitText.get(R.string.ui_calendar_d5d0a3, "Calendar"), CalendarDiagnostics.body(this)));
+        sections.add(new Section(OrbitText.get(R.string.ui_rich_answers_c8d3b6, "Rich Answers"), RichAnswerTrace.body(this)));
+        sections.add(new Section(OrbitText.get(R.string.ui_hosted_search_f228d5, "Hosted search"), hostedSearch()));
+        sections.add(new Section(OrbitText.get(R.string.ui_orbit_local_bafd6d, "Orbit Local"), orbitLocal(d)));
+        sections.add(new Section(OrbitText.get(R.string.ui_actions_utilities_27419a, "Actions & utilities"), actionsAndUtilities(d)));
+        sections.add(new Section(OrbitText.get(R.string.ui_routines_61b7bb, "Routines"), routines(d)));
+        sections.add(new Section(OrbitText.get(R.string.ui_orbit_deck_9ba2c9, "Orbit Deck"), deck(d)));
+        sections.add(new Section(OrbitText.get(R.string.ui_gestures_19f425, "Gestures"), gestures(d)));
+        sections.add(new Section(OrbitText.get(R.string.ui_advanced_9f088d, "Advanced"), advanced()));
         return sections;
     }
 
@@ -403,7 +403,7 @@ public final class DiagnosticsActivity extends Activity {
         head.setClickable(true);
         head.setFocusable(true);
         head.setBackground(UiKit.ripple(Color.TRANSPARENT, UiKit.accent(this), 12, this));
-        head.setContentDescription(section.title + (open ? ", expanded" : ", collapsed"));
+        head.setContentDescription(section.title + (open ? OrbitText.get(R.string.ui_expanded_5590eb, ", expanded") : OrbitText.get(R.string.ui_collapsed_b41e55, ", collapsed")));
         TextView label = UiKit.text(this, section.title, 15, UiKit.TEXT, true);
         head.addView(label, new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1));
         // Its own target inside the header. A child that handles the tap consumes it, so Copy
@@ -428,13 +428,13 @@ public final class DiagnosticsActivity extends Activity {
     }
 
     private void updateToggleAll() {
-        toggleAll.setText(expanded.isEmpty() ? "Expand all" : "Collapse all");
+        toggleAll.setText(expanded.isEmpty() ? OrbitText.get(R.string.ui_expand_all_a3e586, "Expand all") : OrbitText.get(R.string.ui_collapse_all_25f7b3, "Collapse all"));
     }
 
     private void updateSection(LinearLayout card, View head, TextView chevron, Section section) {
         boolean open = expanded.contains(section.title);
         chevron.setText(open ? "▾" : "▸");
-        head.setContentDescription(section.title + (open ? ", expanded" : ", collapsed"));
+        head.setContentDescription(section.title + (open ? OrbitText.get(R.string.ui_expanded_5590eb, ", expanded") : OrbitText.get(R.string.ui_collapsed_b41e55, ", collapsed")));
         if (open && card.getChildCount() == 1) {
             TextView body = UiKit.text(this, bodyText(currentSection(section)), 13, UiKit.TEXT, false);
             body.setTextIsSelectable(true);
@@ -447,7 +447,7 @@ public final class DiagnosticsActivity extends Activity {
     }
 
     private Section currentSection(Section fallback) {
-        if ("Overview".equals(fallback.title)) return new Section("Overview", overview());
+        if (OrbitText.get(R.string.ui_overview_d4b1ea, "Overview").equals(fallback.title)) return new Section(OrbitText.get(R.string.ui_overview_d4b1ea, "Overview"), overview());
         for (Section candidate : sections()) if (candidate.title.equals(fallback.title)) return candidate;
         return fallback;
     }
@@ -460,7 +460,7 @@ public final class DiagnosticsActivity extends Activity {
      * empty paste.
      */
     private static String bodyText(Section section) {
-        return section.body.trim().isEmpty() ? "Nothing recorded yet." : section.body;
+        return section.body.trim().isEmpty() ? OrbitText.get(R.string.ui_nothing_recorded_yet_17f000, "Nothing recorded yet.") : section.body;
     }
 
     /** Exactly one section, titled, and nothing either side of it. */
@@ -481,16 +481,16 @@ public final class DiagnosticsActivity extends Activity {
      * control and stays out of every generic copy path.
      */
     private TextView copyControl(Section section) {
-        TextView copy = UiKit.text(this, "Copy", 12, UiKit.accent(this), false);
+        TextView copy = UiKit.text(this, OrbitText.get(R.string.ui_copy_e21f93, "Copy"), 12, UiKit.accent(this), false);
         copy.setGravity(Gravity.CENTER);
         copy.setClickable(true);
         copy.setFocusable(true);
         copy.setBackground(UiKit.rippleOutlined(Color.TRANSPARENT,
                 UiKit.withAlpha(UiKit.accent(this), 90), UiKit.accent(this), 14, this));
-        copy.setContentDescription("Copy " + section.title + " diagnostics");
+        copy.setContentDescription(OrbitText.get(R.string.ui_copy_26dd02, "Copy ") + section.title + OrbitText.get(R.string.ui_diagnostics_e0336f, " diagnostics"));
         copy.setOnClickListener(v -> copy("Orbit diagnostics — " + section.title,
                 sectionReport(section.title, currentSection(section).body),
-                section.title + " diagnostics copied"));
+                section.title + OrbitText.get(R.string.ui_diagnostics_copied_09f095, " diagnostics copied")));
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
                 UiKit.dp(this, 62), UiKit.dp(this, 34));
         lp.leftMargin = UiKit.dp(this, 8);
@@ -529,7 +529,7 @@ public final class DiagnosticsActivity extends Activity {
     private View rawPlannerCard() {
         String raw = DiagnosticStore.prefs(this).getString("plan_raw", "");
         if (raw == null || raw.trim().isEmpty()) return null;
-        boolean open = expanded.contains(RAW_PLANNER);
+        boolean open = expanded.contains(OrbitText.get(R.string.ui_raw_planner_response_e64ff3, RAW_PLANNER));
         LinearLayout card = card();
 
         LinearLayout head = new LinearLayout(this);
@@ -537,12 +537,12 @@ public final class DiagnosticsActivity extends Activity {
         head.setClickable(true);
         head.setFocusable(true);
         head.setBackground(UiKit.ripple(Color.TRANSPARENT, UiKit.accent(this), 12, this));
-        head.setContentDescription(RAW_PLANNER + (open ? ", expanded" : ", collapsed"));
+        head.setContentDescription(OrbitText.get(R.string.ui_raw_planner_response_e64ff3, RAW_PLANNER) + (open ? OrbitText.get(R.string.ui_expanded_5590eb, ", expanded") : OrbitText.get(R.string.ui_collapsed_b41e55, ", collapsed")));
         LinearLayout labels = new LinearLayout(this);
         labels.setOrientation(LinearLayout.VERTICAL);
-        labels.addView(UiKit.text(this, RAW_PLANNER, 15, UiKit.TEXT, true));
+        labels.addView(UiKit.text(this, OrbitText.get(R.string.ui_raw_planner_response_e64ff3, RAW_PLANNER), 15, UiKit.TEXT, true));
         TextView note = UiKit.text(this,
-                "May contain your routine wording. Not included in either copied report.",
+                OrbitText.get(R.string.ui_may_contain_your_routine_wording_not_inclu_2327ed, "May contain your routine wording. Not included in either copied report."),
                 11, UiKit.MUTED, false);
         note.setPadding(0, UiKit.dp(this, 2), 0, 0);
         labels.addView(note);
@@ -551,7 +551,7 @@ public final class DiagnosticsActivity extends Activity {
         chevron.setPadding(UiKit.dp(this, 8), 0, UiKit.dp(this, 2), 0);
         head.addView(chevron);
         head.setOnClickListener(v -> {
-            if (!expanded.remove(RAW_PLANNER)) expanded.add(RAW_PLANNER);
+            if (!expanded.remove(OrbitText.get(R.string.ui_raw_planner_response_e64ff3, RAW_PLANNER))) expanded.add(OrbitText.get(R.string.ui_raw_planner_response_e64ff3, RAW_PLANNER));
             populate();
         });
         card.addView(head, new LinearLayout.LayoutParams(
@@ -563,9 +563,9 @@ public final class DiagnosticsActivity extends Activity {
             body.setLineSpacing(0, 1.15f);
             body.setPadding(0, UiKit.dp(this, 8), 0, UiKit.dp(this, 10));
             card.addView(body);
-            Button copyRaw = button("Copy raw planner response");
-            copyRaw.setOnClickListener(v -> copy("Orbit raw planner response", raw,
-                    "Raw planner response copied"));
+            Button copyRaw = button(OrbitText.get(R.string.ui_copy_raw_planner_response_1add68, "Copy raw planner response"));
+            copyRaw.setOnClickListener(v -> copy(OrbitText.get(R.string.ui_orbit_raw_planner_response_541ec0, "Orbit raw planner response"), raw,
+                    OrbitText.get(R.string.ui_raw_planner_response_copied_cc12e5, "Raw planner response copied")));
             card.addView(copyRaw, new LinearLayout.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT, UiKit.dp(this, 44)));
         }
@@ -588,8 +588,8 @@ public final class DiagnosticsActivity extends Activity {
 
     private String accountStatus() {
         ChatGptAuth.AccountInfo account = ChatGptAuth.getAccountInfo(this);
-        return account == null ? "Not signed in"
-                : "Connected" + (account.plan.isEmpty() ? "" : " • " + account.plan);
+        return account == null ? OrbitText.get(R.string.ui_not_signed_in_491fc9, "Not signed in")
+                : OrbitText.get(R.string.ui_connected_229655, "Connected") + (account.plan.isEmpty() ? "" : " • " + account.plan);
     }
 
     /**
@@ -603,12 +603,12 @@ public final class DiagnosticsActivity extends Activity {
     private String requestFlow(SharedPreferences d) {
         long ignoredAt = d.getLong("completion_ignored_at", 0L);
         String ignoredDetail = ignoredAt == 0
-                ? "None recorded"
+                ? OrbitText.get(R.string.ui_none_recorded_aab6c5, "None recorded")
                 : d.getString("completion_ignored_detail", "") + " · "
                         + DateFormat.getTimeInstance().format(new Date(ignoredAt));
         long supersededAt = d.getLong("worker_superseded_at", 0L);
         String supersededDetail = supersededAt == 0
-                ? "None recorded"
+                ? OrbitText.get(R.string.ui_none_recorded_aab6c5, "None recorded")
                 : d.getString("worker_superseded_detail", "") + " · "
                         + DateFormat.getTimeInstance().format(new Date(supersededAt));
         return "\n  Accepted submissions: " + d.getInt("submissions_accepted", 0) +
@@ -648,7 +648,7 @@ public final class DiagnosticsActivity extends Activity {
                 "\n  Backend has produced a summary: " + ReasoningSummarySupport.stateLabel(this) +
                 "\n  Last thinking source: " + ReasoningSummarySupport.lastSource(this) +
                 "\n  Thinking updates received: " + ReasoningSummarySupport.updatesReceived(this) +
-                "\n  Last update at: " + (lastAt == 0 ? "Never"
+                "\n  Last update at: " + (lastAt == 0 ? OrbitText.get(R.string.ui_never_6300ef, "Never")
                         : DateFormat.getDateTimeInstance().format(new Date(lastAt))) +
                 "\n  Last status handed over to an answer: "
                         + (ReasoningSummarySupport.lastRequestReachedAnswer(this) ? "yes" : "no");
@@ -699,7 +699,7 @@ public final class DiagnosticsActivity extends Activity {
         if (unavailable > 0L) {
             out.append("\n  Last unavailable model: ")
                .append(orNone(d.getString("model_unavailable", "")))
-               .append(" at ").append(DateFormat.getDateTimeInstance().format(new Date(unavailable)));
+               .append(OrbitText.get(R.string.ui_at_086a51, " at ")).append(DateFormat.getDateTimeInstance().format(new Date(unavailable)));
         }
         out.append(richImageReport());
         return out.toString();
@@ -720,7 +720,7 @@ public final class DiagnosticsActivity extends Activity {
         String outcome = RichAnswerImageStatus.lastOutcome(this);
         if (outcome == null || outcome.isEmpty()) return "";
         long at = RichAnswerImageStatus.lastUpdated(this);
-        String when = at > 0L ? " at " + DateFormat.getDateTimeInstance().format(new Date(at)) : "";
+        String when = at > 0L ? OrbitText.get(R.string.ui_at_086a51, " at ") + DateFormat.getDateTimeInstance().format(new Date(at)) : "";
         return "\n  Last rich image: " + outcome + when;
     }
 
@@ -736,7 +736,7 @@ public final class DiagnosticsActivity extends Activity {
                 "\n  Context source: " + (d.getBoolean("context_profile_override", false)
                         ? "App profile override" : "Automatic classifier") +
                 "\n  Context signal: " + orNone(d.getString("context_reason", "")) +
-                "\n  Last screen context: " + (screenUpdated == 0 ? "Never"
+                "\n  Last screen context: " + (screenUpdated == 0 ? OrbitText.get(R.string.ui_never_6300ef, "Never")
                         : DateFormat.getDateTimeInstance().format(new Date(screenUpdated))) +
                 "\n  Custom app profiles: " + AppProfileStore.list(this).size() +
                 "\n  App behavior source: " + orNone(d.getString("app_profile_source", "")) +
@@ -949,7 +949,7 @@ public final class DiagnosticsActivity extends Activity {
                         ? "\n  Model: component not reachable"
                         : "\n  Model state: " + status.modelState +
                           "\n  Model bytes present: " + status.modelBytes
-                                  + " of " + status.modelSizeBytes +
+                                  + OrbitText.get(R.string.ui_of_a4282e, " of ") + status.modelSizeBytes +
                           "\n  Model bytes on disk: " + status.modelTotalBytes +
                           "\n  WorkManager state: " + (status.workState.isEmpty()
                                   ? "not reported" : status.workState) +
@@ -975,7 +975,7 @@ public final class DiagnosticsActivity extends Activity {
         return "\n  Last local request path: " + blankAs(d.getString("local_request_path", ""), "none") +
                 "\n  Last local outcome: " + blankAs(d.getString("local_request_outcome", ""), "none") +
                 "\n  Context sources: " + blankAs(d.getString("local_request_sources", ""), "none") +
-                "\n  Estimated prompt: " + d.getInt("local_request_tokens", 0) + " of "
+                "\n  Estimated prompt: " + d.getInt("local_request_tokens", 0) + OrbitText.get(R.string.ui_of_a4282e, " of ")
                         + d.getInt("local_request_budget", 0) + " tokens" +
                 "\n  Evidence reduced to excerpts: " + d.getBoolean("local_request_trimmed", false) +
                 "\n  Time to first words: " + (first < 0L ? "none" : first + " ms") +
@@ -1176,7 +1176,7 @@ public final class DiagnosticsActivity extends Activity {
         int duplicates = d.getInt("completions_ignored_duplicate", 0);
         int superseded = d.getInt("worker_attempts_superseded", 0);
         int suppressed = d.getInt("submissions_suppressed", 0);
-        return "Orbit diagnostics summary" +
+        return OrbitText.get(R.string.ui_orbit_diagnostics_summary_f72c96, "Orbit diagnostics summary") +
                 "\nVersion: " + versionLabel() +
                 "\nProvider: " + AiProviders.active(this).displayName()
                         + " · " + accountStatus() +

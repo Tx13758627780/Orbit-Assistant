@@ -154,7 +154,7 @@ public final class OrbitSegmented extends LinearLayout {
             String label = i < labels.length ? labels[i] : "";
             String prefix = title.isEmpty() ? "" : title + ": ";
             segments.get(i).setContentDescription(
-                    prefix + label + (i == selected ? ", selected" : ""));
+                    prefix + label + (i == selected ? OrbitText.get(R.string.ui_selected_bd44f3, ", selected") : ""));
         }
     }
 }

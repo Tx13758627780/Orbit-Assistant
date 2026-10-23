@@ -117,8 +117,8 @@ final class OrbitLaunchSequenceView extends View {
         // Deliberately unnamed. The three orbiters used to be called Luna, Terra and Sol, which are
         // Orbit's Fast/Balanced/Deep model codenames, and on a real device that read as though
         // touching one changed the AI mode. Nothing here selects anything, so nothing here is named.
-        setContentDescription("Orbit launch sequence. A decorative animation you can nudge. "
-                + "Press Back to leave.");
+        setContentDescription(OrbitText.get(R.string.ui_orbit_launch_sequence_a_decorative_animati_46772c, "Orbit launch sequence. A decorative animation you can nudge. ")
+                + OrbitText.get(R.string.ui_press_back_to_leave_a9ff2b, "Press Back to leave."));
         for (int i = 0; i < bodies.length; i++) {
             Body body = new Body();
             // A fixed spread rather than a random one, so the scene opens looking composed.

@@ -82,14 +82,14 @@ public final class CapabilitiesActivity extends Activity {
 
         LinearLayout header = new LinearLayout(this);
         header.setGravity(Gravity.CENTER_VERTICAL);
-        ImageButton back = iconButton(R.drawable.ic_back, "Back");
+        ImageButton back = iconButton(R.drawable.ic_back, OrbitText.get(R.string.ui_back_76900f, "Back"));
         back.setOnClickListener(v -> navigation.performBack());
         header.addView(back, new LinearLayout.LayoutParams(UiKit.dp(this,48), UiKit.dp(this,48)));
 
         LinearLayout titles = new LinearLayout(this);
         titles.setOrientation(LinearLayout.VERTICAL);
-        titles.addView(UiKit.text(this, "Capabilities", 24, UiKit.TEXT, true));
-        titles.addView(UiKit.text(this, "Permissions & access", 12, UiKit.MUTED, false));
+        titles.addView(UiKit.text(this, OrbitText.get(R.string.ui_capabilities_9460f1, "Capabilities"), 24, UiKit.TEXT, true));
+        titles.addView(UiKit.text(this, OrbitText.get(R.string.ui_permissions_access_4ddc4a, "Permissions & access"), 12, UiKit.MUTED, false));
         LinearLayout.LayoutParams titleLp = new LinearLayout.LayoutParams(
                 0, ViewGroup.LayoutParams.WRAP_CONTENT, 1);
         titleLp.setMargins(UiKit.dp(this,14),0,0,0);
@@ -97,70 +97,70 @@ public final class CapabilitiesActivity extends Activity {
         page.addView(header);
 
         TextView intro = UiKit.text(this,
-                "See what Orbit can do now and manage the Android permissions or special access each capability needs.",
+                OrbitText.get(R.string.ui_see_what_orbit_can_do_now_and_manage_the_a_d88fce, "See what Orbit can do now and manage the Android permissions or special access each capability needs."),
                 13, UiKit.MUTED, false);
         intro.setPadding(UiKit.dp(this,4), UiKit.dp(this,14), UiKit.dp(this,4), UiKit.dp(this,4));
         page.addView(intro);
 
-        page.addView(section("VOICE BETA"));
+        page.addView(section(OrbitText.get(R.string.ui_voice_beta_934152, "VOICE BETA")));
         LinearLayout voice = card();
-        voice.addView(runtimePermissionRow("Microphone", Manifest.permission.RECORD_AUDIO, REQ_MICROPHONE));
-        voice.addView(status("Pause-friendly listening", Prefs.voicePauseFriendly(this)));
-        voice.addView(status("Spoken replies", Prefs.speak(this)));
-        voice.addView(status("Hands-free follow-ups", Prefs.autoListen(this)));
+        voice.addView(runtimePermissionRow(OrbitText.get(R.string.ui_microphone_186352, "Microphone"), Manifest.permission.RECORD_AUDIO, REQ_MICROPHONE));
+        voice.addView(status(OrbitText.get(R.string.ui_pause_friendly_listening_b79cb6, "Pause-friendly listening"), Prefs.voicePauseFriendly(this)));
+        voice.addView(status(OrbitText.get(R.string.ui_spoken_replies_9195d3, "Spoken replies"), Prefs.speak(this)));
+        voice.addView(status(OrbitText.get(R.string.ui_hands_free_follow_ups_0f1e4f, "Hands-free follow-ups"), Prefs.autoListen(this)));
         page.addView(voice, cardLp());
 
-        page.addView(section("CONTEXT"));
+        page.addView(section(OrbitText.get(R.string.ui_context_a8bf80, "CONTEXT")));
         LinearLayout context = card();
-        context.addView(status("Screen text", Prefs.screenContext(this)));
-        context.addView(status("Screenshots", Prefs.screenshot(this)));
+        context.addView(status(OrbitText.get(R.string.ui_screen_text_495381, "Screen text"), Prefs.screenContext(this)));
+        context.addView(status(OrbitText.get(R.string.ui_screenshots_067348, "Screenshots"), Prefs.screenshot(this)));
         TextView screenshotNote = UiKit.text(this,
-                "Visual context, previews, and screen-region selection.",
+                OrbitText.get(R.string.ui_visual_context_previews_and_screen_region_d0c0da, "Visual context, previews, and screen-region selection."),
                 11, UiKit.MUTED, false);
         screenshotNote.setPadding(UiKit.dp(this, 4), 0, 0, UiKit.dp(this, 7));
         context.addView(screenshotNote);
         context.addView(notificationAccessRow());
-        context.addView(runtimePermissionRow("Approximate location", Manifest.permission.ACCESS_COARSE_LOCATION, REQ_LOCATION));
-        context.addView(status("Per-app behavior", true));
+        context.addView(runtimePermissionRow(OrbitText.get(R.string.ui_approximate_location_a31621, "Approximate location"), Manifest.permission.ACCESS_COARSE_LOCATION, REQ_LOCATION));
+        context.addView(status(OrbitText.get(R.string.ui_per_app_behavior_18c11a, "Per-app behavior"), true));
         page.addView(context, cardLp());
 
-        page.addView(section("AI & PERSONALIZATION"));
+        page.addView(section(OrbitText.get(R.string.ui_ai_personalization_c9670d, "AI & PERSONALIZATION")));
         LinearLayout ai = card();
-        ai.addView(status("ChatGPT account", ChatGptAuth.getAccountInfo(this) != null));
-        ai.addView(status("Direct model and strength choice", true));
-        ai.addView(status("Orbit Memory", Prefs.memoryEnabled(this)));
-        ai.addView(status("Attachments & PDF", true));
+        ai.addView(status(OrbitText.get(R.string.ui_chatgpt_account_3a477c, "ChatGPT account"), ChatGptAuth.getAccountInfo(this) != null));
+        ai.addView(status(OrbitText.get(R.string.ui_direct_model_and_strength_choice_4d4a80, "Direct model and strength choice"), true));
+        ai.addView(status(OrbitText.get(R.string.ui_orbit_memory_05d7a8, "Orbit Memory"), Prefs.memoryEnabled(this)));
+        ai.addView(status(OrbitText.get(R.string.ui_attachments_pdf_e4de6e, "Attachments & PDF"), true));
         page.addView(ai, cardLp());
 
-        page.addView(section("DEVICE ACTIONS"));
+        page.addView(section(OrbitText.get(R.string.ui_device_actions_3f92d4, "DEVICE ACTIONS")));
         LinearLayout actions = card();
-        actions.addView(runtimePermissionRow("Flashlight control", Manifest.permission.CAMERA, REQ_CAMERA));
-        actions.addView(status("Timers & alarms", true));
-        actions.addView(status("Open apps", true));
-        actions.addView(runtimePermissionRow("Contact lookup", Manifest.permission.READ_CONTACTS, REQ_CONTACTS));
+        actions.addView(runtimePermissionRow(OrbitText.get(R.string.ui_flashlight_control_2b1b26, "Flashlight control"), Manifest.permission.CAMERA, REQ_CAMERA));
+        actions.addView(status(OrbitText.get(R.string.ui_timers_alarms_06528f, "Timers & alarms"), true));
+        actions.addView(status(OrbitText.get(R.string.ui_open_apps_1ec82e, "Open apps"), true));
+        actions.addView(runtimePermissionRow(OrbitText.get(R.string.ui_contact_lookup_e8d9da, "Contact lookup"), Manifest.permission.READ_CONTACTS, REQ_CONTACTS));
         // Orbit writes events itself once this is granted, rather than only opening the composer.
         // Nothing here requests it on its own; the row exists so the state is visible and
         // manageable, and Orbit still asks at the moment a Calendar action is confirmed.
-        actions.addView(runtimePermissionRow("Calendar events", Manifest.permission.WRITE_CALENDAR, REQ_CALENDAR));
-        actions.addView(status("Chained action engine", true));
-        actions.addView(specialAccessRow("Brightness control", true));
-        actions.addView(specialAccessRow("Do Not Disturb control", false));
-        actions.addView(status("Background completions", true));
+        actions.addView(runtimePermissionRow(OrbitText.get(R.string.ui_calendar_events_a0aa61, "Calendar events"), Manifest.permission.WRITE_CALENDAR, REQ_CALENDAR));
+        actions.addView(status(OrbitText.get(R.string.ui_chained_action_engine_347cbf, "Chained action engine"), true));
+        actions.addView(specialAccessRow(OrbitText.get(R.string.ui_brightness_control_fcfe68, "Brightness control"), true));
+        actions.addView(specialAccessRow(OrbitText.get(R.string.ui_do_not_disturb_control_eaafd1, "Do Not Disturb control"), false));
+        actions.addView(status(OrbitText.get(R.string.ui_background_completions_7ed92c, "Background completions"), true));
         page.addView(actions, cardLp());
 
-        page.addView(section("ROUTINE AUTOMATION"));
+        page.addView(section(OrbitText.get(R.string.ui_routine_automation_c10959, "ROUTINE AUTOMATION")));
         LinearLayout automation = card();
-        automation.addView(statusWithText("Time triggers", "Available", true));
+        automation.addView(statusWithText(OrbitText.get(R.string.ui_time_triggers_decf21, "Time triggers"), OrbitText.get(R.string.ui_available_e67444, "Available"), true));
         boolean locationTriggers = OrbitDistribution.supportsLocationTriggers();
-        automation.addView(statusWithText("Location triggers",
-                locationTriggers ? "Available" : "Not available", locationTriggers));
-        automation.addView(routineAutomationAccessRow("Precise timing", true));
+        automation.addView(statusWithText(OrbitText.get(R.string.ui_location_triggers_24a5d9, "Location triggers"),
+                locationTriggers ? OrbitText.get(R.string.ui_available_e67444, "Available") : OrbitText.get(R.string.ui_not_available_67a926, "Not available"), locationTriggers));
+        automation.addView(routineAutomationAccessRow(OrbitText.get(R.string.ui_precise_timing_ffd890, "Precise timing"), true));
         // No location setup row in the Play edition: there is no background location to set up.
         if (locationTriggers) automation.addView(locationAutomationAccessRow());
-        automation.addView(routineAutomationAccessRow("Trigger alerts", false));
+        automation.addView(routineAutomationAccessRow(OrbitText.get(R.string.ui_trigger_alerts_db53cd, "Trigger alerts"), false));
         TextView automationNote = UiKit.text(this, locationTriggers
-                ? "Precise timing uses Android's Alarms & reminders access for time triggers and Orbit reminders. Location triggers require precise plus background location, while Trigger alerts let Orbit hand off any automatic routine that needs a visible app or confirmation."
-                : "Precise timing uses Android's Alarms & reminders access for time triggers and Orbit reminders, while Trigger alerts let Orbit hand off any automatic routine that needs a visible app or confirmation. "
+                ? OrbitText.get(R.string.ui_precise_timing_uses_android_s_alarms_remin_32ed0b, "Precise timing uses Android's Alarms & reminders access for time triggers and Orbit reminders. Location triggers require precise plus background location, while Trigger alerts let Orbit hand off any automatic routine that needs a visible app or confirmation.")
+                : OrbitText.get(R.string.ui_precise_timing_uses_android_s_alarms_remin_ce903f, "Precise timing uses Android's Alarms & reminders access for time triggers and Orbit reminders, while Trigger alerts let Orbit hand off any automatic routine that needs a visible app or confirmation. ")
                         + OrbitDistribution.LOCATION_TRIGGERS_UNAVAILABLE,
                 12, UiKit.MUTED, false);
         automationNote.setPadding(0, UiKit.dp(this,10), 0, 0);
@@ -183,10 +183,10 @@ public final class CapabilitiesActivity extends Activity {
         TextView label = UiKit.text(this, name, 14, UiKit.TEXT, false);
         row.addView(label, new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1));
 
-        TextView state = UiKit.text(this, "Checking…", 12, UiKit.MUTED, true);
+        TextView state = UiKit.text(this, OrbitText.get(R.string.ui_checking_ec963f, "Checking…"), 12, UiKit.MUTED, true);
         row.addView(state);
 
-        Button manage = compactSetupButton("Set up");
+        Button manage = compactSetupButton(OrbitText.get(R.string.ui_set_up_4da10f, "Set up"));
         LinearLayout.LayoutParams manageLp = new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT, UiKit.dp(this, 36));
         manageLp.setMargins(UiKit.dp(this, 10), 0, 0, 0);
@@ -226,13 +226,13 @@ public final class CapabilitiesActivity extends Activity {
         row.setMinimumHeight(UiKit.dp(this, 48));
         row.setPadding(0, UiKit.dp(this, 2), 0, UiKit.dp(this, 2));
 
-        TextView label = UiKit.text(this, "Notification intelligence", 14, UiKit.TEXT, false);
+        TextView label = UiKit.text(this, OrbitText.get(R.string.ui_notification_intelligence_b32b4b, "Notification intelligence"), 14, UiKit.TEXT, false);
         row.addView(label, new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1));
 
-        notificationAccessState = UiKit.text(this, "Checking…", 12, UiKit.MUTED, true);
+        notificationAccessState = UiKit.text(this, OrbitText.get(R.string.ui_checking_ec963f, "Checking…"), 12, UiKit.MUTED, true);
         row.addView(notificationAccessState);
 
-        notificationAccessManage = compactSetupButton("Set up");
+        notificationAccessManage = compactSetupButton(OrbitText.get(R.string.ui_set_up_4da10f, "Set up"));
         LinearLayout.LayoutParams manageLp = new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT, UiKit.dp(this, 36));
         manageLp.setMargins(UiKit.dp(this, 10), 0, 0, 0);
@@ -255,19 +255,19 @@ public final class CapabilitiesActivity extends Activity {
 
     private void refreshRuntimeRow(TextView state, Button manage, boolean ready) {
         if (state != null) {
-            state.setText(ready ? "Ready" : "Needs access");
+            state.setText(ready ? OrbitText.get(R.string.ui_ready_5fa7aa, "Ready") : OrbitText.get(R.string.ui_needs_access_67b0e1, "Needs access"));
             state.setTextColor(ready ? UiKit.SUCCESS : UiKit.MUTED);
         }
-        if (manage != null) manage.setText(ready ? "Manage" : "Set up");
+        if (manage != null) manage.setText(ready ? OrbitText.get(R.string.ui_manage_5a2344, "Manage") : OrbitText.get(R.string.ui_set_up_4da10f, "Set up"));
     }
 
     private void refreshNotificationAccessRow() {
         boolean ready = NotificationAccess.enabled(this);
         if (notificationAccessState != null) {
-            notificationAccessState.setText(ready ? "Ready" : "Needs access");
+            notificationAccessState.setText(ready ? OrbitText.get(R.string.ui_ready_5fa7aa, "Ready") : OrbitText.get(R.string.ui_needs_access_67b0e1, "Needs access"));
             notificationAccessState.setTextColor(ready ? UiKit.SUCCESS : UiKit.MUTED);
         }
-        if (notificationAccessManage != null) notificationAccessManage.setText(ready ? "Manage" : "Set up");
+        if (notificationAccessManage != null) notificationAccessManage.setText(ready ? OrbitText.get(R.string.ui_manage_5a2344, "Manage") : OrbitText.get(R.string.ui_set_up_4da10f, "Set up"));
     }
 
     private LinearLayout specialAccessRow(String name, boolean brightness) {
@@ -279,10 +279,10 @@ public final class CapabilitiesActivity extends Activity {
         TextView label = UiKit.text(this, name, 14, UiKit.TEXT, false);
         row.addView(label, new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1));
 
-        TextView state = UiKit.text(this, "Checking…", 12, UiKit.MUTED, true);
+        TextView state = UiKit.text(this, OrbitText.get(R.string.ui_checking_ec963f, "Checking…"), 12, UiKit.MUTED, true);
         row.addView(state);
 
-        Button setup = compactSetupButton("Set up");
+        Button setup = compactSetupButton(OrbitText.get(R.string.ui_set_up_4da10f, "Set up"));
         LinearLayout.LayoutParams setupLp = new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT, UiKit.dp(this, 36));
         setupLp.setMargins(UiKit.dp(this, 10), 0, 0, 0);
@@ -310,10 +310,10 @@ public final class CapabilitiesActivity extends Activity {
         TextView label = UiKit.text(this, name, 14, UiKit.TEXT, false);
         row.addView(label, new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1));
 
-        TextView state = UiKit.text(this, "Checking…", 12, UiKit.MUTED, true);
+        TextView state = UiKit.text(this, OrbitText.get(R.string.ui_checking_ec963f, "Checking…"), 12, UiKit.MUTED, true);
         row.addView(state);
 
-        Button manage = compactSetupButton("Set up");
+        Button manage = compactSetupButton(OrbitText.get(R.string.ui_set_up_4da10f, "Set up"));
         LinearLayout.LayoutParams manageLp = new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT, UiKit.dp(this, 36));
         manageLp.setMargins(UiKit.dp(this, 10), 0, 0, 0);
@@ -339,13 +339,13 @@ public final class CapabilitiesActivity extends Activity {
         row.setMinimumHeight(UiKit.dp(this, 48));
         row.setPadding(0, UiKit.dp(this, 2), 0, UiKit.dp(this, 2));
 
-        TextView label = UiKit.text(this, "Location automation", 14, UiKit.TEXT, false);
+        TextView label = UiKit.text(this, OrbitText.get(R.string.ui_location_automation_3a5979, "Location automation"), 14, UiKit.TEXT, false);
         row.addView(label, new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1));
 
-        locationAutomationState = UiKit.text(this, "Checking…", 12, UiKit.MUTED, true);
+        locationAutomationState = UiKit.text(this, OrbitText.get(R.string.ui_checking_ec963f, "Checking…"), 12, UiKit.MUTED, true);
         row.addView(locationAutomationState);
 
-        locationAutomationManage = compactSetupButton("Set up");
+        locationAutomationManage = compactSetupButton(OrbitText.get(R.string.ui_set_up_4da10f, "Set up"));
         LinearLayout.LayoutParams manageLp = new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT, UiKit.dp(this, 36));
         manageLp.setMargins(UiKit.dp(this, 10), 0, 0, 0);
@@ -366,11 +366,11 @@ public final class CapabilitiesActivity extends Activity {
             locationAutomationState.setText(state);
             locationAutomationState.setTextColor(locationReady ? UiKit.SUCCESS : UiKit.MUTED);
         }
-        if (locationAutomationManage != null) locationAutomationManage.setText(locationReady ? "Manage" : "Set up");
+        if (locationAutomationManage != null) locationAutomationManage.setText(locationReady ? OrbitText.get(R.string.ui_manage_5a2344, "Manage") : OrbitText.get(R.string.ui_set_up_4da10f, "Set up"));
 
         boolean exact = RoutineTriggerScheduler.canScheduleExact(this);
         if (preciseTimingState != null) {
-            preciseTimingState.setText(exact ? "Ready" : "Approximate");
+            preciseTimingState.setText(exact ? OrbitText.get(R.string.ui_ready_5fa7aa, "Ready") : OrbitText.get(R.string.ui_approximate_78b9b2, "Approximate"));
             preciseTimingState.setTextColor(exact ? UiKit.SUCCESS : UiKit.MUTED);
         }
         if (preciseTimingManage != null) {
@@ -378,17 +378,17 @@ public final class CapabilitiesActivity extends Activity {
                 preciseTimingManage.setVisibility(View.GONE);
             } else {
                 preciseTimingManage.setVisibility(View.VISIBLE);
-                preciseTimingManage.setText(exact ? "Manage" : "Set up");
+                preciseTimingManage.setText(exact ? OrbitText.get(R.string.ui_manage_5a2344, "Manage") : OrbitText.get(R.string.ui_set_up_4da10f, "Set up"));
             }
         }
 
         boolean alerts = RoutineTriggerNotifier.notificationsAllowed(this);
         if (triggerAlertsState != null) {
-            triggerAlertsState.setText(alerts ? "Ready" : "Needs access");
+            triggerAlertsState.setText(alerts ? OrbitText.get(R.string.ui_ready_5fa7aa, "Ready") : OrbitText.get(R.string.ui_needs_access_67b0e1, "Needs access"));
             triggerAlertsState.setTextColor(alerts ? UiKit.SUCCESS : UiKit.MUTED);
         }
         if (triggerAlertsManage != null) {
-            triggerAlertsManage.setText(alerts ? "Manage" : "Set up");
+            triggerAlertsManage.setText(alerts ? OrbitText.get(R.string.ui_manage_5a2344, "Manage") : OrbitText.get(R.string.ui_set_up_4da10f, "Set up"));
         }
     }
 
@@ -434,22 +434,22 @@ public final class CapabilitiesActivity extends Activity {
     private void refreshSpecialAccessRows() {
         boolean brightnessReady = OrbitPermissionHelper.canWriteSystemSettings(this);
         if (brightnessState != null) {
-            brightnessState.setText(brightnessReady ? "Ready" : "Needs access");
+            brightnessState.setText(brightnessReady ? OrbitText.get(R.string.ui_ready_5fa7aa, "Ready") : OrbitText.get(R.string.ui_needs_access_67b0e1, "Needs access"));
             brightnessState.setTextColor(brightnessReady ? UiKit.SUCCESS : UiKit.MUTED);
         }
         if (brightnessSetup != null) {
             brightnessSetup.setVisibility(View.VISIBLE);
-            brightnessSetup.setText(brightnessReady ? "Manage" : "Set up");
+            brightnessSetup.setText(brightnessReady ? OrbitText.get(R.string.ui_manage_5a2344, "Manage") : OrbitText.get(R.string.ui_set_up_4da10f, "Set up"));
         }
 
         boolean dndReady = OrbitPermissionHelper.hasDndAccess(this);
         if (dndState != null) {
-            dndState.setText(dndReady ? "Ready" : "Needs access");
+            dndState.setText(dndReady ? OrbitText.get(R.string.ui_ready_5fa7aa, "Ready") : OrbitText.get(R.string.ui_needs_access_67b0e1, "Needs access"));
             dndState.setTextColor(dndReady ? UiKit.SUCCESS : UiKit.MUTED);
         }
         if (dndSetup != null) {
             dndSetup.setVisibility(View.VISIBLE);
-            dndSetup.setText(dndReady ? "Manage" : "Set up");
+            dndSetup.setText(dndReady ? OrbitText.get(R.string.ui_manage_5a2344, "Manage") : OrbitText.get(R.string.ui_set_up_4da10f, "Set up"));
         }
     }
 
@@ -460,7 +460,7 @@ public final class CapabilitiesActivity extends Activity {
         row.setPadding(0, UiKit.dp(this, 2), 0, UiKit.dp(this, 2));
         TextView label = UiKit.text(this, name, 14, UiKit.TEXT, false);
         row.addView(label, new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1));
-        TextView state = UiKit.text(this, enabled ? "Ready" : "Off / unavailable", 12,
+        TextView state = UiKit.text(this, enabled ? OrbitText.get(R.string.ui_ready_5fa7aa, "Ready") : OrbitText.get(R.string.ui_off_unavailable_3ededb, "Off / unavailable"), 12,
                 enabled ? UiKit.SUCCESS : UiKit.MUTED, true);
         row.addView(state);
         return row;

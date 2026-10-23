@@ -122,14 +122,14 @@ public final class CustomCommandEditorActivity extends Activity {
         LinearLayout titles = new LinearLayout(this);
         titles.setOrientation(LinearLayout.VERTICAL);
         titles.setPadding(UiKit.dp(this, 13), 0, 0, 0);
-        titles.addView(UiKit.text(this, existing == null ? "New Custom Command" : "Edit Custom Command",
+        titles.addView(UiKit.text(this, existing == null ? OrbitText.get(R.string.ui_new_custom_command_e97f99, "New Custom Command") : OrbitText.get(R.string.ui_edit_custom_command_788efa, "Edit Custom Command"),
                 23, UiKit.TEXT, true));
-        titles.addView(UiKit.text(this, "Run one saved Routine", 13, UiKit.MUTED, false));
+        titles.addView(UiKit.text(this, OrbitText.get(R.string.ui_run_one_saved_routine_6b17cb, "Run one saved Routine"), 13, UiKit.MUTED, false));
         header.addView(titles, new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1));
         page.addView(header);
 
         TextView explanation = UiKit.text(this,
-                "Orbit matches these phrases exactly after ignoring capitalization, extra spaces, ending punctuation, and optional “Orbit” or “please” wrappers.",
+                OrbitText.get(R.string.ui_orbit_matches_these_phrases_exactly_after_2c3ff0, "Orbit matches these phrases exactly after ignoring capitalization, extra spaces, ending punctuation, and optional “Orbit” or “please” wrappers."),
                 13, UiKit.MUTED, false);
         explanation.setLineSpacing(0, 1.12f);
         LinearLayout.LayoutParams explanationLp = new LinearLayout.LayoutParams(
@@ -137,23 +137,23 @@ public final class CustomCommandEditorActivity extends Activity {
         explanationLp.setMargins(UiKit.dp(this, 2), UiKit.dp(this, 18), UiKit.dp(this, 2), UiKit.dp(this, 18));
         page.addView(explanation, explanationLp);
 
-        page.addView(label("PRIMARY PHRASE"));
+        page.addView(label(OrbitText.get(R.string.ui_primary_phrase_0e45ca, "PRIMARY PHRASE")));
         String primary = state != null ? state.getString(STATE_PRIMARY, "") :
                 existing == null ? "" : existing.primaryPhrase;
-        primaryField = inputField("Bedtime", primary, false);
+        primaryField = inputField(OrbitText.get(R.string.ui_bedtime_57f8d3, "Bedtime"), primary, false);
         page.addView(primaryField, fieldLp());
 
-        page.addView(label("ADDITIONAL PHRASES (OPTIONAL)"));
+        page.addView(label(OrbitText.get(R.string.ui_additional_phrases_optional_ea4ced, "ADDITIONAL PHRASES (OPTIONAL)")));
         String aliases = state != null ? state.getString(STATE_ALIASES, "") : joinAliases(existing);
-        aliasesField = inputField("Good night\nWind down", aliases, true);
+        aliasesField = inputField(OrbitText.get(R.string.ui_good_night_wind_down_897299, "Good night\nWind down"), aliases, true);
         aliasesField.setMinLines(3);
         aliasesField.setGravity(Gravity.TOP | Gravity.START);
         page.addView(aliasesField, fieldLp());
-        TextView aliasHint = UiKit.text(this, "One phrase per line · up to 5", 11, UiKit.MUTED, false);
+        TextView aliasHint = UiKit.text(this, OrbitText.get(R.string.ui_one_phrase_per_line_up_to_5_1bccc6, "One phrase per line · up to 5"), 11, UiKit.MUTED, false);
         aliasHint.setPadding(UiKit.dp(this, 4), 0, 0, UiKit.dp(this, 14));
         page.addView(aliasHint);
 
-        page.addView(label("RUN ROUTINE"));
+        page.addView(label(OrbitText.get(R.string.ui_run_routine_0d2546, "RUN ROUTINE")));
         routineButton = secondaryButton("");
         routineButton.setGravity(Gravity.START | Gravity.CENTER_VERTICAL);
         routineButton.setPadding(UiKit.dp(this, 16), 0, UiKit.dp(this, 16), 0);
@@ -162,7 +162,7 @@ public final class CustomCommandEditorActivity extends Activity {
                 ViewGroup.LayoutParams.MATCH_PARENT, UiKit.dp(this, 48)));
 
         enabledField = new CheckBox(this);
-        enabledField.setText("Enabled");
+        enabledField.setText(OrbitText.get(R.string.ui_enabled_92c1cd, "Enabled"));
         enabledField.setTextColor(UiKit.TEXT);
         enabledField.setTextSize(14);
         enabledField.setButtonTintList(UiKit.accentControlTint(this));
@@ -178,7 +178,7 @@ public final class CustomCommandEditorActivity extends Activity {
         errorText.setPadding(UiKit.dp(this, 3), UiKit.dp(this, 8), UiKit.dp(this, 3), 0);
         page.addView(errorText);
 
-        Button save = primaryButton(existing == null ? "Save command" : "Save changes");
+        Button save = primaryButton(existing == null ? OrbitText.get(R.string.ui_save_command_3b1fe0, "Save command") : OrbitText.get(R.string.ui_save_changes_dd0ae7, "Save changes"));
         save.setOnClickListener(v -> save());
         LinearLayout.LayoutParams saveLp = new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, UiKit.dp(this, 50));
@@ -193,7 +193,7 @@ public final class CustomCommandEditorActivity extends Activity {
     private void chooseRoutine() {
         List<RoutineStore.Routine> routines = RoutineStore.list(this);
         if (routines.isEmpty()) {
-            Toast.makeText(this, "Create a Routine first.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, OrbitText.get(R.string.ui_create_a_routine_first_0b726d, "Create a Routine first."), Toast.LENGTH_SHORT).show();
             return;
         }
         String[] labels = new String[routines.size()];
@@ -216,11 +216,11 @@ public final class CustomCommandEditorActivity extends Activity {
             routineButton.setText(routine.name);
             routineButton.setTextColor(UiKit.TEXT);
         } else if (!selectedRoutineId.isEmpty()) {
-            routineButton.setText("Routine unavailable — choose another");
+            routineButton.setText(OrbitText.get(R.string.ui_routine_unavailable_choose_another_cc56f3, "Routine unavailable — choose another"));
             routineButton.setTextColor(Color.rgb(239, 105, 105));
         } else {
             routineButton.setText(RoutineStore.list(this).isEmpty() ?
-                    "No saved Routines available" : "Choose a Routine");
+                    OrbitText.get(R.string.ui_no_saved_routines_available_ca61e6, "No saved Routines available") : OrbitText.get(R.string.ui_choose_a_routine_3d88d1, "Choose a Routine"));
             routineButton.setTextColor(UiKit.MUTED);
         }
     }
@@ -246,14 +246,14 @@ public final class CustomCommandEditorActivity extends Activity {
             return;
         }
         if (RoutineStore.findById(this, selectedRoutineId) == null) {
-            showError("Choose an available Routine before saving.");
+            showError(OrbitText.get(R.string.ui_choose_an_available_routine_before_saving_54efea, "Choose an available Routine before saving."));
             return;
         }
         if (!CustomCommandStore.upsert(this, command)) {
-            showError("Orbit could not save this Custom Command.");
+            showError(OrbitText.get(R.string.ui_orbit_could_not_save_this_custom_command_6f2576, "Orbit could not save this Custom Command."));
             return;
         }
-        Toast.makeText(this, existing == null ? "Custom Command created." : "Custom Command updated.",
+        Toast.makeText(this, existing == null ? OrbitText.get(R.string.ui_custom_command_created_22ce0c, "Custom Command created.") : OrbitText.get(R.string.ui_custom_command_updated_01b571, "Custom Command updated."),
                 Toast.LENGTH_SHORT).show();
         finish();
     }
@@ -309,7 +309,7 @@ public final class CustomCommandEditorActivity extends Activity {
         button.setImageResource(R.drawable.ic_back);
         button.setImageTintList(ColorStateList.valueOf(UiKit.accent(this)));
         button.setBackground(UiKit.ripple(UiKit.SURFACE_2, UiKit.accent(this), 18, this));
-        button.setContentDescription("Back");
+        button.setContentDescription(OrbitText.get(R.string.ui_back_76900f, "Back"));
         button.setPadding(UiKit.dp(this, 10), UiKit.dp(this, 10), UiKit.dp(this, 10), UiKit.dp(this, 10));
         UiKit.pressScale(button);
         return button;

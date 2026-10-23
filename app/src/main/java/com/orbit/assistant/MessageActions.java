@@ -149,9 +149,9 @@ final class MessageActions {
     /** The full long-press menu for an assistant reply, in order. */
     static List<Entry> assistantMenu(AssistantActions a, boolean vault) {
         List<Entry> out = new ArrayList<>();
-        out.add(new Entry(COPY_MENU_LABEL, R.drawable.ic_copy, null));
-        if (vault) out.add(new Entry(SAVE_TO_VAULT_MENU_LABEL, R.drawable.ic_vault, null));
-        if (a.retry != null) out.add(new Entry(RETRY_MENU_LABEL, R.drawable.ic_regenerate, a.retry));
+        out.add(new Entry(OrbitText.get(R.string.ui_copy_e21f93, COPY_MENU_LABEL), R.drawable.ic_copy, null));
+        if (vault) out.add(new Entry(OrbitText.get(R.string.ui_save_to_vault_c1d04e, SAVE_TO_VAULT_MENU_LABEL), R.drawable.ic_vault, null));
+        if (a.retry != null) out.add(new Entry(OrbitText.get(R.string.ui_retry_942087, RETRY_MENU_LABEL), R.drawable.ic_regenerate, a.retry));
         out.addAll(moreMenu(a));
         return out;
     }
@@ -162,9 +162,9 @@ final class MessageActions {
      */
     static List<Entry> moreMenu(AssistantActions a) {
         List<Entry> out = new ArrayList<>();
-        if (a.retryWith != null) out.add(new Entry(RETRY_WITH_MENU_LABEL, R.drawable.ic_tune, a.retryWith));
-        if (a.reply != null) out.add(new Entry(REPLY_MENU_LABEL, R.drawable.ic_reply, a.reply));
-        if (a.details != null) out.add(new Entry(DETAILS_MENU_LABEL, R.drawable.ic_settings, a.details));
+        if (a.retryWith != null) out.add(new Entry(OrbitText.get(R.string.ui_retry_with_5ba002, RETRY_WITH_MENU_LABEL), R.drawable.ic_tune, a.retryWith));
+        if (a.reply != null) out.add(new Entry(OrbitText.get(R.string.ui_reply_to_this_482349, REPLY_MENU_LABEL), R.drawable.ic_reply, a.reply));
+        if (a.details != null) out.add(new Entry(OrbitText.get(R.string.ui_response_details_062c92, DETAILS_MENU_LABEL), R.drawable.ic_settings, a.details));
         return out;
     }
 
@@ -208,7 +208,7 @@ final class MessageActions {
         if (visible.trim().isEmpty()) return;
         long now = System.currentTimeMillis();
         if (visible.equals(lastSavedText) && now - lastSavedAt < REPEAT_SAVE_WINDOW_MS) {
-            Toast.makeText(c, "Already saved to your Vault", Toast.LENGTH_SHORT).show();
+            Toast.makeText(c, OrbitText.get(R.string.ui_already_saved_to_your_vault_a1dea8, "Already saved to your Vault"), Toast.LENGTH_SHORT).show();
             return;
         }
         String source = sourceUrls == null || sourceUrls.isEmpty() ? "" : sourceUrls.get(0);
@@ -217,7 +217,7 @@ final class MessageActions {
             lastSavedText = visible;
             lastSavedAt = now;
         }
-        Toast.makeText(c, saved ? OrbitVaultStore.savedMessage(c) : OrbitVaultStore.saveFailureMessage(c, "Orbit could not save that reply"),
+        Toast.makeText(c, saved ? OrbitVaultStore.savedMessage(c) : OrbitVaultStore.saveFailureMessage(c, OrbitText.get(R.string.ui_orbit_could_not_save_that_reply_27a629, "Orbit could not save that reply")),
                 Toast.LENGTH_SHORT).show();
     }
 
@@ -235,11 +235,11 @@ final class MessageActions {
      * the action can return once resending is dependable; the roadmap records that intent.
      */
     static String[] userLabels() {
-        return new String[]{COPY_MENU_LABEL};
+        return new String[]{OrbitText.get(R.string.ui_copy_e21f93, COPY_MENU_LABEL)};
     }
 
     static String[] userLabels(boolean canReply) {
-        return canReply ? new String[]{COPY_MENU_LABEL, REPLY_MENU_LABEL} : userLabels();
+        return canReply ? new String[]{OrbitText.get(R.string.ui_copy_e21f93, COPY_MENU_LABEL), OrbitText.get(R.string.ui_reply_to_this_482349, REPLY_MENU_LABEL)} : userLabels();
     }
 
     static int[] userIcons() {
@@ -256,9 +256,9 @@ final class MessageActions {
      */
     static String[] userLabels(boolean canEdit, boolean canReply) {
         List<String> out = new ArrayList<>();
-        out.add(COPY_MENU_LABEL);
-        if (canEdit) out.add(EDIT_MENU_LABEL);
-        if (canReply) out.add(REPLY_MENU_LABEL);
+        out.add(OrbitText.get(R.string.ui_copy_e21f93, COPY_MENU_LABEL));
+        if (canEdit) out.add(OrbitText.get(R.string.ui_edit_464c4f, EDIT_MENU_LABEL));
+        if (canReply) out.add(OrbitText.get(R.string.ui_reply_to_this_482349, REPLY_MENU_LABEL));
         return out.toArray(new String[0]);
     }
 
@@ -321,20 +321,20 @@ final class MessageActions {
         strip.setTag(STRIP_TAG);
         String copyText = assistantCopyText(rawText);
         AfterCopy copied = a.afterCopy != null ? a.afterCopy
-                : () -> Toast.makeText(c, "Copied", Toast.LENGTH_SHORT).show();
-        strip.addView(stripButton(c, R.drawable.ic_copy, "Copy response",
-                v -> copy(c, "Orbit response", copyText, copied)));
+                : () -> Toast.makeText(c, OrbitText.get(R.string.ui_copied_8d525e, "Copied"), Toast.LENGTH_SHORT).show();
+        strip.addView(stripButton(c, R.drawable.ic_copy, OrbitText.get(R.string.ui_copy_response_f0f755, "Copy response"),
+                v -> copy(c, OrbitText.get(R.string.ui_orbit_response_1a02cf, "Orbit response"), copyText, copied)));
         if (a.retry != null) {
-            strip.addView(stripButton(c, R.drawable.ic_regenerate, "Retry response",
+            strip.addView(stripButton(c, R.drawable.ic_regenerate, OrbitText.get(R.string.ui_retry_response_9d3a6c, "Retry response"),
                     v -> a.retry.run()));
         }
         if (Prefs.vaultEnabled(c)) {
-            strip.addView(stripButton(c, R.drawable.ic_vault, "Save response to Vault",
+            strip.addView(stripButton(c, R.drawable.ic_vault, OrbitText.get(R.string.ui_save_response_to_vault_036db4, "Save response to Vault"),
                     v -> saveToVault(c, rawText, a.sourceUrls)));
         }
         List<Entry> more = moreMenu(a);
         if (!more.isEmpty()) {
-            ImageButton moreButton = stripButton(c, R.drawable.ic_more, "More response actions", null);
+            ImageButton moreButton = stripButton(c, R.drawable.ic_more, OrbitText.get(R.string.ui_more_response_actions_04ae06, "More response actions"), null);
             moreButton.setOnClickListener(v -> {
                 dismiss();
                 UiKit.showOrbitActionMenu(c, moreButton, labelsOf(more), iconsOf(more),
@@ -364,11 +364,11 @@ final class MessageActions {
     }
 
     static void copyAssistant(Context c, String rawText, AfterCopy afterCopy) {
-        copy(c, "Orbit response", assistantCopyText(rawText), afterCopy);
+        copy(c, OrbitText.get(R.string.ui_orbit_response_1a02cf, "Orbit response"), assistantCopyText(rawText), afterCopy);
     }
 
     static void copyUser(Context c, String rawText, AfterCopy afterCopy) {
-        copy(c, "Orbit message", userCopyText(rawText), afterCopy);
+        copy(c, OrbitText.get(R.string.ui_orbit_message_180f87, "Orbit message"), userCopyText(rawText), afterCopy);
     }
 
     static void copy(Context c, String clipLabel, String text, AfterCopy afterCopy) {
@@ -393,9 +393,9 @@ final class MessageActions {
         boolean vault = Prefs.vaultEnabled(bubble.getContext());
         List<Entry> entries = assistantMenu(a, vault);
         showMenu(bubble, labelsOf(entries), iconsOf(entries), (index, label) -> {
-            if (COPY_MENU_LABEL.equals(label)) {
-                copy(bubble.getContext(), "Orbit response", copyText, a.afterCopy);
-            } else if (SAVE_TO_VAULT_MENU_LABEL.equals(label)) {
+            if (OrbitText.get(R.string.ui_copy_e21f93, COPY_MENU_LABEL).equals(label)) {
+                copy(bubble.getContext(), OrbitText.get(R.string.ui_orbit_response_1a02cf, "Orbit response"), copyText, a.afterCopy);
+            } else if (OrbitText.get(R.string.ui_save_to_vault_c1d04e, SAVE_TO_VAULT_MENU_LABEL).equals(label)) {
                 saveToVault(bubble.getContext(), rawText, a.sourceUrls);
             } else {
                 Runnable run = entries.get(index).run;
@@ -409,11 +409,11 @@ final class MessageActions {
         boolean canReply = reply != null;
         boolean canEdit = editResend != null;
         showMenu(bubble, userLabels(canEdit, canReply), userIcons(canEdit, canReply), (index, label) -> {
-            if (COPY_MENU_LABEL.equals(label)) {
-                copy(bubble.getContext(), "Orbit message", text, afterCopy);
-            } else if (REPLY_MENU_LABEL.equals(label) && reply != null) {
+            if (OrbitText.get(R.string.ui_copy_e21f93, COPY_MENU_LABEL).equals(label)) {
+                copy(bubble.getContext(), OrbitText.get(R.string.ui_orbit_message_180f87, "Orbit message"), text, afterCopy);
+            } else if (OrbitText.get(R.string.ui_reply_to_this_482349, REPLY_MENU_LABEL).equals(label) && reply != null) {
                 reply.run();
-            } else if (EDIT_MENU_LABEL.equals(label) && editResend != null) {
+            } else if (OrbitText.get(R.string.ui_edit_464c4f, EDIT_MENU_LABEL).equals(label) && editResend != null) {
                 editResend.run();
             }
         });
