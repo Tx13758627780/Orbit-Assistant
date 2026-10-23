@@ -94,6 +94,10 @@ public class OrbitSession extends VoiceInteractionSession {
     private EditText input;
     private ImageButton mic;
     private ImageButton sendButton;
+    private AssistantDockPanel dockContent;
+    private View dockHandle;
+    private boolean dockCollapsedByUser;
+    private boolean dockVoiceConversation;
     /** True while the composer control is showing Stop rather than Send. */
     private boolean showingStop;
     private OrbitListeningHalo listeningHalo;
@@ -266,6 +270,9 @@ public class OrbitSession extends VoiceInteractionSession {
                 Window w = d.getWindow();
                 w.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                 w.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+                w.setNavigationBarColor(Color.TRANSPARENT);
+                w.setNavigationBarContrastEnforced(false);
+                if (Build.VERSION.SDK_INT >= 30) w.setDecorFitsSystemWindows(false);
                 w.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);
                 if (Prefs.keyboardAwareAssistant(getContext())) {
                     // Start above any keyboard already owned by the foreground app.
@@ -296,6 +303,16 @@ public class OrbitSession extends VoiceInteractionSession {
                 applyImeInsets(insets);
                 return insets;
             });
+            if (Build.VERSION.SDK_INT >= 30) {
+                root.setWindowInsetsAnimationCallback(new android.view.WindowInsetsAnimation.Callback(
+                        android.view.WindowInsetsAnimation.Callback.DISPATCH_MODE_CONTINUE_ON_SUBTREE) {
+                    @Override public WindowInsets onProgress(WindowInsets insets,
+                            List<android.view.WindowInsetsAnimation> animations) {
+                        if (dockContent != null) applyImeInsets(insets);
+                        return insets;
+                    }
+                });
+            }
             // Attachment is the moment Android genuinely owns this view tree, and it is one of the
             // few startup facts the session cannot infer for itself.
             root.addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
@@ -393,6 +410,7 @@ public class OrbitSession extends VoiceInteractionSession {
         internalScreenSelectionResume = false;
         // A genuinely new invocation is being prepared, so this sheet may auto-listen once.
         autoListenHandledForShow = false;
+        dockVoiceConversation = false;
 
         // Prepare the conversation state BEFORE rebuilding the visible sheet. In
         // v0.3.5 the reset happened in onShow(), after renderConversation() had
@@ -502,6 +520,10 @@ public class OrbitSession extends VoiceInteractionSession {
         if (sheet != null) sheet.animate().cancel();
         if (scrim != null) scrim.animate().cancel();
         cancelPeekMorph();
+        if (dockContent != null) dockContent.cancelMotion();
+        dockContent = null;
+        dockHandle = null;
+        dockCollapsedByUser = false;
         peeking = false;
         pendingPeek = false;
         peekProgress = 0f;
@@ -511,6 +533,19 @@ public class OrbitSession extends VoiceInteractionSession {
         // Read once per build, which happens on every new invocation, so a Settings change shows
         // up on the next press without touching a sheet that is already on screen.
         style = OverlayStyle.current(c);
+        UiKit.syncTheme(c);
+        if (isDockStyle()) {
+            OrbitTheme theme = OrbitThemeStore.active(c);
+            boolean dark = (c.getResources().getConfiguration().uiMode
+                    & android.content.res.Configuration.UI_MODE_NIGHT_MASK)
+                    == android.content.res.Configuration.UI_MODE_NIGHT_YES;
+            if (!dark && !theme.amoled && OrbitTheme.CLASSIC.equals(theme.surface)
+                    && OrbitTheme.CLASSIC.equals(theme.background)) {
+                // Resolve a light system canvas without rewriting the user's saved theme.
+                UiKit.applyTheme(OrbitThemeTokens.resolve(c,
+                        theme.withSurface("#FAF8FC").withBackground("#F3F0F7")));
+            }
+        }
         controls = OverlayControls.of(c, style);
         conversationCapPx = UiKit.dp(c, style.conversationDp);
 
@@ -563,11 +598,13 @@ public class OrbitSession extends VoiceInteractionSession {
         // to the handle. Negative margins only reclaim dead vertical space.
         handleLp.setMargins(0, UiKit.dp(c, -4), 0, UiKit.dp(c, -2));
         sheet.addView(handleZone, handleLp);
-        installHandleTouchDelegate(sheet, handleZone);
+        if (!isDockStyle()) installHandleTouchDelegate(sheet, handleZone);
 
         LinearLayout top = new LinearLayout(c);
         top.setGravity(Gravity.CENTER_VERTICAL);
-        View mark = UiKit.orbitMark(c, style.markDp);
+        // The ordinary mark refreshes the app palette. Keep the dock's resolved system palette.
+        View mark = isDockStyle() ? UiKit.orbitMark(c, style.markDp, UiKit.accent(c))
+                : UiKit.orbitMark(c, style.markDp);
         int markBox = style.markDp + (style.cute ? 10 : 4);
         if (style.cute) mark = CutieTouches.dressMark(c, mark, UiKit.dp(c, style.markDp + 4));
         LinearLayout.LayoutParams markLp = new LinearLayout.LayoutParams(
@@ -632,6 +669,7 @@ public class OrbitSession extends VoiceInteractionSession {
         int icon = UiKit.dp(c, style.iconDp);
         if (controls.history) {
             ImageButton recent = tinyIconButton(com.orbit.assistant.R.drawable.ic_history);
+            recent.setTag("orbit_header_history");
             recent.setContentDescription(OrbitText.get(R.string.ui_recent_chats_2ccfec, "Recent chats"));
             recent.setOnClickListener(v -> showHistoryPicker());
             LinearLayout.LayoutParams recentLp = new LinearLayout.LayoutParams(icon, icon);
@@ -640,6 +678,7 @@ public class OrbitSession extends VoiceInteractionSession {
         }
         if (controls.newChat) {
             ImageButton newChat = tinyIconButton(com.orbit.assistant.R.drawable.ic_add);
+            newChat.setTag("orbit_header_new");
             newChat.setContentDescription(OrbitText.get(R.string.ui_new_chat_db1838, "New chat"));
             newChat.setOnClickListener(v -> startNewChat());
             LinearLayout.LayoutParams newChatLp = new LinearLayout.LayoutParams(icon, icon);
@@ -765,6 +804,26 @@ public class OrbitSession extends VoiceInteractionSession {
 
         final OverlayStyle built = style;
         messageScroll = new ScrollView(c) {
+            private float downX, downY;
+            private boolean collapsed;
+            @Override public boolean onInterceptTouchEvent(MotionEvent event) {
+                if (event.getActionMasked() == MotionEvent.ACTION_DOWN) {
+                    downX = event.getRawX(); downY = event.getRawY(); collapsed = false;
+                }
+                if (isDockStyle() && event.getActionMasked() == MotionEvent.ACTION_MOVE
+                        && getScrollY() == 0 && event.getRawY() - downY > UiKit.dp(c, 32)
+                        && event.getRawY() - downY > Math.abs(event.getRawX() - downX)) return true;
+                return super.onInterceptTouchEvent(event);
+            }
+            @Override public boolean onTouchEvent(MotionEvent event) {
+                if (isDockStyle() && event.getActionMasked() == MotionEvent.ACTION_MOVE
+                        && getScrollY() == 0 && event.getRawY() - downY > UiKit.dp(c, 32)
+                        && event.getRawY() - downY > Math.abs(event.getRawX() - downX)) {
+                    if (!collapsed) { collapsed = true; setDockExpanded(false, true); }
+                    return true;
+                }
+                return collapsed || super.onTouchEvent(event);
+            }
             @Override protected void onMeasure(int widthSpec, int heightSpec) {
                 // A content-fitting conversation stops growing at its cap and scrolls. The cap
                 // follows the window (see placeSheet), so it is read here rather than captured.
@@ -837,7 +896,7 @@ public class OrbitSession extends VoiceInteractionSession {
         // Behaves as an ordinary EditText; it additionally records when Android asks it for an
         // input connection, which is the one thing no previous investigation could observe.
         input = new TracingEditText(c);
-        input.setHint(style.hint());
+        input.setHint(isDockStyle() ? getContext().getString(R.string.dock_hint) : style.hint());
         input.setHintTextColor(Color.rgb(117, 123, 139));
         input.setTextColor(UiKit.TEXT);
         input.setTextSize(15);
@@ -944,10 +1003,179 @@ public class OrbitSession extends VoiceInteractionSession {
             return false;
         });
 
+        if (isDockStyle()) installDock(c, top, handleZone, composer, attach);
         buildPeek(c);
         updateContextUi();
         UiKit.applyTypography(root);
         root.post(root::requestApplyInsets);
+    }
+
+    private boolean isDockStyle() { return style == OverlayStyle.MODERN; }
+
+    /** Reuses the live editor, request controls and screen buttons; only their containers change. */
+    private void installDock(Context c, LinearLayout header, View handle,
+                             LinearLayout composer, ImageButton attach) {
+        sheet.removeAllViews();
+        sheet.setPadding(0, 0, 0, 0);
+        sheet.setBackgroundColor(Color.TRANSPARENT);
+        sheet.setElevation(0f);
+        sheet.setClipChildren(false);
+        sheet.setClipToPadding(false);
+        sheet.setTouchDelegate(null);
+        scrim.setBackgroundColor(Color.TRANSPARENT);
+
+        dockContent = new AssistantDockPanel(c);
+        LinearLayout body = new LinearLayout(c);
+        body.setOrientation(LinearLayout.VERTICAL);
+        body.setPadding(UiKit.dp(c, 14), UiKit.dp(c, 12), UiKit.dp(c, 14), UiKit.dp(c, 10));
+        body.setBackground(UiKit.outlined(UiKit.SURFACE, UiKit.withAlpha(UiKit.MUTED, 48), 28, c));
+        body.setClipToOutline(true);
+        modeChip.setMaxWidth(UiKit.dp(c, 98));
+        body.addView(header, new LinearLayout.LayoutParams(-1, UiKit.dp(c, 48)));
+        if (suggestionScroll.getParent() instanceof ViewGroup)
+            ((ViewGroup) suggestionScroll.getParent()).removeView(suggestionScroll);
+        body.addView(suggestionScroll, new LinearLayout.LayoutParams(-1, -2));
+        messageScroll.setMinimumHeight(0);
+        body.addView(messageScroll, new LinearLayout.LayoutParams(-1, -2));
+        dockContent.addView(body, new FrameLayout.LayoutParams(-1, -2));
+        LinearLayout.LayoutParams contentLp = new LinearLayout.LayoutParams(-1, -2);
+        contentLp.bottomMargin = UiKit.dp(c, 8);
+        sheet.addView(dockContent, contentLp);
+
+        // A separate, small screen capsule never paints a large surface behind the desktop.
+        if (screenButton.getParent() instanceof ViewGroup)
+            ((ViewGroup) screenButton.getParent()).removeView(screenButton);
+        screenButton.setTag("orbit_dock_screen");
+        screenButton.setOnLongClickListener(v -> { showScreenAttachmentMenu(screenButton); return true; });
+        LinearLayout.LayoutParams pillLp = new LinearLayout.LayoutParams(-2, UiKit.dp(c, 44));
+        pillLp.gravity = Gravity.END;
+        pillLp.setMargins(0, UiKit.dp(c, 8), UiKit.dp(c, 4), UiKit.dp(c, 8));
+        sheet.addView(screenButton, pillLp);
+        sheet.addView(attachmentStrip, new LinearLayout.LayoutParams(-1, -2));
+        sheet.addView(composerFocusHolder, new LinearLayout.LayoutParams(0, 0));
+
+        composer.removeAllViews();
+        composer.setTag("orbit_dock_composer");
+        composer.setOrientation(LinearLayout.VERTICAL);
+        composer.setPadding(UiKit.dp(c, 8), 0, UiKit.dp(c, 8), UiKit.dp(c, 8));
+        composer.setBackground(UiKit.outlined(UiKit.SURFACE,
+                UiKit.withAlpha(UiKit.MUTED, 52), 32, c));
+        composer.setElevation(UiKit.dp(c, 10));
+        dockHandle = handle;
+        handle.setTag("orbit_dock_handle");
+        handle.setContentDescription(c.getString(R.string.dock_expand));
+        handle.setOnClickListener(v -> setDockExpanded(!dockContent.isExpanded(), true));
+        installDockGesture(handle);
+        installDockGesture(header);
+        composer.addView(handle, new LinearLayout.LayoutParams(-1, UiKit.dp(c, 18)));
+        installHandleTouchDelegate(composer, handle);
+
+        LinearLayout row = new LinearLayout(c);
+        row.setGravity(Gravity.CENTER_VERTICAL);
+        for (View control : new View[]{attach, input, mic, sendButton}) {
+            if (control.getParent() instanceof ViewGroup)
+                ((ViewGroup) control.getParent()).removeView(control);
+        }
+        attach.setVisibility(View.VISIBLE);
+        attach.setBackground(UiKit.ripple(UiKit.SURFACE, UiKit.accent(c), 24, c));
+        attach.setContentDescription(c.getString(R.string.ui_more_options_bc79cd));
+        attach.setOnClickListener(v -> showDockMenu(attach));
+        input.setHint(c.getString(R.string.dock_hint));
+        input.setTextSize(16);
+        input.setMaxLines(3);
+        input.setPadding(UiKit.dp(c, 6), UiKit.dp(c, 10), UiKit.dp(c, 4), UiKit.dp(c, 10));
+        input.setOnFocusChangeListener((v, focused) -> {
+            composer.setBackground(UiKit.outlined(UiKit.SURFACE,
+                    focused ? UiKit.withAlpha(UiKit.accent(c), 150) : UiKit.withAlpha(UiKit.MUTED, 52), 32, c));
+            if (composerFocus != null) composerFocus.onFocusChanged(focused);
+        });
+        input.addTextChangedListener(new android.text.TextWatcher() {
+            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override public void onTextChanged(CharSequence s, int start, int before, int count) {
+                updateComposerAction();
+            }
+            @Override public void afterTextChanged(Editable value) {}
+        });
+        mic.setVisibility(controls.voice || listening ? View.VISIBLE : View.GONE);
+        mic.setBackground(UiKit.ripple(UiKit.SURFACE_2, UiKit.accent(c), 24, c));
+        sendButton.setOnClickListener(v -> {
+            if (showingStop) stopGenerating();
+            else if (dockVoiceConversation) toggleDockVoiceConversation();
+            else if (dockHasDraft()) submit();
+            else toggleDockVoiceConversation();
+        });
+        int button = UiKit.dp(c, 48);
+        row.addView(attach, new LinearLayout.LayoutParams(button, button));
+        row.addView(input, new LinearLayout.LayoutParams(0, -2, 1f));
+        row.addView(mic, new LinearLayout.LayoutParams(button, button));
+        row.addView(sendButton, new LinearLayout.LayoutParams(button, button));
+        composer.addView(row, new LinearLayout.LayoutParams(-1, -2));
+        sheet.addView(composer, new LinearLayout.LayoutParams(-1, -2));
+        dockContent.setExpanded(false, false);
+        updateComposerAction();
+    }
+
+    private boolean dockHasDraft() {
+        return input != null && (!input.getText().toString().trim().isEmpty()
+                || !composerAttachments.isEmpty());
+    }
+
+    private void setDockExpanded(boolean expanded, boolean animate) {
+        if (dockContent == null) return;
+        dockCollapsedByUser = !expanded;
+        dockContent.setExpanded(expanded, animate);
+        if (dockHandle != null) dockHandle.setContentDescription(getContext().getString(
+                expanded ? R.string.dock_collapse : R.string.dock_expand));
+        if (!expanded) hideKeyboard();
+    }
+
+    private void installDockGesture(View target) {
+        final float[] down = new float[2];
+        final boolean[] moved = new boolean[1];
+        target.setOnTouchListener((v, event) -> {
+            if (event.getActionMasked() == MotionEvent.ACTION_DOWN) {
+                down[0] = event.getRawX(); down[1] = event.getRawY(); moved[0] = false;
+                return true;
+            }
+            float dy = event.getRawY() - down[1];
+            float dx = event.getRawX() - down[0];
+            if (event.getActionMasked() == MotionEvent.ACTION_MOVE) {
+                moved[0] |= Math.abs(dy) > UiKit.dp(getContext(), 8);
+                return true;
+            }
+            if (event.getActionMasked() == MotionEvent.ACTION_UP) {
+                if (Math.abs(dy) > UiKit.dp(getContext(), 32) && Math.abs(dy) > Math.abs(dx))
+                    setDockExpanded(dy < 0, true);
+                else if (!moved[0]) v.performClick();
+                return true;
+            }
+            return true;
+        });
+    }
+
+    private void showDockMenu(View anchor) {
+        Context c = getContext();
+        String[] labels = {c.getString(R.string.dock_attachments),
+                c.getString(R.string.ui_ai_model_4d2e74),
+                c.getString(R.string.ui_recent_chats_2ccfec),
+                c.getString(R.string.ui_new_chat_db1838),
+                c.getString(R.string.ui_screen_6e5613), c.getString(R.string.ui_close_orbit_ebe5e6)};
+        OrbitAttachmentMenu.show(root, anchor, labels, (index, label) -> {
+            if (index == 0) anchor.postOnAnimation(() -> showAttachmentMenu(anchor));
+            else if (index == 1) {
+                main.postDelayed(this::showModeMenu, 160);
+            } else if (index == 2) { setDockExpanded(true, true); showHistoryPicker(); }
+            else if (index == 3) startNewChat();
+            else if (index == 4) anchor.postOnAnimation(() -> showScreenAttachmentMenu(anchor));
+            else dismissAnimated(OverlayLaunchTrace.REASON_CLOSE_BUTTON);
+        });
+    }
+
+    private void toggleDockVoiceConversation() {
+        dockVoiceConversation = !dockVoiceConversation;
+        if (dockVoiceConversation) { hideKeyboard(); startListening(); }
+        else { stopListening(); stopSpeaking(); }
+        updateComposerAction();
     }
 
     /**
@@ -1174,6 +1402,13 @@ public class OrbitSession extends VoiceInteractionSession {
     @Override
     public void onComputeInsets(Insets outInsets) {
         super.onComputeInsets(outInsets);
+        if (dockContent != null && sheet != null && !OrbitAttachmentMenu.isShowing(root)) {
+            int[] at = new int[2];
+            sheet.getLocationInWindow(at);
+            outInsets.touchableRegion.set(at[0], at[1], at[0] + sheet.getWidth(), at[1] + sheet.getHeight());
+            outInsets.touchableInsets = Insets.TOUCHABLE_INSETS_REGION;
+            return;
+        }
         if (!peeking || peekView == null || peekView.getWidth() <= 0) return;
         int[] at = new int[2];
         peekView.getLocationInWindow(at);
@@ -1234,6 +1469,7 @@ public class OrbitSession extends VoiceInteractionSession {
 
     /** Where the AI menus open: the chip, or More while the chip is hidden. */
     private View aiMenuAnchor() {
+        if (dockContent != null && !dockContent.isExpanded()) return sendButton;
         if (modeChip != null && modeChip.getVisibility() == View.VISIBLE) return modeChip;
         return moreButton != null ? moreButton : modeChip;
     }
@@ -1490,7 +1726,7 @@ public class OrbitSession extends VoiceInteractionSession {
         messages.removeAllViews();
         if (history.isEmpty()) {
             // Float's composer hint carries the greeting, so its empty chat takes no height.
-            if (!style.compact) addBubbleNow(OrbitText.get(R.string.ui_what_can_i_help_with_e43f5a, "What can I help with?"), false, false);
+            if (!style.compact && !isDockStyle()) addBubbleNow(OrbitText.get(R.string.ui_what_can_i_help_with_e43f5a, "What can I help with?"), false, false);
             return;
         }
         // While a retry is running its answer, and anything after it, step aside so the new version
@@ -1656,6 +1892,7 @@ public class OrbitSession extends VoiceInteractionSession {
         stopSpeaking();
         if (input != null) input.setText("");
         renderConversation();
+        if (dockContent != null) setDockExpanded(false, true);
         stateTextSafe(OrbitText.get(R.string.ui_new_chat_db1838, "New chat"));
         if (Prefs.haptics(getContext())) vibrate(16);
         main.postDelayed(() -> stateTextSafe(readyState()), 700);
@@ -1690,8 +1927,43 @@ public class OrbitSession extends VoiceInteractionSession {
         }
     }
 
+    private void applyDockInsets(WindowInsets insets) {
+        Context c = getContext();
+        int bottom, left, right, top, imeBottom;
+        if (Build.VERSION.SDK_INT >= 30) {
+            android.graphics.Insets bars = insets.getInsets(WindowInsets.Type.systemBars()
+                    | WindowInsets.Type.displayCutout() | WindowInsets.Type.mandatorySystemGestures());
+            bottom = bars.bottom; left = bars.left; right = bars.right; top = bars.top;
+            imeBottom = insets.isVisible(WindowInsets.Type.ime())
+                    ? insets.getInsets(WindowInsets.Type.ime()).bottom : 0;
+        } else {
+            left = insets.getSystemWindowInsetLeft(); right = insets.getSystemWindowInsetRight();
+            top = insets.getSystemWindowInsetTop(); bottom = insets.getStableInsetBottom();
+            imeBottom = insets.getSystemWindowInsetBottom() > UiKit.dp(c, 120)
+                    ? insets.getSystemWindowInsetBottom() : 0;
+        }
+        imeShowing = imeBottom > 0;
+        int width = root.getWidth() > 0 ? root.getWidth() : c.getResources().getDisplayMetrics().widthPixels;
+        int height = root.getHeight() > 0 ? root.getHeight() : c.getResources().getDisplayMetrics().heightPixels;
+        int margin = UiKit.dp(c, 12);
+        FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) sheet.getLayoutParams();
+        lp.leftMargin = margin + left;
+        lp.rightMargin = margin + right;
+        lp.bottomMargin = margin + Math.max(bottom, imeBottom);
+        lp.gravity = Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL;
+        lp.width = Math.max(0, Math.min(width - lp.leftMargin - lp.rightMargin, UiKit.dp(c, 520)));
+        lp.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+        sheet.setLayoutParams(lp);
+        int other = sheet.getHeight() - dockContent.getHeight();
+        if (other <= 0) other = UiKit.dp(c, 144);
+        int available = Math.max(0, height - top - lp.bottomMargin - margin - other);
+        conversationCapPx = Math.max(0, Math.min(available, Math.round(height * .62f)));
+        dockContent.setHeightLimit(conversationCapPx);
+    }
+
     private void applyImeInsets(WindowInsets insets) {
         if (root == null || sheet == null || insets == null) return;
+        if (dockContent != null) { applyDockInsets(insets); return; }
         int imeBottom;
         boolean imeVisible;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
@@ -1777,6 +2049,7 @@ public class OrbitSession extends VoiceInteractionSession {
      */
     private void restConversation() {
         if (messageScroll == null) return;
+        if (dockContent != null) return;
         LinearLayout.LayoutParams scrollParams = (LinearLayout.LayoutParams) messageScroll.getLayoutParams();
         boolean fits = style.fitsContent();
         scrollParams.height = fits ? 0 : UiKit.dp(getContext(), style.conversationDp);
@@ -1878,7 +2151,7 @@ public class OrbitSession extends VoiceInteractionSession {
             boolean startVoice = OverlayAutoListen.shouldStartForShow(
                     Prefs.autoListenOnOpen(getContext()), false, autoListenHandledForShow);
             if (startVoice) autoListenHandledForShow = true;
-            boolean focusComposer = OverlayAutoListen.shouldFocusComposer(startVoice,
+            boolean focusComposer = !isDockStyle() && OverlayAutoListen.shouldFocusComposer(startVoice,
                     Prefs.autoListen(getContext()), Prefs.keyboardAwareAssistant(getContext()));
             main.postDelayed(() -> {
                 if (startVoice) {
@@ -2051,6 +2324,15 @@ public class OrbitSession extends VoiceInteractionSession {
                 }
             }
             renderSuggestions();
+            if (dockContent != null && screenButton != null) {
+                screenButton.setVisibility(controls.screen && !blocked && (available || screenAttached)
+                        ? View.VISIBLE : View.GONE);
+                screenButton.setText(getContext().getString(screenAttached
+                        ? R.string.dock_screen_attached : R.string.dock_use_screen));
+                screenButton.setPadding(UiKit.dp(getContext(), 20), 0, UiKit.dp(getContext(), 20), 0);
+                screenButton.setBackground(UiKit.rippleOutlined(UiKit.SURFACE,
+                        UiKit.withAlpha(UiKit.MUTED, 42), UiKit.accent(getContext()), 22, getContext()));
+            }
         });
     }
 
@@ -2209,7 +2491,7 @@ public class OrbitSession extends VoiceInteractionSession {
         if (suggestionRow == null || suggestionScroll == null) return;
         suggestionRow.removeAllViews();
         if (!screenAttached || selectionAttached) {
-            suggestionScroll.setVisibility(style.compact ? View.GONE : View.INVISIBLE);
+            suggestionScroll.setVisibility(style.compact || isDockStyle() ? View.GONE : View.INVISIBLE);
             return;
         }
         if (!Prefs.contextChips(getContext())) {
@@ -2220,7 +2502,7 @@ public class OrbitSession extends VoiceInteractionSession {
         if (items.isEmpty()) {
             // Preserve the 36dp slot while context is arriving so the sheet never
             // changes height after its opening animation has begun.
-            suggestionScroll.setVisibility(style.compact ? View.GONE : View.INVISIBLE);
+            suggestionScroll.setVisibility(style.compact || isDockStyle() ? View.GONE : View.INVISIBLE);
             return;
         }
         suggestionScroll.setVisibility(View.VISIBLE);
@@ -2423,6 +2705,7 @@ public class OrbitSession extends VoiceInteractionSession {
     private void refreshGenericAttachmentTray() {
         if (attachmentStrip == null) return;
         attachmentStrip.bind(composerAttachments.items());
+        if (dockContent != null) updateComposerAction();
     }
 
     private void submit() {
@@ -2530,6 +2813,7 @@ public class OrbitSession extends VoiceInteractionSession {
 
     private void acceptedSubmitPrompt(String q, boolean voiceRequest) {
         if (historyMode) renderConversation();
+        if (dockContent != null) setDockExpanded(true, true);
         stopListening();
         stopSpeaking();
         // A typed turn keeps its editor and keyboard exactly as the user left them, so Orbit is
@@ -2670,7 +2954,7 @@ public class OrbitSession extends VoiceInteractionSession {
                                     java.util.Collections.emptyList());
                         }
                         executeActions(reply.actions, 0);
-                        if (voiceRequest && Prefs.speak(getContext())) speak(OrbitMarkdown.toSpeechText(
+                        if (voiceRequest && (Prefs.speak(getContext()) || dockVoiceConversation)) speak(OrbitMarkdown.toSpeechText(
                                 SourceLinkUtil.displayText(storedText)));
                     }
                     updateComposerAction();
@@ -2753,6 +3037,7 @@ public class OrbitSession extends VoiceInteractionSession {
     }
 
     private void showThinkingIndicator() {
+        if (dockContent != null && !dockCollapsedByUser) dockContent.setExpanded(true, true);
         // Remove any previous indicator outright rather than fading it, so one request can never
         // leave two orbital indicators on screen at once.
         if (thinkingIndicator != null) {
@@ -2934,6 +3219,21 @@ public class OrbitSession extends VoiceInteractionSession {
     private void updateComposerAction() {
         if (sendButton == null) return;
         boolean stop = ComposerActionState.shouldShowStop(getContext(), conversationId, busy);
+        if (dockContent != null) {
+            showingStop = stop;
+            boolean voice = !stop && (dockVoiceConversation || !dockHasDraft());
+            sendButton.setSelected(voice && dockVoiceConversation);
+            if (voice) {
+                sendButton.setImageResource(R.drawable.ic_voice_conversation);
+                sendButton.setContentDescription(getContext().getString(dockVoiceConversation
+                        ? R.string.dock_stop_voice_conversation : R.string.dock_voice_conversation));
+            } else ComposerActionState.apply(sendButton, stop);
+            boolean accent = !voice || dockVoiceConversation;
+            sendButton.setImageTintList(ColorStateList.valueOf(accent ? UiKit.onAccent(getContext()) : UiKit.TEXT));
+            sendButton.setBackground(UiKit.ripple(accent ? UiKit.accent(getContext()) : UiKit.SURFACE,
+                    UiKit.accent(getContext()), 24, getContext()));
+            return;
+        }
         if (stop == showingStop) return;
         showingStop = stop;
         ComposerActionState.apply(sendButton, stop);
@@ -3510,7 +3810,7 @@ public class OrbitSession extends VoiceInteractionSession {
                                     java.util.Collections.emptyList());
                         }
                         executeActions(reply.actions, 0);
-                        if (voiceRequest && Prefs.speak(getContext())) speak(OrbitMarkdown.toSpeechText(
+                        if (voiceRequest && (Prefs.speak(getContext()) || dockVoiceConversation)) speak(OrbitMarkdown.toSpeechText(
                                 SourceLinkUtil.displayText(storedText)));
                     }
                     updateComposerAction();
@@ -4137,6 +4437,7 @@ public class OrbitSession extends VoiceInteractionSession {
      * auto-listens and follow-ups still happen if they are switched on.
      */
     private void handOffVoiceToTyping() {
+        if (dockVoiceConversation) { dockVoiceConversation = false; updateComposerAction(); }
         if (!VoiceHandoff.shouldTakeOver(listening, voiceFinishing)) return;
         voiceTurn.abandon();
         cancelVoiceFinalize();
@@ -4440,7 +4741,7 @@ public class OrbitSession extends VoiceInteractionSession {
         // typing state is released whenever Orbit puts the keyboard away, which a voice turn does.
         boolean surfaceEligible = sessionVisible && !busy && !listening && !voiceFinishing
                 && !composerIme.isTyping();
-        return VoiceFollowUpPolicy.decide(Prefs.autoListen(c), Prefs.smartFollowUps(c),
+        return VoiceFollowUpPolicy.decide(Prefs.autoListen(c) || dockVoiceConversation, Prefs.smartFollowUps(c),
                 utteranceLive, surfaceEligible, lastSpokenReply);
     }
 
@@ -4757,13 +5058,13 @@ public class OrbitSession extends VoiceInteractionSession {
 
     private void restoreComposerHintSafe() {
         main.post(() -> {
-            if (input != null) input.setHint(style.hint());
+            if (input != null) input.setHint(isDockStyle() ? getContext().getString(R.string.dock_hint) : style.hint());
         });
     }
 
     private void restoreComposerHintIfVoiceIdleSafe() {
         main.post(() -> {
-            if (!listening && !speaking && input != null) input.setHint(style.hint());
+            if (!listening && !speaking && input != null) input.setHint(isDockStyle() ? getContext().getString(R.string.dock_hint) : style.hint());
         });
     }
 
@@ -5287,6 +5588,10 @@ public class OrbitSession extends VoiceInteractionSession {
     public void onBackPressed() {
         // Back closes the attachment chooser first, leaving the sheet and keyboard untouched.
         if (OrbitAttachmentMenu.dismiss(root)) return;
+        if (dockContent != null) {
+            if (imeShowing) { hideKeyboard(); return; }
+            if (dockContent.isExpanded()) { setDockExpanded(false, true); return; }
+        }
         dismissAnimated(OverlayLaunchTrace.REASON_BACK);
     }
 
@@ -5323,6 +5628,7 @@ public class OrbitSession extends VoiceInteractionSession {
 
     @Override
     public void onHide() {
+        dockVoiceConversation = false;
         OverlayLaunchTrace.event(OverlayLaunchTrace.STAGE_HIDE,
                 OverlayLaunchTrace.State.of()
                         .flag("firstFrame", firstFrameRecorded)

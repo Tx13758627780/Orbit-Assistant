@@ -223,7 +223,7 @@ public class OverlayFloatTest {
         for (String style : new String[]{Prefs.OVERLAY_STYLE_MODERN, Prefs.OVERLAY_STYLE_CLASSIC}) {
             FrameLayout root = overlay(style, 412, 915);
             View handle = handle(root);
-            assertFalse(style, handle.hasOnClickListeners());
+            assertEquals(style, Prefs.OVERLAY_STYLE_MODERN.equals(style), handle.hasOnClickListeners());
             assertFalse(style, handle.getContentDescription().toString().contains("minimize"));
             touch(handle, 0f);
             assertFalse(style, session.isPeekingForTest());
@@ -283,7 +283,8 @@ public class OverlayFloatTest {
     }
 
     private static View handle(View root) {
-        return findStarting(root, "Tap to minimize Orbit", "Swipe up to open this chat");
+        View dock = root.findViewWithTag("orbit_dock_handle");
+        return dock != null ? dock : findStarting(root, "Tap to minimize Orbit", "Swipe up to open this chat");
     }
 
     private static View capsule(View root) {

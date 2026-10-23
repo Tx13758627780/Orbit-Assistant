@@ -1,3 +1,5 @@
+> **OnePlus 底部输入条 fix2**：默认现代样式已重做，使用 fix1 同一签名，可覆盖更新。[改动与安装说明](docs/ONEPLUS_DOCK_FIX2.zh-CN.md)。
+
 > 本地 AI 检查卡住的修复和安装步骤见 [本地 AI 修复说明](docs/LOCAL_AI_FIX.zh-CN.md)。本次 APK 内置同签名组件，请勿混装官方组件。
 
 # Orbit Assistant 简体中文初版

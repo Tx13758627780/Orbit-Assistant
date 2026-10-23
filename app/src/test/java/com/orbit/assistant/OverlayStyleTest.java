@@ -134,9 +134,17 @@ public class OverlayStyleTest {
     @Test public void everyStyleBuildsEveryControl() {
         for (String style : STYLES) {
             View root = overlay(style);
-            for (String control : EVERY_CONTROL) {
-                assertNotNull(style + " lost " + control, find(root, control));
+            if (Prefs.OVERLAY_STYLE_MODERN.equals(style)) {
+                assertNotNull(find(root, "More options"));
+                assertNotNull(find(root, "Voice input"));
+                assertNotNull(find(root, "Voice conversation"));
+                composerInput(root).setText("typed turn");
+                assertNotNull(find(root, "Send message"));
+                assertNotNull(find(root, "Close Orbit"));
+                assertNotNull(modeChip(root));
+                continue;
             }
+            for (String control : EVERY_CONTROL) assertNotNull(style + " lost " + control, find(root, control));
             assertNotNull(style + " lost the AI selector", modeChip(root));
             if (OverlayStyle.of(style).compact) {
                 assertNotNull(style + " lost its More menu", find(root, "More options"));
@@ -169,15 +177,15 @@ public class OverlayStyleTest {
         assertNull("New chat left history", textView(root, "No saved chats yet."));
     }
 
-    @Test public void modernAndFloatMoveTheScreenControlsIntoTheComposer() {
+    @Test public void modernUsesAFloatingScreenCapsuleAndFloatKeepsItsIntegratedControls() {
         View classic = overlay(Prefs.OVERLAY_STYLE_CLASSIC);
         assertNotSame(composerOf(classic, "Voice input"), composerOf(classic, "Attach current screen"));
-
-        for (String style : new String[]{Prefs.OVERLAY_STYLE_MODERN, Prefs.OVERLAY_STYLE_FLOAT}) {
-            View root = overlay(style);
-            assertSame(style, composerOf(root, "Voice input"), composerOf(root, "Attach current screen"));
-            assertSame(style, composerOf(root, "Voice input"), composerOf(root, "Select or mark part of the current screen"));
-        }
+        View floating = overlay(Prefs.OVERLAY_STYLE_FLOAT);
+        assertSame(composerOf(floating, "Voice input"), composerOf(floating, "Attach current screen"));
+        assertSame(composerOf(floating, "Voice input"), composerOf(floating, "Select or mark part of the current screen"));
+        View modern = overlay(Prefs.OVERLAY_STYLE_MODERN);
+        assertNotNull(modern.findViewWithTag("orbit_dock_screen"));
+        assertNotSame(modern.findViewWithTag("orbit_dock_composer"), modern.findViewWithTag("orbit_dock_screen"));
     }
 
     @Test public void classicKeepsItsFixedConversationAndReservedRows() {
@@ -193,20 +201,13 @@ public class OverlayStyleTest {
 
     @Test public void emptyConversationsShrinkByStyle() {
         int classic = emptyConversationHeight(Prefs.OVERLAY_STYLE_CLASSIC);
-        int modern = emptyConversationHeight(Prefs.OVERLAY_STYLE_MODERN);
         int floating = emptyConversationHeight(Prefs.OVERLAY_STYLE_FLOAT);
-
-        // Modern no longer reserves beta.1's 220dp blank middle, but keeps a fuller feel.
-        assertTrue("modern " + modern, modern < UiKit.dp(context, 220));
-        assertTrue("modern " + modern, modern >= UiKit.dp(context, 120));
-        // Float's empty conversation is a sliver, a fraction of Modern's.
-        assertTrue("float " + floating + " modern " + modern, floating * 3 <= modern);
-        assertTrue(modern < classic);
-
-        int modernSheet = sheetHeight(Prefs.OVERLAY_STYLE_MODERN);
-        int floatSheet = sheetHeight(Prefs.OVERLAY_STYLE_FLOAT);
-        assertTrue("float sheet " + floatSheet + " modern " + modernSheet,
-                modernSheet - floatSheet >= UiKit.dp(context, 120));
+        View modern = overlay(Prefs.OVERLAY_STYLE_MODERN);
+        measure(modern);
+        AssistantDockPanel panel = modern.findViewWithTag("orbit_dock_content");
+        assertEquals("modern reserves no conversation height", 0, panel.getHeight());
+        assertTrue("only the editor remains", modern.findViewWithTag("orbit_dock_composer").getHeight() < UiKit.dp(context, 100));
+        assertTrue(floating < classic);
     }
 
     @Test public void floatHidesWhatAnEmptyChatDoesNotNeed() {
@@ -216,7 +217,8 @@ public class OverlayStyleTest {
         assertEquals(View.GONE, suggestions(root).getVisibility());
 
         View modern = overlay(Prefs.OVERLAY_STYLE_MODERN);
-        assertNotNull(textView(modern, "What can I help with?"));
+        assertNull(textView(modern, "What can I help with?"));
+        assertEquals("Ask Orbit…", composerInput(modern).getHint().toString());
     }
 
     @Test public void floatGrowsWithItsConversationUpToACap() {

@@ -147,6 +147,7 @@ public class OverlayCustomizationTest {
         for (OverlayStyle style : ALL) {
             Prefs.get(context).edit().putBoolean(Prefs.LELO_MODE, style.cute).commit();
             View root = overlay(style.id);
+            if (style == OverlayStyle.MODERN) input(root).setText("typed turn");
             assertNotNull(style.id, input(root));
             assertEquals(style.id, View.VISIBLE, find(root, "Send message").getVisibility());
             assertEquals(style.id, View.VISIBLE, find(root, "Close Orbit").getVisibility());

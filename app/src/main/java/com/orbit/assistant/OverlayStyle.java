@@ -16,9 +16,9 @@ final class OverlayStyle {
             78, 8, OverlayStretch.SHEET_CORNER_DP, 18, 36, 18, 40, 12, 240, 240, 22,
             false, false, 255, false);
     /**
-     * Orbit's full floating card, shipped as "Float" in 0.8.4.0-beta.1: lighter dim, a slimmer
-     * header, and one composer card that also carries the screen controls. Its conversation fits
-     * what it holds, so an empty chat no longer reserves a tall blank middle.
+     * The default bottom input dock. OrbitSession reuses these controls in a single-row editor,
+     * reveals conversation content only when needed, and floats the screen control separately.
+     * The shared dimensions still size its expanded header and the settings preview.
      */
     static final OverlayStyle MODERN = new OverlayStyle(Prefs.OVERLAY_STYLE_MODERN, "Modern",
             44, 12, 32f, 14, 28, 15, 36, 16, 120, 260, 26,

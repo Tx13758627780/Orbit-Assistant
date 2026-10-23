@@ -52,7 +52,7 @@ android {
         buildConfigField 'boolean', 'BUNDLED_ORBIT_LOCAL', orbitBundledLocal.toString()
         minSdk 29
         targetSdk 36
-        versionCode 818
+        versionCode 819
         versionName "0.8.4.1"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 

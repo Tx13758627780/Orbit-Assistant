@@ -177,7 +177,7 @@ public final class OrbitVersionTest {
 
     /** Stable must supersede Beta 1, published as versionCode 817. */
     @Test public void thisBuildOutranksThePublishedReleaseItFollows() {
-        assertEquals("the next synchronized version code", 818, BuildConfig.VERSION_CODE);
+        assertEquals("the next synchronized version code", 819, BuildConfig.VERSION_CODE);
         assertTrue(OrbitVersion.compareVersions(BuildConfig.VERSION_NAME, "0.8.4.1-beta.1") > 0);
         assertTrue(OrbitVersion.compareVersions(BuildConfig.VERSION_NAME, "0.8.4.0") > 0);
     }

@@ -229,7 +229,39 @@ final class OverlayPreviewView extends FrameLayout {
         View attach = round(c, R.drawable.ic_add, UiKit.SURFACE_2, UiKit.accent(c), button, TAG_ATTACH);
         View mic = round(c, R.drawable.ic_mic, Color.TRANSPARENT, accent, button, TAG_VOICE);
         View send = round(c, R.drawable.ic_send, accent, UiKit.onAccent(c), button, null);
-        if (s.integratedComposer) {
+        if (s == OverlayStyle.MODERN) {
+            composer.setOrientation(LinearLayout.HORIZONTAL);
+            composer.setPadding(px(6), px(4), px(6), px(4));
+            hint.setText(c.getString(R.string.dock_hint));
+            composer.addView(attach, new LinearLayout.LayoutParams(button, button));
+            composer.addView(hint, new LinearLayout.LayoutParams(0, -2, 1));
+            composer.addView(mic, new LinearLayout.LayoutParams(button, button));
+            composer.addView(round(c, R.drawable.ic_voice_conversation, UiKit.SURFACE,
+                    UiKit.TEXT, button, null), new LinearLayout.LayoutParams(button, button));
+            sheet.removeAllViews();
+            sheet.setPadding(0, 0, 0, 0);
+            sheet.setBackgroundColor(Color.TRANSPARENT);
+            LinearLayout body = new LinearLayout(c);
+            body.setOrientation(LinearLayout.VERTICAL);
+            body.setPadding(px(12), px(10), px(12), px(10));
+            body.setBackground(UiKit.rounded(UiKit.SURFACE, 28 * S, c));
+            body.addView(header); body.addView(talk);
+            sheet.addView(body);
+            screen.removeViewAt(1);
+            LinearLayout.LayoutParams capsule = new LinearLayout.LayoutParams(-2, -2);
+            capsule.gravity = Gravity.END;
+            capsule.setMargins(0, px(8), 0, px(8));
+            sheet.addView(screen, capsule);
+            LinearLayout dock = new LinearLayout(c);
+            dock.setOrientation(LinearLayout.VERTICAL);
+            dock.setPadding(0, px(7), 0, px(3));
+            dock.setBackground(UiKit.rounded(UiKit.SURFACE, 32 * S, c));
+            dock.addView(handle, handleLp);
+            dock.addView(composer);
+            sheet.addView(dock);
+            UiKit.applyTypography(sheet);
+            return sheet;
+        } else if (s.integratedComposer) {
             LinearLayout status = row(c);
             status.setPadding(px(10), 0, px(4), 0);
             status.addView(UiKit.text(c, OrbitText.get(R.string.ui_current_screen_available_b4cf6d, "Current screen available"), 11 * S, UiKit.MUTED, false));
